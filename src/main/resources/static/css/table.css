@@ -8,7 +8,7 @@ body {
   font-size: 20px;
   margin: 0;
   padding: 0;
-  background-image: url('../images/background.png'); /*경로 수정 필요*/
+  background-image: url('/html/Hanium/img/background.png'); /*경로 수정 필요*/
 }
 
 /* 상단바 */
@@ -163,7 +163,7 @@ header {
 .container {
   max-width: 1800px;
   margin: 0 auto;
-  padding: 0 20px 30px;
+  padding: 0 20px 10px;
 }
 
 .card-wrapper {
@@ -703,3 +703,8 @@ legend {
   color: white;
 }
 /* 여기까지 */
+
+/* 추가 */
+#dicCard {
+  cursor: pointer;
+}

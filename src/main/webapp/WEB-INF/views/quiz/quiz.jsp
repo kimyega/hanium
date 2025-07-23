@@ -1,3 +1,5 @@
+<%--인코딩을 위해서 추가해야함!--%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -9,7 +11,7 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link rel="stylesheet" href="/css/table.css" />
+    <link rel="stylesheet" href="../css/table.css" />
 </head>
 
 <body>
@@ -55,7 +57,7 @@
                         <h1>토끼</h1>
                     </fieldset>
                 </div>
-                <div class="card card-dic">
+                <div class="card card-dic" id="dicCard">
                     <div class="card-dic-title-text">정답 확인</div> <!-- 버튼 대신 텍스트 -->
                     <div class="card-dic-img">
                         <i class="fa-solid fa-question fa-2xl" style="color: #fca08c;"></i>
@@ -87,6 +89,19 @@
 
     document.addEventListener('click', function () {
         menu.style.display = 'none';
+    });
+
+    const dicCard = document.getElementById('dicCard');
+    let isImageShown = false;
+
+    dicCard.addEventListener('click', function () {
+        if (!isImageShown) {
+            dicCard.style.backgroundImage = "url('/images/language.png')"; // 🔁 여기에 원하는 이미지 경로
+            dicCard.style.backgroundSize = "cover";
+            dicCard.style.backgroundPosition = "center";
+            dicCard.innerHTML = ''; // 기존 텍스트/아이콘 제거
+            isImageShown = true;
+        }
     });
 </script>
 </body>
