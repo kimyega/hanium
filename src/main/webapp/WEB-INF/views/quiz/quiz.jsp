@@ -62,6 +62,7 @@
                         <i class="fa-solid fa-question fa-2xl" style="color: #fca08c;"></i>
                     </div>
                 </div>
+            </div>
 
             <div class="footer-two">
                 <button class="button" onclick="location.href='/pre-page.html'">
