@@ -1,5 +1,3 @@
-<%--인코딩을 위해서 추가해야함!--%>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -13,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="../css/table.css" />
 </head>
-<%--수정--%>
+
 <body>
 <header>
     <div class="header-icon-stack">
@@ -57,6 +55,7 @@
                         <h1>토끼</h1>
                     </fieldset>
                 </div>
+                <div class="card card-dic">
                 <div class="card card-dic" id="dicCard">
                     <div class="card-dic-title-text">정답 확인</div> <!-- 버튼 대신 텍스트 -->
                     <div class="card-dic-img">
@@ -77,7 +76,6 @@
         </div>
     </main>
 </form>
-<%--주석--%>
 
 <script>
     const toggle = document.getElementById('headerDropdownToggle');
