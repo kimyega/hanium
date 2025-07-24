@@ -1,4 +1,3 @@
-<%--인코딩을 위해서 추가해야함!--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -13,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="/css/table.css" />
 </head>
-<%--수정--%>
+
 <body>
 <header>
     <div class="header-icon-stack">
@@ -77,7 +76,6 @@
         </div>
     </main>
 </form>
-<%--주석--%>
 
 <script>
     const toggle = document.getElementById('headerDropdownToggle');
