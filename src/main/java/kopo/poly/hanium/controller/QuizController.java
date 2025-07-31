@@ -57,4 +57,16 @@ public class QuizController {
 
         return "contents/quizResult";
     }
+
+    @GetMapping(value = "mypage")
+    public String myPage() {
+
+        return "contents/mypage";
+    }
+
+    @GetMapping(value = "register")
+    public String register() {
+
+        return "contents/register";
+    }
 }
