@@ -30,7 +30,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('/Hanium/이미지.png'); /* 이미지 경로 확인 필요 */
+            background-image: url('/'); /* 이미지 경로 확인 필요 */
             background-size: 70%;
             background-position: center;
             background-repeat: no-repeat;
