@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -54,7 +55,6 @@
                         <h1>토끼</h1>
                     </fieldset>
                 </div>
-                <div class="card card-dic">
                 <div class="card card-dic" id="dicCard">
                     <div class="card-dic-title-text">정답 확인</div> <!-- 버튼 대신 텍스트 -->
                     <div class="card-dic-img">

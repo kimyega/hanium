@@ -525,6 +525,10 @@ legend {
   padding: 10px;
   font-size: 24px;
   border-top: 2px solid #fca08c;
+  display: flex;
+  justify-content: center; /* 가운데 정렬 */
+  align-items: center;
+  position: relative;
 }
 
 .slide-btn-container {
@@ -709,5 +713,14 @@ legend {
   cursor: pointer;
 }
 /*여기까지*/
+
+
+.card-quiz-score {
+  position: absolute;
+  right: 0.75rem;
+  color: #29B969;
+}
+/* 여기까지 */
+
 
 
