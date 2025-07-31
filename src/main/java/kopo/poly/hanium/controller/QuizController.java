@@ -69,4 +69,22 @@ public class QuizController {
 
         return "contents/register";
     }
+
+    @GetMapping(value = "haniumstartpage")
+    public String haniumstartpage() {
+
+        return "contents/haniumstartpage";
+    }
+
+    @GetMapping(value = "haniumIDfound01")
+    public String haniumIDfound01() {
+
+        return "contents/haniumIDfound01";
+    }
+
+    @GetMapping(value = "haniumpassword")
+    public String haniumpassword() {
+
+        return "contents/haniumpassword";
+    }
 }
