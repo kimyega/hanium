@@ -88,9 +88,8 @@ public class QuizController {
         return "contents/haniumpassword";
     }
 
-
-        @GetMapping(value = "hanium-login")
-        public String haniumlogin() {
+    @GetMapping(value = "hanium-login")
+    public String haniumlogin() {
 
         return "contents/hanium-login";
     }
