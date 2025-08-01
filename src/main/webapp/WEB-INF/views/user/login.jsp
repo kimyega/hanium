@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <!-- ✅ 공통 상단바 스타일 -->
+ 
     <link rel="stylesheet" href="/css/table.css" />
 
     <style>
@@ -23,19 +24,28 @@
             overflow: hidden;
         }
 
+
         .background-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('/'); /* 이미지 경로 수정 필요 */
-            background-size: 70%;
-            background-position: center;
-            background-repeat: no-repeat;
+ 
             z-index: 0;
         }
 
+        .background-image img.bg-img {
+            position: absolute;
+            top: 0;
+            left: -20px;   /* ← 여기서 오른쪽으로 이동시키기 위해 조정 */
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+        }
+
+
+ 
         .login-wrapper {
             position: absolute;
             top: 65%;
@@ -81,8 +91,10 @@
 
         .login-buttons button {
             font-family: 'Cute Font', sans-serif;
-            font-size: 30px;
-            padding: 16px 60px;
+            font-size: 24px;
+            padding: 12px 30px;
+
+           
             border: 4px solid #fca08c;
             border-radius: 50px;
             background-color: white;
@@ -110,14 +122,38 @@
         .find-links a:hover {
             text-decoration: underline;
         }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 40px;
+            background-color: #fca08c;
+            z-index: 3;
+        }
+
+        .header-logo {
+            font-size: 26px;
+            font-family: 'Kavoon', cursive;
+        }
+
+        .header-icon-stack {
+            display: flex;
+            gap: 10px;
+            font-size: 24px;
+        }
     </style>
 </head>
 
 <body>
 <div class="main-container">
-    <div class="background-image"></div>
+    <!-- 배경 이미지 -->
+    <div class="background-image">
+        <img src="/images/login.png" alt="배경 이미지" class="bg-img" />
+    </div>
 
-    <!-- ✅ 공통 상단바 (스타일은 table.css에 있음) -->
+    <!-- 상단바 -->
+
     <header>
         <div class="header-icon-stack">
             <i class="fa-solid fa-book-open book"></i>
@@ -126,7 +162,7 @@
         <div class="header-logo">Märchand</div>
     </header>
 
-    <!-- ✅ 로그인 폼 -->
+
     <form>
         <div class="login-wrapper">
             <label><span>ID :</span><input type="text" placeholder="ID를 입력 하세요"></label>
@@ -138,9 +174,11 @@
 
             <div class="find-links">
                 ID나 비밀번호가 기억이 안나시나요?<br>
-                <a href="/Hanium/haniumIDfound01.html">ID 찾기</a> /
-                <a href="/Hanium/haniumpassword.html">비밀번호 찾기</a>
+                <a href="/contents/findId">ID 찾기</a> /
+                <a href="/contents/findPw">비밀번호 찾기</a>
             </div>
+
+
         </div>
     </form>
 </div>
