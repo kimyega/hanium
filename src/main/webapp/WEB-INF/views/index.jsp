@@ -12,6 +12,7 @@
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
+
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/table.css" />
 	<style>
@@ -122,6 +123,8 @@
 		}
 
 	</style>
+
+	
 </head>
 
 <body class="start-page">
@@ -130,7 +133,9 @@
 		<i class="fa-solid fa-book-open book"></i>
 		<i class="fa-solid fa-hands-holding hands"></i>
 	</div>
+ 
 	<div class="header-logo" onclick="location.href='/'">Märchand</div>
+
 	<div class="header-user-area">
 		<div class="header-user-icon">
 			<i class="fa-solid fa-circle-user fa-2xl"></i>
@@ -147,12 +152,14 @@
 
 <main>
 	<div class="start-container">
+
 		<img src="/images/start.png" alt="동물 그림" class="start-image" />
 		<div class="start-buttons">
 			<!-- ✅ 회원가입 / 로그인 버튼 경로 수정 -->
 			<!-- index.jsp 내 최종 수정 -->
 			<button class="start-button" onclick="location.href='/contents/register'" type="button">회원 가입</button>
 			<button class="start-button" onclick="location.href='/contents/login'" type="button">로그인</button>
+
 
 		</div>
 	</div>
