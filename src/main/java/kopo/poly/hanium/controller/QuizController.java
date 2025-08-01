@@ -67,7 +67,31 @@ public class QuizController {
     @GetMapping(value = "register")
     public String register() {
 
-        return "contents/register";
+        return "user/register";
+    }
+
+    @GetMapping(value = "/")
+    public String indexpage() {
+
+        return "index";
+    }
+
+    @GetMapping(value = "findId")
+    public String findId() {
+
+        return "user/findId";
+    }
+
+    @GetMapping(value = "findPw")
+    public String findPw() {
+
+        return "user/findPw";
+    }
+
+        @GetMapping(value = "login")
+        public String loginpage() {
+
+        return "user/login";
     }
 
     @GetMapping(value = "haniumstartpage")
