@@ -10,7 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- 공통 상단바 CSS -->
     <link rel="stylesheet" href="/css/table.css" />
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -18,105 +21,6 @@
             background-color: #f5f3f2;
             font-family: 'Cute Font', sans-serif;
             font-size: 20px;
-        }
-
-        header {
-            background-color: #fca08c;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 30px;
-            position: relative;
-        }
-
-        .header-icon-stack {
-            position: relative;
-            width: 60px;
-            height: 60px;
-        }
-
-        .header-icon-stack .book {
-            position: absolute;
-            top: 10px;
-            left: 20%;
-            transform: translateX(-50%);
-            font-size: 20px;
-            color: black;
-        }
-
-        .header-icon-stack .hands {
-            position: absolute;
-            bottom: 10px;
-            left: 20%;
-            transform: translateX(-50%);
-            font-size: 40px;
-            color: black;
-        }
-
-        .header-logo {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Kavoon', cursive;
-            font-size: 24px;
-        }
-
-        .header-logo:hover { cursor: pointer; }
-
-        .header-user-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-        }
-
-        .header-user-icon {
-            width: 24px;
-            height: 24px;
-            font-size: 30px;
-            margin-right: 40px;
-        }
-
-        .header-dropdown {
-            position: relative;
-        }
-
-        .header-dropdown-toggle {
-            background-color: #fca08c;
-            border: none;
-            font-family: 'Cute Font', sans-serif;
-            font-size: 35px;
-            cursor: pointer;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
-
-        .header-dropdown-toggle:hover {
-            background-color: #ffe1d7;
-        }
-
-        .header-dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: white;
-            border: 1px solid #ccc;
-            min-width: 180px;
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: 5px;
-        }
-
-        .header-dropdown-menu li {
-            padding: 10px;
-            cursor: pointer;
-            list-style: none;
-            font-size: 24px;
-        }
-
-        .header-dropdown-menu li:hover {
-            background-color: #fca08c;
-            color: white;
         }
 
         main {
@@ -199,6 +103,8 @@
     </style>
 </head>
 <body>
+
+<!-- ✅ 공통 상단바 (스타일은 table.css에서 적용됨) -->
 <header>
     <div class="header-icon-stack">
         <i class="fa-solid fa-book-open book"></i>
@@ -264,7 +170,7 @@
     <section id="step4" class="find-box" style="display: none;">
         <h1 class="find-title">비밀번호가 변경되었습니다!</h1>
         <button class="verify-button" onclick="location.href='/'">로그인 화면으로 돌아가기</button>
-    </section>niu
+    </section>
 </main>
 
 <script>
@@ -312,5 +218,6 @@
         }
     });
 </script>
+
 </body>
 </html>

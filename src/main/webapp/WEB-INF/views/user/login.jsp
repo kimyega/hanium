@@ -23,21 +23,19 @@
             overflow: hidden;
         }
 
-        /* ✅ 배경을 이미지로 처리 */
         .background-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('/'); /* 이미지 경로 확인 필요 */
+            background-image: url('/'); /* 이미지 경로 수정 필요 */
             background-size: 70%;
             background-position: center;
             background-repeat: no-repeat;
             z-index: 0;
         }
 
-        /* ✅ 로그인 박스 */
         .login-wrapper {
             position: absolute;
             top: 65%;
@@ -117,10 +115,9 @@
 
 <body>
 <div class="main-container">
-    <!-- ✅ 배경 이미지 -->
     <div class="background-image"></div>
 
-    <!-- ✅ 상단바 -->
+    <!-- ✅ 공통 상단바 (스타일은 table.css에 있음) -->
     <header>
         <div class="header-icon-stack">
             <i class="fa-solid fa-book-open book"></i>
@@ -132,8 +129,8 @@
     <!-- ✅ 로그인 폼 -->
     <form>
         <div class="login-wrapper">
-            <label><span class="label-text">ID :</span><input type="text" placeholder="ID를 입력 하세요"></label>
-            <label><span class="label-text">비밀번호 :</span><input type="password" placeholder="비밀번호를 입력하세요."></label>
+            <label><span>ID :</span><input type="text" placeholder="ID를 입력 하세요"></label>
+            <label><span>비밀번호 :</span><input type="password" placeholder="비밀번호를 입력하세요."></label>
 
             <div class="login-buttons">
                 <button type="submit">로그인!</button>
