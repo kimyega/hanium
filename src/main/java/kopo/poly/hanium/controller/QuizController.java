@@ -15,47 +15,37 @@ public class QuizController {
     @GetMapping(value = "fairytaleList")
     public String quizPage() {
 
-        return "contents/fairytaleList";
+        return "fairytale/fairytaleList";
     }
-    @GetMapping(value = "hanium")
+    @GetMapping(value = "readFairytale")
     public String haniumPage() {
 
-        return "contents/hanium";
+        return "fairytale/readFairytale";
     }
-    @GetMapping(value = "make")
+    @GetMapping(value = "makeFairytale")
     public String makePage() {
 
-        return "contents/make";
+        return "make/makeFairytale";
     }
-    @GetMapping(value = "makeResult")
+    @GetMapping(value = "makeFairytaleResult")
     public String makeResultPage() {
 
-        return "contents/makeResult";
+        return "make/makeFairytaleResult";
     }
-    @GetMapping(value = "quiz1")
+    @GetMapping(value = "quiz")
     public String quiz1Page() {
 
-        return "contents/quiz1";
-    }
-    @GetMapping(value = "quiz2")
-    public String quiz2Page() {
-
-        return "contents/quiz2";
-    }
-    @GetMapping(value = "quiz3")
-    public String quiz3Page() {
-
-        return "contents/quiz3";
+        return "quiz/quiz";
     }
     @GetMapping(value = "quizList")
     public String quizListPage() {
 
-        return "contents/quizList";
+        return "quiz/quizList";
     }
     @GetMapping(value = "quizResult")
     public String quizResultPage() {
 
-        return "contents/quizResult";
+        return "quiz/quizResult";
     }
 
     @GetMapping(value = "mypage")
@@ -123,5 +113,4 @@ public class QuizController {
 
         return "index";
     }
-
 }

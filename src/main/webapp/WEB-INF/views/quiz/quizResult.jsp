@@ -11,6 +11,83 @@
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 	<link rel="stylesheet" href="/css/table.css" />
+	<style>
+		.score-text {
+			font-size: 130px;
+			color: #29B969;
+			margin-top: 20px;
+		}
+
+		.score-result {
+			background-color: #fff;
+			padding: 20px;
+			flex: none;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			border: 15px solid #fca08c;
+			width: 66.6666%;
+			height: 600px;
+			font-size: 55px;
+			overflow-y: auto;
+			max-height: 600px;
+		}
+
+		.score-result::-webkit-scrollbar {
+			width: 15px;               /* 스크롤바 너비 */
+			height: 20px;
+		}
+
+		.score-result::-webkit-scrollbar-track {
+			background: #ffe5de;       /* 스크롤 트랙 배경 */
+			width: 2px;
+		}
+
+		.score-result::-webkit-scrollbar-thumb {
+			background-color: #fca08c; /* 스크롤바 색상 */
+			border-radius: 10px;
+			border: 3px solid #ffe5de; /* thumb 테두리 색상 (트랙과 같게 하면 패딩처럼 보임) */
+		}
+
+		.score-result div {
+			font-size: 100px;
+		}
+
+		.result.correct {
+			color: #29B969;
+		}
+
+		.make-wrapper {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			margin-top: 10px;
+		}
+
+		.make-wrapper  button {
+			font-family: 'Cute Font', sans-serif;
+			font-size: 35px;
+			padding: 30px 90px;
+			border-radius: 100px;
+			border: 8px solid #fca08c;
+			background-color: white;
+			cursor: pointer;
+			text-align: center;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			line-height: 1.2;
+			white-space: nowrap;         /* 🔥 줄바꿈 방지 */
+			writing-mode: horizontal-tb;
+			width: 200px;
+			height: 80px;
+		}
+		.make-wrapper button:hover {
+			background-color: #fca08c;
+			color: white;
+		}
+
+	</style>
 </head>
 
 <body>

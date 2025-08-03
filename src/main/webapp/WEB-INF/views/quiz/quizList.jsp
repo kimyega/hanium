@@ -11,6 +11,150 @@
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 	<link rel="stylesheet" href="/css/table.css" />
+	<style>
+		.top-search {
+			position: relative;
+			width: 800px;
+			height: 70px;
+			border: 8px solid #fca08c;
+			border-radius: 50px;
+			background-color: white;
+			box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.top-search i {
+			position: absolute;
+			left: 30px;
+			font-size: 20px;
+			z-index: 2;
+			cursor: pointer;
+		}
+
+		.search-bar {
+			width: 100%;
+			height: 100%;
+			padding: 0 20px 0 80px; /* 왼쪽 여백 확보 (아이콘 공간) */
+			border: none;
+			outline: none;
+			font-size: 24px;
+			border-radius: 50px;
+			background-color: transparent;
+			font-family: 'Cute Font', sans-serif;
+			box-sizing: border-box;
+		}
+
+		.slide-container {
+			width: 100%;
+			max-width: 1200px;
+			margin: 50px auto;
+			overflow: hidden;
+			position: relative;
+		}
+
+		.slide-card-wrapper {
+			margin-top: 50px;
+			display: flex;
+			transition: transform 0.5s ease-in-out;
+		}
+
+		.slide-card {
+			min-width: 33.33%;
+			padding: 20px;
+			box-sizing: border-box;
+		}
+
+		.card-inner {
+			border-top-left-radius: 12px;
+			border-top-right-radius: 50px;
+			border-bottom-left-radius: 12px;
+			border-bottom-right-radius: 12px;
+			overflow: hidden;
+			box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+			background-color: white;
+			text-align: center;
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+		}
+
+		.card-inner img {
+			border-top-left-radius: 12px;
+			border-top-right-radius: 50px;
+			border-bottom-left-radius: 12px;
+			border-bottom-right-radius: 12px;
+			width: auto;
+			max-width: calc(100% - 60px);
+			height: 320px;
+			object-fit: contain;
+			display: block;
+			margin: 30px auto;
+		}
+
+		.card-title {
+			background: white;
+			padding: 10px;
+			font-size: 24px;
+			border-top: 2px solid #fca08c;
+			display: flex;
+			justify-content: center; /* 가운데 정렬 */
+			align-items: center;
+			position: relative;
+		}
+
+		.slide-btn-container {
+			position: absolute;
+			top: 50%;
+			left: 0;
+			right: 0;
+			transform: translateY(-50%);
+			display: flex;
+			justify-content: space-between;
+			padding: 0 20px;
+			pointer-events: none;
+		}
+
+		.slide-btn-container .slide {
+			border: 8px solid #fca08c;
+			border-radius: 50%;
+			width: 65px;
+			height: 65px;
+			background-color: white;
+			cursor: pointer;
+			align-items: center;
+			justify-content: center;
+			pointer-events: auto;
+		}
+
+		.slide-card:hover .card-inner {
+			transform: scale(1.05); /* 살짝 커짐 */
+			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3); /* 더 강한 그림자 */
+			z-index: 1; /* 주변 카드 위에 보이도록 */
+		}
+
+		.slide:hover {
+			background-color: #fca08c;
+			color: white;
+		}
+
+		.slide.right {
+			right: 30px;
+		}
+
+		.slide.left {
+			left: 30px;
+		}
+
+		.slide-card {
+			cursor: pointer;
+		}
+
+		.card-quiz-score {
+			position: absolute;
+			right: 0.75rem;
+			color: #29B969;
+		}
+	</style>
 </head>
 
 <body>
@@ -41,7 +185,8 @@
 				<i class="fa-solid fa-house fa-2xl"></i>
 			</button>
 			<div class="top-search">
-				<i class="fa-solid fa-magnifying-glass fa-sm" style="color: #000000;"></i>
+				<i class="fa-solid fa-magnifying-glass fa-sm search-icon" onclick="focusInput()"></i>
+				<input id="searchInput" class="search-bar" type="text" placeholder="동화를 검색해보세요..." />
 			</div>
 			<div style="width: 60px;"></div>
 		</div>
@@ -108,10 +253,10 @@
 		</div>
 
 		<div class="slide-btn-container">
-			<button class="slide left" onclick="slide(-1, event)">
+			<button type="button" class="slide left" onclick="slide(-1, event)">
 				<i class="fa-solid fa-arrow-left fa-2xl"></i>
 			</button>
-			<button class="slide right" onclick="slide(1, event)">
+			<button type="button" class="slide right" onclick="slide(1, event)">
 				<i class="fa-solid fa-arrow-right fa-2xl"></i>
 			</button>
 		</div>
@@ -154,6 +299,10 @@
 
 	function goToDetail(url) {
 		window.location.href = url;
+	}
+
+	function focusInput() {
+		document.getElementById('searchInput').focus();
 	}
 
 </script>
