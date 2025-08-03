@@ -3,7 +3,7 @@
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
-	<title>퀴즈</title>
+	<title>동화 생성 결과</title>
 	<!-- Google Fonts: Kavoon, Cute Font -->
 	<link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Kavoon&display=swap" rel="stylesheet">
@@ -40,37 +40,29 @@
 			<button class="button top-home-button" onclick="location.href='/home.html'">
 				<i class="fa-solid fa-house fa-2xl"></i>
 			</button>
-			<div class="top-title">단어 퀴즈</div>
-			<div style="width: 60px;"></div>
 		</div>
 
 		<div class="container">
-			<div class="card-wrapper">
-				<div class="card card-img">
-					<div class="screen-text">카메라에 손 모양을 보여주세요</div>
-					<div class="black-screen"></div>
+			<div class="made-card-wrapper">
+				<div class="made card card-img">
+					<img src="/images/castle.png" alt="없습니다.">
 				</div>
-				<div class="card text-card">
-					<fieldset class="quiz-container">
-						<legend>1 / 10</legend>
-						<h1>자라</h1>
-					</fieldset>
-				</div>
-				<div class="card card-dic" id="dicCard">
-					<div class="card-dic-title-text">정답 확인</div> <!-- 버튼 대신 텍스트 -->
-					<div class="card-dic-img">
-						<i class="fa-solid fa-question fa-2xl" style="color: #fca08c;"></i>
-					</div>
+				<div class="made contents">
+					<p>
+						옛날 옛날에 용궁에 용왕님이 살고 있었는데,
+						어느날 용왕님이 죽을병에 걸리고 말았어요.
+					</p>
+					<p>
+						용왕님의 <span class="highlight underline">병</span>을 고치려면 <span class="highlight underline">토끼</span>의 간이 필요해요
+					</p>
 				</div>
 			</div>
-
-			<div class="footer">
-				<div class="page-number">1</div>
-				<button type="button" class="button" id="nextBtn">
-					<i class="fa-solid fa-arrow-right fa-2xl"></i>
-				</button>
+			<div class="make-wrapper-two">
+				<button class="button make" onclick="location.href='/pre-page.html'">다시 만들기</button>
+				<button class="button make" onclick="location.href='/next-page.html'">동화생성</button>
 			</div>
 		</div>
+
 	</main>
 </form>
 
@@ -85,26 +77,6 @@
 
 	document.addEventListener('click', function () {
 		menu.style.display = 'none';
-	});
-
-	const dicCard = document.getElementById('dicCard');
-	let isImageShown = false;
-
-	dicCard.addEventListener('click', function () {
-		if (!isImageShown) {
-			dicCard.style.backgroundImage = "url('/images/language.png')"; // 🔁 여기에 원하는 이미지 경로
-			dicCard.style.backgroundSize = "cover";
-			dicCard.style.backgroundPosition = "center";
-			dicCard.innerHTML = ''; // 기존 텍스트/아이콘 제거
-			isImageShown = true;
-		}
-	});
-
-	document.getElementById('nextBtn').addEventListener('click', function () {
-		const form = document.getElementById('f');
-		form.action = '/contents/quiz2';
-		form.method = 'get';
-		form.submit();
 	});
 </script>
 </body>

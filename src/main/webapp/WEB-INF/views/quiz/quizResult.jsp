@@ -3,7 +3,7 @@
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
-	<title>퀴즈</title>
+	<title>퀴즈 결과</title>
 	<!-- Google Fonts: Kavoon, Cute Font -->
 	<link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Kavoon&display=swap" rel="stylesheet">
@@ -40,37 +40,29 @@
 			<button class="button top-home-button" onclick="location.href='/home.html'">
 				<i class="fa-solid fa-house fa-2xl"></i>
 			</button>
-			<div class="top-title">단어 퀴즈</div>
+			<div class="top-title">체점 결과</div>
 			<div style="width: 60px;"></div>
 		</div>
 
 		<div class="container">
 			<div class="card-wrapper">
 				<div class="card card-img">
-					<div class="screen-text">카메라에 손 모양을 보여주세요</div>
-					<div class="black-screen"></div>
+					<div class="score-text">100점</div>
 				</div>
-				<div class="card text-card">
-					<fieldset class="quiz-container">
-						<legend>1 / 10</legend>
-						<h1>자라</h1>
-					</fieldset>
-				</div>
-				<div class="card card-dic" id="dicCard">
-					<div class="card-dic-title-text">정답 확인</div> <!-- 버튼 대신 텍스트 -->
-					<div class="card-dic-img">
-						<i class="fa-solid fa-question fa-2xl" style="color: #fca08c;"></i>
-					</div>
+				<div class="score-result">
+					<div><span class="word">토끼</span> : <span class="result correct">정답</span></div>
+					<div><span class="word">자라</span> : <span class="result correct">정답</span></div>
+					<div><span class="word">동물</span> : <span class="result correct">정답</span></div>
+					<div><span class="word">용왕</span> : <span class="result correct">정답</span></div>
+					<div><span class="word">보물</span> : <span class="result correct">정답</span></div>
+					<div><span class="word">생일</span> : <span class="result correct">정답</span></div>
 				</div>
 			</div>
-
-			<div class="footer">
-				<div class="page-number">1</div>
-				<button type="button" class="button" id="nextBtn">
-					<i class="fa-solid fa-arrow-right fa-2xl"></i>
-				</button>
+			<div class="make-wrapper">
+				<button type="button" class="button make" id="quizSaveBtn">저장하기</button>
 			</div>
 		</div>
+
 	</main>
 </form>
 
@@ -87,25 +79,19 @@
 		menu.style.display = 'none';
 	});
 
-	const dicCard = document.getElementById('dicCard');
-	let isImageShown = false;
+	const nextBtn = document.querySelector('.button.make');
 
-	dicCard.addEventListener('click', function () {
-		if (!isImageShown) {
-			dicCard.style.backgroundImage = "url('/images/language.png')"; // 🔁 여기에 원하는 이미지 경로
-			dicCard.style.backgroundSize = "cover";
-			dicCard.style.backgroundPosition = "center";
-			dicCard.innerHTML = ''; // 기존 텍스트/아이콘 제거
-			isImageShown = true;
-		}
+	nextBtn.addEventListener('click', function () {
+		alert('저장되었습니다.');
 	});
 
-	document.getElementById('nextBtn').addEventListener('click', function () {
+	document.getElementById('quizSaveBtn').addEventListener('click', function () {
 		const form = document.getElementById('f');
-		form.action = '/contents/quiz2';
+		form.action = '/contents/quizList';
 		form.method = 'get';
 		form.submit();
 	});
+
 </script>
 </body>
 </html>

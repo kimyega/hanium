@@ -57,4 +57,71 @@ public class QuizController {
 
         return "contents/quizResult";
     }
+
+    @GetMapping(value = "mypage")
+    public String myPage() {
+
+        return "contents/mypage";
+    }
+
+    @GetMapping(value = "register")
+    public String register() {
+
+        return "user/register";
+    }
+
+    @GetMapping(value = "/")
+    public String indexpage() {
+
+        return "index";
+    }
+
+    @GetMapping(value = "findId")
+    public String findId() {
+
+        return "user/findId";
+    }
+
+    @GetMapping(value = "findPw")
+    public String findPw() {
+
+        return "user/findPw";
+    }
+
+        @GetMapping(value = "login")
+        public String loginpage() {
+
+        return "user/login";
+    }
+
+    @GetMapping(value = "haniumstartpage")
+    public String haniumstartpage() {
+
+        return "contents/haniumstartpage";
+    }
+
+    @GetMapping(value = "haniumIDfound01")
+    public String haniumIDfound01() {
+
+        return "contents/haniumIDfound01";
+    }
+
+    @GetMapping(value = "haniumpassword")
+    public String haniumpassword() {
+
+        return "contents/haniumpassword";
+    }
+
+    @GetMapping(value = "hanium-login")
+    public String haniumlogin() {
+
+        return "contents/hanium-login";
+    }
+
+    @GetMapping(value = "index")
+    public String index() {
+
+        return "index";
+    }
+
 }

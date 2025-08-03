@@ -3,7 +3,7 @@
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
-	<title>퀴즈</title>
+	<title>동화 생성</title>
 	<!-- Google Fonts: Kavoon, Cute Font -->
 	<link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Kavoon&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
 			<button class="button top-home-button" onclick="location.href='/home.html'">
 				<i class="fa-solid fa-house fa-2xl"></i>
 			</button>
-			<div class="top-title">단어 퀴즈</div>
+			<div class="top-title">동화 만들기</div>
 			<div style="width: 60px;"></div>
 		</div>
 
@@ -51,26 +51,31 @@
 					<div class="black-screen"></div>
 				</div>
 				<div class="card text-card">
-					<fieldset class="quiz-container">
-						<legend>1 / 10</legend>
-						<h1>자라</h1>
-					</fieldset>
+					<div class="word-check-text">이 단어가 맞나요?</div>
+					<div class="word-check-container">
+						<div class="word-check-content">공주</div>
+					</div>
+					<div class="button-container">
+						<input type="button" class="word-button" value="다시 입력">
+						<input type="button" class="word-button" value="단어 추가">
+					</div>
 				</div>
-				<div class="card card-dic" id="dicCard">
-					<div class="card-dic-title-text">정답 확인</div> <!-- 버튼 대신 텍스트 -->
-					<div class="card-dic-img">
-						<i class="fa-solid fa-question fa-2xl" style="color: #fca08c;"></i>
+				<div class="card card-dic">
+					<div>
+						<fieldset>
+							<legend>2 / 10</legend>
+							<div class="list-content">왕자, 구두</div>
+						</fieldset>
+						<div class="list-main-name">주인공 이름</div>
+						<input type="text" class="list-main-name-insert">
 					</div>
 				</div>
 			</div>
-
-			<div class="footer">
-				<div class="page-number">1</div>
-				<button type="button" class="button" id="nextBtn">
-					<i class="fa-solid fa-arrow-right fa-2xl"></i>
-				</button>
+			<div class="make-wrapper">
+				<button type="button" class="button make" id="submitBtn">동화 생성</button>
 			</div>
 		</div>
+
 	</main>
 </form>
 
@@ -87,22 +92,9 @@
 		menu.style.display = 'none';
 	});
 
-	const dicCard = document.getElementById('dicCard');
-	let isImageShown = false;
-
-	dicCard.addEventListener('click', function () {
-		if (!isImageShown) {
-			dicCard.style.backgroundImage = "url('/images/language.png')"; // 🔁 여기에 원하는 이미지 경로
-			dicCard.style.backgroundSize = "cover";
-			dicCard.style.backgroundPosition = "center";
-			dicCard.innerHTML = ''; // 기존 텍스트/아이콘 제거
-			isImageShown = true;
-		}
-	});
-
-	document.getElementById('nextBtn').addEventListener('click', function () {
+	document.getElementById('submitBtn').addEventListener('click', function () {
 		const form = document.getElementById('f');
-		form.action = '/contents/quiz2';
+		form.action = '/contents/makeResult';
 		form.method = 'get';
 		form.submit();
 	});
