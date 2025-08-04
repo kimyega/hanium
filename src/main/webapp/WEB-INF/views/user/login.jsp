@@ -11,6 +11,7 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
 
     <!-- ✅ 공통 상단바 스타일 -->
  
@@ -143,6 +144,49 @@
             font-size: 24px;
         }
     </style>
+    <script>
+        $(document).ready(function () {
+
+            $("#btnLogin").on("click", function () {
+                let f = document.getElementById("f");
+
+                if (f.userId.value === "") {
+                    alert("아이디를 입력하세요.");
+                    f.userId.focus();
+                    return;
+                }
+
+                if (f.password.value === "") {
+                    alert("비밀번호를 입력하세요.");
+                    f.password.focus();
+                    return;
+                }
+
+                // Ajax 호출해서 로그인하기
+                $.ajax({
+                        url: "/user/loginProc",
+                        type: "post", // 전송방식은 Post
+                        dataType: "JSON", // 전송 결과는 JSON으로 받기
+                        data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
+                        success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
+
+                            if (json.result === 1) { // 로그인 성공
+                                alert(json.msg); // 메시지 띄우기
+                                location.href = "/"; // 로그인 성공 페이지 이동
+
+                            } else { // 로그인 실패
+                                alert(json.msg); // 메시지 띄우기
+                                $("#userId").focus(); // 아이디 입력 항목에 마우스 커서 이동
+                            }
+
+                        }
+                    }
+                )
+
+            })
+        })
+
+    </script>
 </head>
 
 <body>
@@ -153,7 +197,6 @@
     </div>
 
     <!-- 상단바 -->
-
     <header>
         <div class="header-icon-stack">
             <i class="fa-solid fa-book-open book"></i>
@@ -162,14 +205,13 @@
         <div class="header-logo">Märchand</div>
     </header>
 
-
-    <form>
+    <form id="f">
         <div class="login-wrapper">
-            <label><span>ID :</span><input type="text" placeholder="ID를 입력 하세요"></label>
-            <label><span>비밀번호 :</span><input type="password" placeholder="비밀번호를 입력하세요."></label>
+            <label><span>ID :</span><input type="text" name="userId" id="userId" placeholder="ID를 입력 하세요"></label>
+            <label><span>비밀번호 :</span><input type="password" name="password" id="password" placeholder="비밀번호를 입력하세요."></label>
 
             <div class="login-buttons">
-                <button type="submit">로그인!</button>
+                <button type="button" id="btnLogin">로그인!</button>
             </div>
 
             <div class="find-links">
@@ -177,8 +219,6 @@
                 <a href="/contents/findId">ID 찾기</a> /
                 <a href="/contents/findPw">비밀번호 찾기</a>
             </div>
-
-
         </div>
     </form>
 </div>
