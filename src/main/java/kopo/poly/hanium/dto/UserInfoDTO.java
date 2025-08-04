@@ -10,6 +10,6 @@ public class UserInfoDTO {
     private String password;
     private String name;
     private String email;
-
-    // 나머지는 생성 필요
+    private String birthDate;
+    private String createdAt;
 }
