@@ -9,12 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="/css/table.css" />
-
-
     <style>
-
 
         main {
             display: flex;
@@ -94,6 +91,96 @@
             background-color: #ffbfa8;
         }
     </style>
+    <script>
+
+        let emailAuthNumber = "";
+
+        $(document).ready(function () {
+
+            let f = document.getElementById("f");
+            let f2 = document.getElementById("f2");
+
+            $("#btnEmail").on("click", function () {
+                emailExists(f)
+            })
+            $("#btnCheck").on("click", function () {
+                doCheck(f2);
+            })
+        })
+
+        function emailExists(f) {
+            if (f.email.value === "") {
+                alert("이메일을 입력하세요.");
+                f.email.focus();
+                return;
+            }
+
+            if (f.userName.value === "") {
+                alert("이름을 입력하세요.");
+                f.email.focus();
+                return;
+            }
+
+            $.ajax({
+                url: "/user/emailAuthNumber",
+                type: "post",
+                dataType: "JSON",
+                data: $("#f").serialize(),
+                success: function (json) {
+                    if (json.existsYn === "Y") {
+                        step1.style.display = 'none';
+                        step2.style.display = 'block';
+                        console.log("받은 인증번호 " + json.authNumber);
+                        emailAuthNumber = json.authNumber;
+                        console.log("저장된 인증번호 " + json.authNumber);
+
+                        document.getElementById("hiddenUserName").value = f.userName.value;
+                        document.getElementById("hiddenEmail").value = f.email.value;
+                    } else {
+                        alert("존재하지 않는 메일 입니다.")
+                        f.email.focus();
+                    }
+                }
+            })
+        }
+        function doCheck(f2) {
+
+            if (f2.authNumber.value === "") {
+                alert("인증번호를 입력하세요.");
+                f2.authNumber.focus();
+                return;
+            }
+
+            if (parseInt(f2.authNumber.value) !== emailAuthNumber) {
+                alert("인증번호가 일치하지 않습니다.")
+                f2.authNumber.focus();
+                return;
+            }
+
+            $.ajax({
+                url: "/user/searchUserIdProc",
+                type: "post",
+                dataType: "JSON",
+                data: $("#f2").serialize(),
+                success: function (json) {
+
+                    if (json.result === 1) {
+                        console.log("인증 성공, 페이지 전환 시도");
+                        step2.style.display = 'none';
+                        step3.style.display = 'block';
+
+                        const title = step3.querySelector(".find-id-title");
+                        title.textContent = json.name + "님의 아이디를 찾았습니다!";
+
+                        const strongEl = step3.querySelector("strong");
+                        strongEl.textContent = json.msg;
+                    } else {
+                        alert(json.msg);
+                    }
+                }
+            })
+        }
+    </script>
 </head>
 <body>
 
@@ -121,36 +208,38 @@
     <!-- 1단계 -->
     <section id="step1" class="find-id-box">
         <h1 class="find-id-title">아이디 찾기</h1>
-        <form class="find-id-form">
+        <form class="find-id-form" id="f">
             <div class="form-row">
-                <label for="name">이름:</label>
-                <input type="text" id="name" placeholder="이름을 입력하세요." />
+                <label for="userName">이름:</label>
+                <input type="text" name="userName" id="userName" placeholder="이름을 입력하세요." />
             </div>
             <div class="form-row">
                 <label for="email">이메일:</label>
-                <input type="email" id="email" placeholder="이메일을 입력하세요." />
+                <input type="email" name="email" id="email" placeholder="이메일을 입력하세요." />
             </div>
-            <button type="submit" class="verify-button">인증메일 받기</button>
+            <button type="button" id="btnEmail" class="verify-button">인증메일 받기</button>
         </form>
     </section>
 
     <!-- 2단계 -->
     <section id="step2" class="find-id-box" style="display: none;">
         <h1 class="find-id-title">이메일로 온 인증번호를 입력해 주세요.</h1>
-        <form class="find-id-form">
+        <form class="find-id-form" id="f2">
+            <input type="hidden" name="userName" id="hiddenUserName" />
+            <input type="hidden" name="email" id="hiddenEmail" />
             <div class="form-row">
                 <label for="code">인증번호:</label>
-                <input type="text" id="code" placeholder="인증번호 입력" />
+                <input type="text" id="code" name="authNumber" placeholder="인증번호 입력" />
             </div>
-            <button type="submit" class="verify-button">인증번호 확인</button>
+            <button type="button" class="verify-button" id="btnCheck">인증번호 확인</button>
         </form>
     </section>
 
     <!-- 3단계 -->
     <section id="step3" class="find-id-box" style="display: none;">
-        <h1 class="find-id-title">홍길동님의 아이디를 찾았습니다!</h1>
-        <p style="font-size: 20px; margin: 30px 0;">아이디: <strong>honggil572</strong></p>
-        <button class="verify-button" onclick="location.href='/'">로그인 화면으로 돌아가기</button>
+        <h1 class="find-id-title">님의 아이디를 찾았습니다!</h1>
+        <p style="font-size: 20px; margin: 30px 0;">아이디: <strong></strong></p>
+        <button class="verify-button" onclick="location.href='/user/login'">로그인 화면으로 돌아가기</button>
     </section>
 </main>
 
@@ -167,28 +256,10 @@
         menu.style.display = 'none';
     });
 
-    // 단계 전환
     const step1 = document.getElementById('step1');
     const step2 = document.getElementById('step2');
     const step3 = document.getElementById('step3');
 
-    document.querySelector('#step1 form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('인증 메일이 전송되었습니다.');
-        step1.style.display = 'none';
-        step2.style.display = 'block';
-    });
-
-    document.querySelector('#step2 form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const code = document.getElementById('code').value;
-        if (code === '123456') {
-            step2.style.display = 'none';
-            step3.style.display = 'block';
-        } else {
-            alert('인증번호가 올바르지 않습니다.');
-        }
-    });
 </script>
 </body>
 </html>

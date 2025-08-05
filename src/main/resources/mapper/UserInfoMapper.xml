@@ -11,4 +11,21 @@
           AND password = #{password}
     </select>
 
+    <select id="emailAuthNumber" parameterType="UserInfoDTO" resultType="UserInfoDTO">
+        SELECT
+            IF(COUNT(user_id) > 0, 'Y', 'N') AS EXISTS_YN
+        FROM users
+        WHERE email = #{email}
+    </select>
+
+    <select id="getUserId" parameterType="UserInfoDTO" resultType="UserInfoDto">
+        SELECT user_id, name, email
+        FROM users
+        WHERE 1 = 1
+        <if test="userId neq null and userId neq '' "> <!-- 비밀번호 찾기라면, user_id 조회 추가 -->
+            AND user_id = #{userId}
+        </if>
+        AND name = #{name}
+        AND email = #{email}
+    </select>
 </mapper>
