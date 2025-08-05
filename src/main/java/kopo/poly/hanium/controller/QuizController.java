@@ -76,12 +76,6 @@ public class QuizController {
         return "index";
     }
 
-    @GetMapping(value = "findId")
-    public String findId() {
-
-        return "user/findId";
-    }
-
     @GetMapping(value = "findPw")
     public String findPw() {
 

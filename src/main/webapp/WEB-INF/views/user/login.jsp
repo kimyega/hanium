@@ -216,7 +216,7 @@
 
             <div class="find-links">
                 ID나 비밀번호가 기억이 안나시나요?<br>
-                <a href="/contents/findId">ID 찾기</a> /
+                <a href="/user/findId">ID 찾기</a> /
                 <a href="/contents/findPw">비밀번호 찾기</a>
             </div>
         </div>

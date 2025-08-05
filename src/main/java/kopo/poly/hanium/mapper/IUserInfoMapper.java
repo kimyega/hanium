@@ -7,4 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface IUserInfoMapper {
 
     UserInfoDTO getLogin(UserInfoDTO pDTO) throws Exception;
+
+    UserInfoDTO emailAuthNumber(UserInfoDTO pDTO) throws Exception;
+
+    UserInfoDTO getUserId(UserInfoDTO pDTO) throws Exception;
 }
