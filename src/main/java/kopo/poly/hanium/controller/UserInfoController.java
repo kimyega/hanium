@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -39,29 +37,6 @@ public class UserInfoController {
     public String findId() {
 
         return "user/findId";
-    }
-
-
-    @GetMapping({"/", "/index"})
-    public String index() {
-        log.info("GET /index");
-        return "index";  // => src/main/webapp/WEB-INF/views/index.jsp
-    }
-
-
-
-    @GetMapping("/main")
-    public String main() {
-        log.info("GET /main");
-        return "main";   // => src/main/webapp/WEB-INF/views/main.jsp
-    }
-
-    // 회원가입 페이지 이동
-    @GetMapping(value = "register")
-    public String register() {
-        log.info("{}.user/register", this.getClass().getName());
-
-        return "user/register";
     }
 
     // 로그인시 입력한 정보를 DB에서 확인해서 결과를 리턴
@@ -88,7 +63,8 @@ public class UserInfoController {
             pDTO = new UserInfoDTO();
             pDTO.setUserId(userId);
 
-            pDTO.setPassword(EncryptUtil.encHashSHA256(password));
+//            pDTO.setPassword(EncryptUtil.encHashSHA256(password));
+            pDTO.setPassword(password);
             UserInfoDTO rDTO = userInfoService.getLogin(pDTO);
 
             if (!kopo.poly.hanium.util.CmmUtil.nvl(rDTO.getUserId()).isEmpty()) {
@@ -124,14 +100,13 @@ public class UserInfoController {
 
         log.info("{}.emailAuthNumber Start!", this.getClass().getName());
 
-        String email = CmmUtil.nvl(request.getParameter("email"));
+        String email = kopo.poly.hanium.util.CmmUtil.nvl(request.getParameter("email"));
 
         log.info("email : {}", email);
 
         UserInfoDTO pDTO = new UserInfoDTO();
-        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
-
-        log.info("암호화 email : {}", pDTO.getEmail());
+        pDTO.setEmail(email);
+//        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
 
         UserInfoDTO rDTO = Optional.ofNullable(userInfoService.emailAuthNumber(pDTO)).orElseGet(UserInfoDTO::new);
 
@@ -153,7 +128,7 @@ public class UserInfoController {
 
         UserInfoDTO pDTO = new UserInfoDTO();
         pDTO.setName(userName);
-        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
+        pDTO.setEmail(email);
 
         UserInfoDTO rDTO = Optional.ofNullable(
                 userInfoService.searchUserIdOrPasswordProc(pDTO)
@@ -174,343 +149,5 @@ public class UserInfoController {
 
         return dto;
     }
-    @GetMapping(value = "mypage")
-    public String myPage() {
-
-        return "user/mypage";
-    }
-    // 비밀번호 찾기 페이지 이동
-    @GetMapping(value = "findPw")
-    public String findPw() {
-        return "user/findPw"; // JSP: /WEB-INF/views/user/findPw.jsp
-    }
-    @ResponseBody
-    @PostMapping(value = "searchPasswordProc")
-    public MsgDTO searchPasswordProc(HttpServletRequest request) throws Exception {
-
-        log.info("{}.searchPasswordProc Start!", this.getClass().getName());
-
-        String userId = CmmUtil.nvl(request.getParameter("userId"));
-        String email  = CmmUtil.nvl(request.getParameter("email"));
-
-        log.info("userId : {} / email : {}", userId, email);
-
-        UserInfoDTO pDTO = new UserInfoDTO();
-        pDTO.setUserId(userId);
-        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
-
-        UserInfoDTO rDTO = Optional.ofNullable(
-                userInfoService.searchUserIdOrPasswordProc(pDTO) // 내부에서 userId+email 일치 확인
-        ).orElseGet(UserInfoDTO::new);
-
-        MsgDTO dto = new MsgDTO();
-
-        if (rDTO.getUserId() != null) {
-            dto.setResult(1);
-            dto.setMsg("본인 확인 완료");
-            // dto.setName(rDTO.getName()); // 이름 안 쓸거면 필요 없음
-        } else {
-            dto.setResult(0);
-            dto.setMsg("입력하신 정보와 일치하는 사용자가 없습니다.");
-        }
-
-        log.info("{}.searchPasswordProc End!", this.getClass().getName());
-
-        return dto;
-    }
-
-    @ResponseBody
-    @PostMapping(value = "resetPasswordProc")
-    public MsgDTO resetPasswordProc(HttpServletRequest request) {
-
-        log.info("{}.resetPasswordProc Start!", this.getClass().getName());
-
-        int res = 0;
-        String msg;
-
-        try {
-            String userId   = CmmUtil.nvl(request.getParameter("userId"));
-            String password = CmmUtil.nvl(request.getParameter("password"));
-
-            log.info("reset target userId : {}", userId);
-
-            if (userId.isEmpty() || password.isEmpty()) {
-                msg = "잘못된 요청입니다.";
-            } else {
-                UserInfoDTO pDTO = new UserInfoDTO();
-                pDTO.setUserId(userId);
-
-                // ※ 실제 운영 시에는 반드시 해시 적용
-                pDTO.setPassword(EncryptUtil.encHashSHA256(password));
-
-                int i = userInfoService.updatePassword(pDTO); // IUserInfoService에 메서드 필요
-
-                if (i > 0) {
-                    res = 1;
-                    msg = "비밀번호가 변경되었습니다.";
-                } else {
-                    msg = "비밀번호 변경에 실패했습니다.";
-                }
-            }
-        } catch (Exception e) {
-            log.error("resetPasswordProc ERROR: ", e);
-            res = 2;
-            msg = "시스템 문제로 비밀번호 변경에 실패했습니다.";
-        }
-
-        MsgDTO dto = new MsgDTO();
-        dto.setResult(res);
-        dto.setMsg(msg);
-
-        log.info("{}.resetPasswordProc End!", this.getClass().getName());
-
-        return dto;
-    }
-    // 1) 탈퇴 페이지 이동
-    @GetMapping(value = "withdraw")
-    public String withdrawPage() {
-        return "user/withdraw";
-    }
-
-    // 2) 탈퇴 처리 (비밀번호 확인 + 삭제 + 세션종료)
-    @ResponseBody
-    @PostMapping(value = "withdrawProc")
-    public MsgDTO withdrawProc(HttpServletRequest request, HttpSession session) {
-
-        log.info("{}.withdrawProc Start!", this.getClass().getName());
-
-        int res = 0;
-        String msg;
-
-        try {
-            String userId = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID")); // 현재 로그인 유저
-            String password = CmmUtil.nvl(request.getParameter("password"));
-
-            if (userId.isEmpty() || password.isEmpty()) {
-                msg = "잘못된 요청입니다.";
-            } else {
-                // 로그인과 동일한 방식으로 비번 검증
-                UserInfoDTO pDTO = new UserInfoDTO();
-                pDTO.setUserId(userId);
-
-                // 로그인에서 평문 비교 중이면 아래 라인 유지
-                pDTO.setPassword(password);
-
-                // 로그인에서 해시쓰면 아래로 교체
-                // pDTO.setPassword(EncryptUtil.encHashSHA256(password));
-
-                UserInfoDTO rDTO = userInfoService.getLogin(pDTO);
-
-                if (rDTO != null && CmmUtil.nvl(rDTO.getUserId()).length() > 0) {
-                    // 비밀번호 일치 → 삭제
-                    UserInfoDTO dDTO = new UserInfoDTO();
-                    dDTO.setUserId(userId);
-                    int i = userInfoService.deleteUser(dDTO);
-
-                    if (i > 0) {
-                        res = 1;
-                        msg = "회원 탈퇴가 완료되었습니다.";
-                        // 세션 종료
-                        session.invalidate();
-                    } else {
-                        msg = "회원 탈퇴에 실패했습니다.";
-                    }
-                } else {
-                    msg = "비밀번호가 일치하지 않습니다.";
-                }
-            }
-        } catch (Exception e) {
-            log.error("withdrawProc ERROR: ", e);
-            res = 2;
-            msg = "시스템 문제로 탈퇴 처리에 실패했습니다.";
-        }
-
-        MsgDTO dto = new MsgDTO();
-        dto.setResult(res);
-        dto.setMsg(msg);
-
-        log.info("{}.withdrawProc End!", this.getClass().getName());
-        return dto;
-    }
-    // 비밀번호 변경 페이지 이동
-    @GetMapping(value = "changePw")
-    public String changePwPage() {
-        return "user/changePw";
-    }
-
-    // 비밀번호 변경 처리
-    @ResponseBody
-    @PostMapping(value = "changePwProc")
-    public MsgDTO changePwProc(HttpServletRequest request, HttpSession session) {
-
-        log.info("{}.changePwProc Start!", this.getClass().getName());
-
-        int res = 0;
-        String msg;
-
-        try {
-            String userId    = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID"));
-            String currentPw = CmmUtil.nvl(request.getParameter("currentPw"));
-            String newPw     = CmmUtil.nvl(request.getParameter("newPw"));
-
-            if (userId.isEmpty() || currentPw.isEmpty() || newPw.isEmpty()) {
-                msg = "잘못된 요청입니다.";
-            } else {
-                UserInfoDTO pDTO = new UserInfoDTO();
-                pDTO.setUserId(userId);
-                pDTO.setPassword(currentPw); // 해시 쓰면 EncryptUtil 적용
-
-                UserInfoDTO rDTO = userInfoService.getLogin(pDTO);
-
-                if (rDTO != null && rDTO.getUserId() != null) {
-                    UserInfoDTO uDTO = new UserInfoDTO();
-                    uDTO.setUserId(userId);
-                    uDTO.setPassword(newPw); // 해시 쓰면 EncryptUtil 적용
-
-                    int i = userInfoService.updatePassword(uDTO);
-
-                    if (i > 0) {
-                        res = 1;
-                        msg = "비밀번호가 변경되었습니다.";
-                        session.invalidate(); // 로그아웃 처리
-                    } else {
-                        msg = "비밀번호 변경에 실패했습니다.";
-                    }
-                } else {
-                    msg = "현재 비밀번호가 일치하지 않습니다.";
-                }
-            }
-        } catch (Exception e) {
-            log.error("changePwProc ERROR: ", e);
-            res = 2;
-            msg = "시스템 문제로 비밀번호 변경에 실패했습니다.";
-        }
-
-        MsgDTO dto = new MsgDTO();
-        dto.setResult(res);
-        dto.setMsg(msg);
-
-        log.info("{}.changePwProc End!", this.getClass().getName());
-        return dto;
-    }
-
-
-
-
-
-    /*
-    *  아이디 중복체크
-    * */
-    @ResponseBody
-    @PostMapping(value = "getUserIdExists")
-    public UserInfoDTO getUserExists(HttpServletRequest request) throws Exception {
-
-        log.info("{}.getUserIdExists Start!", this.getClass().getName());
-
-        String userId = CmmUtil.nvl(request.getParameter("userId"));
-
-        log.info("userId : {}", userId);
-
-        UserInfoDTO pDTO = new UserInfoDTO();
-        pDTO.setUserId(userId);
-
-        UserInfoDTO rDTO = Optional.ofNullable(userInfoService.getUserIdExists(pDTO)).orElseGet(UserInfoDTO::new);
-
-        log.info("{}.getUserIdExists End!", this.getClass().getName());
-
-        return rDTO;
-    }
-
-    /*
-     *  이메일 중복체크
-     * */
-    @ResponseBody
-    @PostMapping(value = "getEmailExists")
-    public UserInfoDTO getEmailExists(HttpServletRequest request) throws Exception {
-
-        log.info("{}.getEmailExists Start!", this.getClass().getName());
-
-        String email = CmmUtil.nvl(request.getParameter("email"));
-
-        log.info("email : {}", email);
-
-        UserInfoDTO pDTO = new UserInfoDTO();
-        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
-
-        UserInfoDTO rDTO = Optional.ofNullable(userInfoService.getEmailExists(pDTO)).orElseGet(UserInfoDTO::new);
-
-        log.info("{}.getEmailExists End!", this.getClass().getName());
-
-        return rDTO;
-    }
-
-    /*
-     *  회원가입
-     * */
-    @ResponseBody
-    @PostMapping(value = "insertUserInfo")
-    public MsgDTO insertUserInfo(HttpServletRequest request) {
-
-        log.info("{}.insertUserInfo Start!", this.getClass().getName());
-
-        int res = 0;
-        String msg = "";
-        MsgDTO dto;
-
-        UserInfoDTO pDTO;
-
-        try {
-            String userId = CmmUtil.nvl(request.getParameter("userId"));
-            String password = CmmUtil.nvl(request.getParameter("password"));
-            String name = CmmUtil.nvl(request.getParameter("name"));
-            String email = CmmUtil.nvl(request.getParameter("email"));
-
-            String birthYear = CmmUtil.nvl(request.getParameter("birthYear"));
-            String birthMonth = CmmUtil.nvl(request.getParameter("birthMonth"));
-            String birthDay = CmmUtil.nvl(request.getParameter("birthDay"));
-            String birthDate = birthYear + "-" + birthMonth + "-" + birthDay;
-
-            log.info("userId : {}", userId);
-            log.info("password : {}", password);
-            log.info("name : {}", name);
-            log.info("email : {}", email);
-            log.info("birthDate : {}", birthDate);
-
-            pDTO = new UserInfoDTO();
-            pDTO.setUserId(userId);
-            pDTO.setPassword(EncryptUtil.encHashSHA256(password));
-            pDTO.setName(name);
-            pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
-            pDTO.setBirthDate(birthDate);
-
-            log.info("암호화 email : {}", pDTO.getEmail());
-
-            res = userInfoService.insertUserInfo(pDTO);
-
-            log.info("회원가입 결과 (res) : " + res);
-
-            if(res == 1) {
-                msg = "회원가입 되었습니다.";
-            } else if (res == 2) {
-                msg = "이미 가입된 아이디 입니다.";
-            } else {
-                msg = "오류로 인해 회원가입이 실패하였습니다.";
-            }
-
-        } catch (Exception e) {
-            msg = "실패하였습니다." + e;
-            log.info(e.toString());
-        } finally {
-
-            dto = new MsgDTO();
-            dto.setResult(res);
-            dto.setMsg(msg);
-
-            log.info("{}.insertUserInfo End!", this.getClass().getName());
-        }
-
-        return dto;
-    }
-
 
 }

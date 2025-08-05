@@ -2,123 +2,181 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-	<meta charset="UTF-8" />
-	<title>Märchand</title>
+	<meta charset="UTF-8">
+	<title>별주부전</title>
 
-	<!-- 공통 폰트/아이콘/스타일 -->
+	<!-- Google Fonts -->
 	<link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
 
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
+
 	<!-- CSS -->
 	<link rel="stylesheet" href="/css/table.css" />
-
 	<style>
-		:root{
-			--peach:#fca08c;
-			--peach-border:#f59c8b;
-			--shadow:0 8px 12px rgba(0,0,0,.10);
-		}
-		html,body{
-			height:100%; margin:0;
-			font-family:'Cute Font',sans-serif;
-			background:#fff;
-			overflow:hidden; /* ✅ 스크롤 제거 */
+		html, body {
+			margin: 0;
+			padding: 0;
+			height: 100vh;
+			overflow: hidden;
+			font-family: 'Cute Font', sans-serif;
 		}
 
-		/* ===== 메인 Hero ===== */
-		.hero-wrap{
-			width:100%;
-			height:calc(100vh - 80px); /* 헤더 제외한 전체 화면 */
-			/*background:url('/images/start.png') no-repeat center center;*/
-			background-size:cover;      /* ✅ 화면에 꽉 차게 */
-			display:flex;
-			justify-content:flex-end;   /* 버튼을 아래쪽으로 배치 */
-			align-items:center;         /* 가운데 정렬 */
-			flex-direction:column;
-			position:relative;
+		.start-container {
+			width: 100vw;
+			height: 100vh;
+			position: relative;
+			overflow: hidden;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 		}
 
-		/* 버튼 */
-		.btn-box{
-			margin-bottom:60px; /* 화면 하단에서 띄우기 */
-			display:flex;
-			gap:40px;
-			justify-content:center;
-		}
-		.menu-btn{
-			padding:16px 40px;
-			font-size:28px;
-			border-radius:40px;
-			border:6px solid var(--peach-border);
-			background:#fff;
-			cursor:pointer;
-			box-shadow:var(--shadow);
-			transition:all .2s ease;
-		}
-		.menu-btn:hover{
-			background:#fffaf7;
-			transform:translateY(-3px);
-			box-shadow:0 14px 20px rgba(0,0,0,.18);
+		.start-image {
+			max-width: 100%;
+			max-height: 100%;
+			height: auto;
+			width: auto;
+			display: block;
 		}
 
-		/* 반응형 */
-		@media (max-width: 768px){
-			.btn-box{ flex-direction:column; gap:20px; }
-			.menu-btn{ width:80%; margin:0 auto; font-size:22px; }
+		.start-buttons {
+			position: absolute;
+			bottom: 200px;
+			display: flex;
+			gap: 70px;
 		}
+
+		.start-button {
+			font-size: 30px;
+			padding: 20px 40px;
+			border-radius: 35px;
+			border: none;
+			background-color: white;
+			border: 2px solid #f59c8b;
+			font-family: 'Cute Font', sans-serif;
+			cursor: pointer;
+			box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15);
+		}
+
+		header {
+			background-color: #fca08c;
+			padding: 15px 40px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.header-logo {
+			font-family: 'Kavoon', cursive;
+			font-size: 26px;
+			color: #333;
+			cursor: pointer;
+		}
+
+		.header-icon-stack {
+			display: flex;
+			gap: 10px;
+			font-size: 24px;
+			color: #333;
+		}
+
+		.header-user-area {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.header-dropdown-toggle {
+			border: none;
+			background: none;
+			cursor: pointer;
+			font-size: 18px;
+		}
+
+		.header-dropdown-menu {
+			display: none;
+			position: absolute;
+			top: 60px;
+			right: 40px;
+			background-color: white;
+			border: 1px solid #ccc;
+			border-radius: 8px;
+			list-style: none;
+			padding: 10px 0;
+			box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+		}
+
+		.header-dropdown-menu li {
+			padding: 10px 20px;
+			cursor: pointer;
+		}
+
+		.header-dropdown-menu li:hover {
+			background-color: #f1f1f1;
+		}
+		/* start-page 클래스가 body에 있을 때만 유저 아이콘 영역 숨기기 */
+		.start-page .header-user-area {
+			display: none;
+		}
+
 	</style>
-</head>
-<body>
 
-<!-- ===== 상단바 (table.css 구조 건드리지 않음) ===== -->
+	
+</head>
+
+<body class="start-page">
 <header>
 	<div class="header-icon-stack">
 		<i class="fa-solid fa-book-open book"></i>
 		<i class="fa-solid fa-hands-holding hands"></i>
 	</div>
+ 
 	<div class="header-logo" onclick="location.href='/'">Märchand</div>
+
 	<div class="header-user-area">
-		<div class="header-user-icon"><i class="fa-solid fa-circle-user fa-2xl"></i></div>
+		<div class="header-user-icon">
+			<i class="fa-solid fa-circle-user fa-2xl"></i>
+		</div>
 		<div class="header-dropdown">
-			<button class="header-dropdown-toggle" id="headerDropdownToggle">
-				<%
-					String uname = (String)session.getAttribute("SS_USER_NAME");
-					if (uname == null || uname.trim().isEmpty()) { uname = "메뉴"; }
-				%>
-				<%= uname %> ▼
-			</button>
+			<button class="header-dropdown-toggle" id="headerDropdownToggle">홍길동 ⏷</button>
 			<ul class="header-dropdown-menu" id="headerDropdownMenu">
-				<li onclick="location.href='/user/mypage'">내 정보</li>
-				<li onclick="location.href='/user/login'">로그인</li>
-				<li onclick="location.href='/user/register'">회원가입</li>
-				<li onclick="location.href='/'">로그아웃</li>
+				<li onclick="location.href='/profile.html'">내 정보</li>
+				<li onclick="location.href='/logout.html'">로그아웃</li>
 			</ul>
 		</div>
 	</div>
 </header>
 
-<!-- ===== 메인 ===== -->
-<main class="hero-wrap">
-	<div class="btn-box">
-		<button class="menu-btn" onclick="location.href='/user/register'">회원 가입</button>
-		<button class="menu-btn" onclick="location.href='/user/login'">로그인</button>
+<main>
+	<div class="start-container">
+
+		<img src="/images/start.png" alt="동물 그림" class="start-image" />
+		<div class="start-buttons">
+			<!-- ✅ 회원가입 / 로그인 버튼 경로 수정 -->
+			<!-- index.jsp 내 최종 수정 -->
+			<button class="start-button" onclick="location.href='/contents/register'" type="button">회원 가입</button>
+			<button class="start-button" onclick="location.href='/user/login'" type="button">로그인</button>
+
+
+		</div>
 	</div>
 </main>
 
 <script>
-	// 드롭다운
 	const toggle = document.getElementById('headerDropdownToggle');
 	const menu = document.getElementById('headerDropdownMenu');
-	if (toggle && menu){
-		toggle.addEventListener('click', e => {
-			e.stopPropagation();
-			menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-		});
-		document.addEventListener('click', () => menu.style.display = 'none');
-	}
+
+	toggle.addEventListener('click', function (e) {
+		e.stopPropagation();
+		menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+	});
+
+	document.addEventListener('click', function () {
+		menu.style.display = 'none';
+	});
 </script>
 </body>
 </html>
