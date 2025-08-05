@@ -11,6 +11,154 @@
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 	<link rel="stylesheet" href="/css/table.css" />
+	<style>
+		.screen-text {
+			margin-top: 20px;
+		}
+
+		.black-screen {
+			width: 100%;
+			height: 460px;
+			object-fit: cover;
+			border-radius: 0;
+			margin-top: 20px;
+			aspect-ratio: 1 / 1; /* 정사각형 유지 */
+			background-color: black;
+		}
+		.word-check-text {
+			font-size: 60px;
+			text-align: center;
+		}
+		.word-check-container{
+			border: 5px solid #fca08c;
+			border-radius: 10px;
+			display: flex;
+			width: 100%;
+			height: 350px;
+			justify-content: center;
+			align-items: center;
+		}
+		.word-check-content {
+			font-size: 100px;
+			font-weight: 500;
+			width: 100%;
+			height: 280px;
+			margin-top: 80px;
+			text-align: center;
+		}
+		.word-check-button {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.re-insert {
+			border: 5px solid #fca08c;
+			border-radius: 30px;
+			font-weight: 500;
+			background-color: white;
+			width: 100px;
+			height: 40px;
+			margin-bottom: 0;
+		}
+		.add-word {
+			border: 5px solid #fca08c;
+			border-radius: 30px;
+			font-weight: 500;
+			background-color: white;
+			width: 100px;
+			height: 40px;
+			margin-bottom: 0;
+		}
+		.btn-text {
+			text-align: center;
+		}
+		.button-container {
+			display: flex;
+			gap: 20px;
+			justify-content: center;
+			margin-top: 10px;
+		}
+		.word-button {
+			font-family: 'Cute Font', sans-serif;
+			font-size: 35px;
+			border: 8px solid #fca08c;
+			border-radius: 100px;
+			padding: 10px 25px;
+			background-color: white;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			width: 200px;
+			margin-bottom: 20px;
+		}
+		.word-button:hover {
+			background-color: #fca08c;
+			color: white;
+		}
+		fieldset {
+			margin-top: 40px;
+			border: 5px solid #fca08c;
+			border-radius: 10px;
+			width: 100%;
+			height: 230px;
+		}
+		legend {
+			font-size: 50px;
+			font-weight: 305;
+		}
+		.list-content{
+			font-size: 40px;
+			margin-left: 0px;
+			margin-right: 200px;
+		}
+		.list-main-name {
+			margin-top: 80px;
+			text-align: center;
+			font-size: 50px;
+		}
+		.list-main-name-insert {
+			font-family: 'Cute Font', sans-serif;
+			display: block;
+			margin: 20px auto;
+			width: 200px;
+			padding: 8px;
+			font-size: 50px;
+			text-align: center;
+			border: solid 3px #fca08c;
+			border-top: 0;
+			border-left: 0;
+			border-right: 0;
+		}
+
+		.make-wrapper {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			margin-top: 10px;
+		}
+
+		.make-wrapper  button {
+			font-family: 'Cute Font', sans-serif;
+			font-size: 35px;
+			padding: 30px 90px;
+			border-radius: 100px;
+			border: 8px solid #fca08c;
+			background-color: white;
+			cursor: pointer;
+			text-align: center;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			line-height: 1.2;
+			white-space: nowrap;         /* 🔥 줄바꿈 방지 */
+			writing-mode: horizontal-tb;
+			width: 200px;
+			height: 80px;
+		}
+		.make-wrapper button:hover {
+			background-color: #fca08c;
+			color: white;
+		}
+	</style>
 </head>
 
 <body>
