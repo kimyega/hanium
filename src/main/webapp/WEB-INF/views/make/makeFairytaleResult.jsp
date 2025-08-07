@@ -11,6 +11,87 @@
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 	<link rel="stylesheet" href="/css/table.css" />
+	<style>
+		.made {
+			background-color: #fff;
+			padding: 20px;
+			flex: none;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			border: 15px solid #fca08c;
+			width: 50%;
+			height: 600px;
+			font-size: 55px;
+		}
+
+		.made.contents {
+			text-align: center;
+			overflow-y: auto;
+		}
+
+		.made.contents::-webkit-scrollbar {
+			width: 15px;               /* 스크롤바 너비 */
+			height: 20px;
+		}
+
+		.made.contents::-webkit-scrollbar-track {
+			background: #ffe5de;       /* 스크롤 트랙 배경 */
+			width: 2px;
+		}
+
+		.made.contents::-webkit-scrollbar-thumb {
+			background-color: #fca08c; /* 스크롤바 색상 */
+			border-radius: 10px;
+			border: 3px solid #ffe5de; /* thumb 테두리 색상 (트랙과 같게 하면 패딩처럼 보임) */
+		}
+
+		.made-card-wrapper {
+			width: 60%;
+			display: flex;
+			justify-content: space-between;
+			gap: 0;
+			margin: 15px auto 0 auto;
+			margin-top: 15px;
+			box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+			border-radius: 10px;
+			border: 15px solid #fca08c;
+		}
+
+		.make-wrapper-two {
+			display: flex;
+			justify-content: space-between; /* 버튼을 양쪽 끝으로 정렬 */
+			align-items: center;
+			margin-top: 10px;
+			width: 100%; /* 전체 너비 사용 */
+			padding: 0 30px; /* 좌우 여백 조절 (원하면 조정 가능) */
+			box-sizing: border-box;
+		}
+
+		.make-wrapper-two button {
+			font-family: 'Cute Font', sans-serif;
+			font-size: 35px;
+			padding: 30px 90px;
+			border-radius: 100px;
+			border: 8px solid #fca08c;
+			background-color: white;
+			cursor: pointer;
+			text-align: center;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			line-height: 1.2;
+			white-space: nowrap;
+			writing-mode: horizontal-tb;
+			width: 200px;
+			height: 80px;
+		}
+
+		.make-wrapper-two button:hover {
+			background-color: #fca08c;
+			color: white;
+		}
+	</style>
 </head>
 
 <body>

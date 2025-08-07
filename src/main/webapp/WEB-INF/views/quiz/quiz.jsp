@@ -11,6 +11,69 @@
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 	<link rel="stylesheet" href="/css/table.css" />
+	<style>
+		.screen-text {
+			margin-top: 20px;
+		}
+
+		.black-screen {
+			width: 100%;
+			height: 460px;
+			object-fit: cover;
+			border-radius: 0;
+			margin-top: 20px;
+			aspect-ratio: 1 / 1; /* 정사각형 유지 */
+			background-color: black;
+		}
+
+		fieldset {
+			margin-top: 40px;
+			border: 5px solid #fca08c;
+			border-radius: 10px;
+			width: 100%;
+			height: 230px;
+		}
+		legend {
+			font-size: 50px;
+			font-weight: 305;
+		}
+
+		.make-wrapper  button {
+			font-family: 'Cute Font', sans-serif;
+			font-size: 35px;
+			padding: 30px 90px;
+			border-radius: 100px;
+			border: 8px solid #fca08c;
+			background-color: white;
+			cursor: pointer;
+			text-align: center;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			line-height: 1.2;
+			white-space: nowrap;         /* 🔥 줄바꿈 방지 */
+			writing-mode: horizontal-tb;
+			width: 200px;
+			height: 80px;
+		}
+		.make-wrapper button:hover {
+			background-color: #fca08c;
+			color: white;
+		}
+		.quiz-container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 450px;
+			height: 600px;
+			position: relative;
+			border: 5px solid #fca08c;
+			border-radius: 10px;
+			margin: 0;
+			padding: 0;
+			background-color: white;
+		}
+	</style>
 </head>
 
 <body>

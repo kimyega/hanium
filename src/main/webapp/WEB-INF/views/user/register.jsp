@@ -223,11 +223,6 @@
                 <input type="text" id="birth-year" placeholder="년(4자)" maxlength="4" />
                 <select id="birth-month">
                     <option value="">월</option>
-                    <script>
-                        for (let i = 1; i <= 12; i++) {
-                            document.write(`<option value="${i}">${i}</option>`);
-                        }
-                    </script>
                 </select>
                 <input type="text" id="birth-day" placeholder="일" maxlength="2" />
             </div>
@@ -373,6 +368,15 @@
     });
     document.getElementById("birth-year").addEventListener("blur", validateBirth);
     document.getElementById("birth-day").addEventListener("blur", validateBirth);
+
+    // 월 추가
+    const select = document.getElementById('birth-month');
+    for (let i = 1; i <= 12; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        select.appendChild(option);
+    }
 </script>
 </body>
 

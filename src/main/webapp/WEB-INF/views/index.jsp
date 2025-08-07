@@ -152,7 +152,7 @@
 			<!-- ✅ 회원가입 / 로그인 버튼 경로 수정 -->
 			<!-- index.jsp 내 최종 수정 -->
 			<button class="start-button" onclick="location.href='/contents/register'" type="button">회원 가입</button>
-			<button class="start-button" onclick="location.href='/contents/login'" type="button">로그인</button>
+			<button class="start-button" onclick="location.href='/user/login'" type="button">로그인</button>
 
 		</div>
 	</div>
