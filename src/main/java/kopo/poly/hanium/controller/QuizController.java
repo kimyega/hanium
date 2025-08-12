@@ -58,11 +58,7 @@ public class QuizController {
         return "quiz/quizResult";
     }
 
-    @GetMapping(value = "mypage")
-    public String myPage() {
 
-        return "contents/mypage";
-    }
 
     @GetMapping(value = "register")
     public String register() {
@@ -76,11 +72,7 @@ public class QuizController {
         return "index";
     }
 
-    @GetMapping(value = "findPw")
-    public String findPw() {
 
-        return "user/findPw";
-    }
 
     @GetMapping(value = "haniumstartpage")
     public String haniumstartpage() {

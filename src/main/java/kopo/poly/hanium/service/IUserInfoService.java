@@ -9,4 +9,10 @@ public interface IUserInfoService {
     UserInfoDTO emailAuthNumber(UserInfoDTO pDTO) throws Exception;
 
     UserInfoDTO searchUserIdOrPasswordProc(UserInfoDTO pDTO) throws Exception;
+    // IUserInfoService.java 에 추가
+    int updatePassword(UserInfoDTO pDTO) throws Exception;
+    int deleteUser(UserInfoDTO pDTO) throws Exception;
+
+
+
 }

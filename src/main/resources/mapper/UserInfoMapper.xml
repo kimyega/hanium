@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-
 <mapper namespace="kopo.poly.hanium.mapper.IUserInfoMapper">
 
     <select id="getLogin" parameterType="UserInfoDTO" resultType="UserInfoDTO">
@@ -12,12 +11,12 @@
     </select>
 
     <select id="emailAuthNumber" parameterType="UserInfoDTO" resultType="UserInfoDTO">
-        SELECT
-            IF(COUNT(user_id) > 0, 'Y', 'N') AS EXISTS_YN
+        SELECT IF(COUNT(user_id) > 0, 'Y', 'N') AS EXISTS_YN
         FROM users
         WHERE email = #{email}
     </select>
 
+    <!-- 아이디 찾기용 -->
     <select id="getUserId" parameterType="UserInfoDTO" resultType="UserInfoDto">
         SELECT user_id, name, email
         FROM users
@@ -28,4 +27,31 @@
         AND name = #{name}
         AND email = #{email}
     </select>
+
+    <!-- 비밀번호 찾기용 -->
+    <!-- 비밀번호 찾기: user_id + email -->
+    <!-- 그대로 유지: getUserId (이름+이메일) -->
+
+    <!-- 추가: 비밀번호 찾기용 (아이디+이메일) -->
+    <select id="getUserForPassword" parameterType="UserInfoDTO" resultType="UserInfoDTO">
+        SELECT user_id, name, email
+        FROM users
+        WHERE user_id = #{userId}
+          AND email   = #{email}
+            LIMIT 1
+    </select>
+
+
+    <!-- 비밀번호 업데이트 -->
+    <update id="updateUserPassword" parameterType="UserInfoDTO">
+        UPDATE users
+        SET password = #{password}
+        WHERE user_id = #{userId}
+    </update>
+
+
+    <delete id="deleteUser" parameterType="UserInfoDTO">
+        DELETE FROM users WHERE user_id = #{userId}
+    </delete>
+
 </mapper>

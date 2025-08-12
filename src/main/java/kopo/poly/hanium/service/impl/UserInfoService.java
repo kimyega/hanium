@@ -85,10 +85,32 @@ public class UserInfoService implements IUserInfoService {
     public UserInfoDTO searchUserIdOrPasswordProc(UserInfoDTO pDTO) throws Exception {
         log.info("{}.searchUserIdOrPasswordProc Start!", this.getClass().getName());
 
-        UserInfoDTO rDTO = userInfoMapper.getUserId(pDTO);
+        UserInfoDTO rDTO;
+
+        // userId가 있으면 → 비밀번호 찾기(아이디 + 이메일)
+        if (pDTO.getUserId() != null && !pDTO.getUserId().trim().isEmpty()) {
+            rDTO = Optional.ofNullable(userInfoMapper.getUserForPassword(pDTO))
+                    .orElseGet(UserInfoDTO::new);
+        } else {
+            // userId가 없으면 → 아이디 찾기(이름 + 이메일)
+            rDTO = Optional.ofNullable(userInfoMapper.getUserId(pDTO))
+                    .orElseGet(UserInfoDTO::new);
+        }
 
         log.info("{}.searchUserIdOrPasswordProc End!", this.getClass().getName());
-
         return rDTO;
     }
+
+    @Override
+    public int updatePassword(UserInfoDTO pDTO) throws Exception {
+        // 운영 시 암호화 사용 시 여기서 해시 적용(예: BCrypt/sha-256)
+        // pDTO.setPassword(EncryptUtil.encHashSHA256(pDTO.getPassword()));
+        return userInfoMapper.updateUserPassword(pDTO);
+    }
+
+    @Override
+    public int deleteUser(UserInfoDTO pDTO) throws Exception {
+        return userInfoMapper.deleteUser(pDTO);
+    }
+
 }

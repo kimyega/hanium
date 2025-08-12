@@ -151,12 +151,12 @@
 <main class="mypage-main">
     <h2>마이페이지</h2>
 
-    <button class="mypage-btn" onclick="location.href='/change-password.html'">
+    <button class="mypage-btn" onclick="location.href='/user/changePw'">
         <span><i class="fa-solid fa-lock"></i> 비밀번호 변경</span>
         <i class="fa-solid fa-chevron-right"></i>
     </button>
 
-    <button class="mypage-btn" onclick="location.href='/delete-account.html'">
+    <button class="mypage-btn" onclick="location.href='/user/withdraw'">
         <span><i class="fa-solid fa-user-xmark"></i> 회원 탈퇴</span>
         <i class="fa-solid fa-chevron-right"></i>
     </button>
