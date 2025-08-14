@@ -242,6 +242,8 @@
 	</main>
 </form>
 
+<script src="${pageContext.request.contextPath}/js/listSlide.js"></script>
+
 <script>
 
 	const toggle = document.getElementById('headerDropdownToggle');
@@ -255,24 +257,6 @@
 	document.addEventListener('click', function () {
 		menu.style.display = 'none';
 	});
-
-	const wrapper = document.getElementById('slideCardWrapper');
-	const cardCount = document.querySelectorAll('.slide-card').length;
-	const cardsPerPage = 3;
-	let currentIndex = 0;
-
-	function slide(direction, event) {
-		if (event) event.preventDefault();  // 버튼 기본 동작 방지
-
-		const maxIndex = Math.ceil(cardCount / cardsPerPage) - 1;
-		currentIndex += direction;
-
-		if (currentIndex < 0) currentIndex = 0;
-		if (currentIndex > maxIndex) currentIndex = maxIndex;
-
-		const offset = currentIndex * 100;
-		wrapper.style.transform = `translateX(-${offset}%)`;
-	}
 
 	function goToDetail(url) {
 		window.location.href = url;
