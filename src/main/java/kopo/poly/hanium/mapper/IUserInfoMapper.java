@@ -12,11 +12,12 @@ public interface IUserInfoMapper {
 
     UserInfoDTO getUserId(UserInfoDTO pDTO) throws Exception;
 
-    // ▼ 비밀번호 찾기: 사용자 존재 확인 (userId + name + email)
-    UserInfoDTO getUserForPassword(UserInfoDTO pDTO) throws Exception;
+    // 회원가입
+    int insertUserInfo(UserInfoDTO pDTO) throws Exception;
 
-    // ▼ 비밀번호 업데이트
-    int updateUserPassword(UserInfoDTO pDTO) throws Exception;
-    int deleteUser(UserInfoDTO pDTO) throws Exception;
+    // 아이디 중복체크
+    UserInfoDTO getUserIdExists(UserInfoDTO pDTO) throws Exception;
 
+    // 이메일 중복체크
+    UserInfoDTO getUserEmailExists(UserInfoDTO pDTO) throws Exception;
 }

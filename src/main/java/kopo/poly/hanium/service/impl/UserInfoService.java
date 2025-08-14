@@ -3,6 +3,7 @@ package kopo.poly.hanium.service.impl;
 import kopo.poly.hanium.dto.MailDTO;
 import kopo.poly.hanium.dto.UserInfoDTO;
 import kopo.poly.hanium.service.IMailService;
+import kopo.poly.hanium.util.CmmUtil;
 import kopo.poly.hanium.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,32 +86,81 @@ public class UserInfoService implements IUserInfoService {
     public UserInfoDTO searchUserIdOrPasswordProc(UserInfoDTO pDTO) throws Exception {
         log.info("{}.searchUserIdOrPasswordProc Start!", this.getClass().getName());
 
-        UserInfoDTO rDTO;
-
-        // userId가 있으면 → 비밀번호 찾기(아이디 + 이메일)
-        if (pDTO.getUserId() != null && !pDTO.getUserId().trim().isEmpty()) {
-            rDTO = Optional.ofNullable(userInfoMapper.getUserForPassword(pDTO))
-                    .orElseGet(UserInfoDTO::new);
-        } else {
-            // userId가 없으면 → 아이디 찾기(이름 + 이메일)
-            rDTO = Optional.ofNullable(userInfoMapper.getUserId(pDTO))
-                    .orElseGet(UserInfoDTO::new);
-        }
+        UserInfoDTO rDTO = userInfoMapper.getUserId(pDTO);
 
         log.info("{}.searchUserIdOrPasswordProc End!", this.getClass().getName());
+
         return rDTO;
     }
 
     @Override
-    public int updatePassword(UserInfoDTO pDTO) throws Exception {
-        // 운영 시 암호화 사용 시 여기서 해시 적용(예: BCrypt/sha-256)
-        // pDTO.setPassword(EncryptUtil.encHashSHA256(pDTO.getPassword()));
-        return userInfoMapper.updateUserPassword(pDTO);
+    public UserInfoDTO getUserIdExists(UserInfoDTO pDTO) throws Exception {
+
+        log.info("{}.getUserIdExists Start!", this.getClass().getName());
+
+        UserInfoDTO rDTO = userInfoMapper.getUserIdExists(pDTO);
+
+        log.info("{}.getUserIdExists End!", this.getClass().getName());
+
+        return rDTO;
     }
 
     @Override
-    public int deleteUser(UserInfoDTO pDTO) throws Exception {
-        return userInfoMapper.deleteUser(pDTO);
+    public UserInfoDTO getEmailExists(UserInfoDTO pDTO) throws Exception {
+
+        log.info("{}.getEmailExists Start!", this.getClass().getName());
+
+        UserInfoDTO rDTO = Optional.ofNullable(userInfoMapper.getUserEmailExists(pDTO)).orElseGet(UserInfoDTO::new);
+
+        if (CmmUtil.nvl(rDTO.getExistsYn()).equals("N")) {
+
+            int authNumber = ThreadLocalRandom.current().nextInt(100000, 1000000);
+
+            log.info("authNumber : {}", authNumber);
+
+            MailDTO dto = new MailDTO();
+
+            dto.setTitle("이메일 중복확인 발송메일");
+            dto.setContents("인증번호는 " + authNumber + " 입니다.");
+            dto.setToMail(EncryptUtil.decAES128BCBC(CmmUtil.nvl(pDTO.getEmail())));
+
+            mailService.doSendMail(dto);
+
+            dto = null;
+
+            rDTO.setAuthNumber(authNumber);
+        }
+
+        log.info("{}.getUserEmailExists End!", this.getClass().getName());
+
+        return rDTO;
     }
 
+    @Override
+    public int insertUserInfo(UserInfoDTO pDTO) throws Exception {
+
+        log.info("{}.insertUserInfo Start!", this.getClass().getName());
+
+        int res = 0;
+
+        int success = userInfoMapper.insertUserInfo(pDTO);
+
+        if (success > 0) {
+            res = 1;
+
+            MailDTO mDto = new MailDTO();
+
+            mDto.setToMail(EncryptUtil.encAES128BCBC(CmmUtil.nvl(pDTO.getEmail())));
+
+            mDto.setTitle("회원가입을 축하드립니다.");
+
+            mDto.setContents(CmmUtil.nvl(pDTO.getName()) + "님의 회원가입을 진심으로 축하드립니다.");
+
+            mailService.doSendMail(mDto);
+        }
+
+        log.info("{}.insertUserInfo End!", this.getClass().getName());
+
+        return res;
+    }
 }
