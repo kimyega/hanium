@@ -20,7 +20,6 @@ import kopo.poly.hanium.service.IUserInfoService;
 @Controller
 public class QuizController {
 
-    private final IUserInfoService userInfoService;
 
     @GetMapping(value = "fairytaleList")
     public String quizPage() {
@@ -64,11 +63,6 @@ public class QuizController {
         return "contents/mypage";
     }
 
-    @GetMapping(value = "register")
-    public String register() {
-
-        return "user/register";
-    }
 
     @GetMapping(value = "/")
     public String indexpage() {

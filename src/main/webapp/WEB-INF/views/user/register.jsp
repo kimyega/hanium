@@ -7,7 +7,9 @@
     <title>회원가입 | Märchand</title>
     <link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Kavoon&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <link rel="stylesheet" href="/css/table.css" />
     <style>
         .signup-container {
@@ -157,6 +159,68 @@
             transform: scale(0.98);
             /* 눌리는 느낌 */
         }
+
+
+        /*** 모달 창 CSS ***/
+
+        /* 모달 배경 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        /* 모달 박스 */
+        .modal-content {
+            background-color: #fff;
+            margin: 12% auto;
+            padding: 30px 25px;
+            border: 8px solid #f9b59e;
+            border-radius: 40px;
+            width: 450px;      /* 가로로 조금 늘림 */
+            text-align: center;
+            font-family: 'Cute Font', sans-serif;
+        }
+
+        /* 제목 */
+        .modal-content h2 {
+            font-size: 56px;  /* 제목 좀 더 크게 */
+            margin-bottom: 15px;
+        }
+
+        /* 내용 */
+        .modal-content p {
+            font-size: 40px;  /* 요청하신 대로 40px */
+            margin-bottom: 25px;
+        }
+
+        /* 버튼 */
+        #modalLoginBtn {
+            padding: 10px 0;      /* 세로 패딩 조금 줄임 */
+            width: 100%;
+            font-size: 28px;      /* 버튼 글자 약간 작게 조정 */
+            border-radius: 30px;
+            border: 4px solid #f4c2a5;
+            background-color: #fca88f;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        #modalLoginBtn:hover {
+            background-color: #f99074;
+        }
+
+        #modalLoginBtn:active {
+            background-color: #e87b5f;
+            transform: scale(0.98);
+        }
     </style>
 </head>
 
@@ -188,13 +252,13 @@
         <form class="signup-form" id="signupForm">
             <label for="userid">아이디</label>
             <div class="input-group">
-                <input type="text" id="userid" placeholder="아이디 입력 (6 ~ 20자 이내)" />
+                <input type="text" id="userid" name="userId" placeholder="아이디 입력 (6 ~ 20자 이내)" />
                 <button type="button" onclick="checkUsername()">중복 확인</button>
             </div>
             <span class="message" id="userid-msg"></span>
 
             <label for="password">비밀번호</label>
-            <input type="password" id="password" placeholder="비밀번호 입력 (문자, 숫자, 특수문자 포함 8~20자 이내)" />
+            <input type="password" id="password" name="password" placeholder="비밀번호 입력 (문자, 숫자, 특수문자 포함 8~20자 이내)" />
             <span class="message" id="password-msg"></span>
 
             <label for="password-check">비밀번호 확인</label>
@@ -202,12 +266,12 @@
             <span class="message" id="password-check-msg"></span>
 
             <label for="name">이름</label>
-            <input type="text" id="name" placeholder="이름을 입력해 주세요." />
+            <input type="text" id="name" name="name" placeholder="이름을 입력해 주세요." />
             <span class="message" id="name-msg"></span>
 
             <label for="email">이메일</label>
             <div class="input-group">
-                <input type="email" id="email" placeholder="이메일 주소를 입력해 주세요." />
+                <input type="email" id="email" name="email" placeholder="이메일 주소를 입력해 주세요." />
                 <button type="button" onclick="checkEmail()">인증 메일 받기</button>
             </div>
             <span class="message" id="email-msg"></span>
@@ -220,25 +284,40 @@
 
             <label for="birth-year">생년월일</label>
             <div class="birth-group">
-                <input type="text" id="birth-year" placeholder="년(4자)" maxlength="4" />
-                <select id="birth-month">
+                <input type="text" id="birth-year" name="birthYear" placeholder="년(4자)" maxlength="4" />
+                <select id="birth-month" name="birthMonth">
                     <option value="">월</option>
                 </select>
-                <input type="text" id="birth-day" placeholder="일" maxlength="2" />
+                <input type="text" id="birth-day" name="birthDay" placeholder="일" maxlength="2" />
             </div>
             <span class="message" id="birth-msg"></span>
 
             <div class="signup-buttons">
                 <button type="submit" class="signup-btn">회원가입</button>
-                <button type="button" class="cancel-btn" onclick="location.href='main.html'">회원가입 취소</button>
+                <button type="button" class="cancel-btn" onclick="location.href='/'">회원가입 취소</button>
             </div>
         </form>
     </div>
 </main>
 
+<!-- 회원가입 완료 모달 -->
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <h2>메르헨드</h2>
+        <p>회원가입 완료!!</p>
+        <button id="modalLoginBtn">로그인 화면으로</button>
+    </div>
+</div>
+
 <script>
     const toggle = document.getElementById('headerDropdownToggle');
     const menu = document.getElementById('headerDropdownMenu');
+
+
+    const $signupForm = $("#signupForm");
+
+    let userIdCheck = "Y";
+    let emailAuthNumber = "";
 
     toggle.addEventListener('click', function (e) {
         e.stopPropagation();
@@ -269,12 +348,26 @@
         const input = document.getElementById("userid");
         const msg = document.getElementById("userid-msg");
         const value = input.value.trim();
+
         if (!value) return setError(input, msg, "아이디를 입력해 주세요.");
         if (value.length < 6 || value.length > 20)
             return setError(input, msg, "아이디는 6 ~ 20 자 이내로 입력해야 합니다.");
-        const isDuplicated = ["admin", "test", "user1"].includes(value);
-        if (isDuplicated) setError(input, msg, "중복된 아이디 입니다.");
-        else setSuccess(input, msg, "사용가능한 아이디 입니다.");
+
+        $.ajax({
+            url: "/user/getUserIdExists",
+            type: "POST",
+            dataType: "JSON",
+            data: $signupForm.serialize(),
+            success: function (json) {
+                if (json.existsYn === "Y") {
+                    setError(input, msg, "중복된 아이디입니다.");
+                    setTimeout(() => input.focus(), 0);
+                } else {
+                    setSuccess(input, msg, "사용 가능한 아이디입니다.");
+                    userIdCheck = "N";
+                }
+            }
+        });
     }
 
     function validatePassword() {
@@ -305,10 +398,25 @@
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!regex.test(value)) return setError(input, msg, "이메일 주소 형식이 맞지 않습니다.");
 
-        const isDuplicated = ["test@test.com"].includes(value);
-        if (isDuplicated) return setError(input, msg, "중복된 이메일 입니다.");
 
-        setSuccess(input, msg, "사용 가능한 이메일입니다.");
+        $.ajax({
+            url: "/user/getEmailExists",
+            type: "POST",
+            dataType: "JSON",
+            data: $signupForm.serialize(),
+            success: function (json) {
+                if (json.existsYn === "Y") {
+                    setError(input, msg, "중복된 이메일 입니다.");
+                    setTimeout(() => input.focus(), 0);
+                } else {
+                    setSuccess(input, msg, "인증번호가 발송되었습니다.");
+                    alert(json.authNumber);
+                    emailAuthNumber = json.authNumber;
+                }
+            }
+        });
+
+
     }
 
 
@@ -317,8 +425,9 @@
         const msg = document.getElementById("email-code-msg");
         const emailInput = document.getElementById("email");
         const emailBtn = emailInput.nextElementSibling;
+        const emailCodeBtn = code.nextElementSibling;
 
-        const expected = "123456";
+        const expected = (emailAuthNumber + "").trim();
         const inputCode = code.value.trim();
 
         if (!inputCode) {
@@ -332,14 +441,25 @@
         // ✅ 인증번호가 일치할 경우만 아래 코드 실행됨
         setSuccess(code, msg, "인증되었습니다.");
 
-        // 이메일 입력란, 버튼, 코드 입력창 비활성화
+        // 입력/버튼 비활성화
         emailInput.disabled = true;
         emailBtn.disabled = true;
         code.disabled = true;
+        emailCodeBtn.disabled = true;
 
-        // 버튼 스타일도 비활성화처럼 보이게
+        // 스타일 비활성화
+        emailInput.style.opacity = 0.5;
+        code.style.opacity = 0.5;
+
         emailBtn.style.opacity = 0.5;
+        emailCodeBtn.style.opacity = 0.5;
+
+        emailInput.style.cursor = "not-allowed";
+        code.style.cursor = "not-allowed";
         emailBtn.style.cursor = "not-allowed";
+        emailCodeBtn.style.cursor = "not-allowed";
+
+
     }
 
     function validateBirth() {
@@ -347,13 +467,26 @@
         const month = document.getElementById("birth-month");
         const day = document.getElementById("birth-day");
         const msg = document.getElementById("birth-msg");
+
+        const y = parseInt(year.value, 10);
+        const m = parseInt(month.value, 10);
+        const d = parseInt(day.value, 10);
+
         if (!year.value) return setError(year, msg, "년도를 입력해 주세요.");
         if (!/^[0-9]{4}$/.test(year.value)) return setError(year, msg, "년도는 4자리수 입니다.");
         if (!month.value) return setError(month, msg, "월을 선택해 주세요.");
         if (!day.value) return setError(day, msg, "일을 입력해 주세요.");
-        const date = new Date(`${year.value}-${month.value}-${day.value}`);
-        if (isNaN(date.getTime()) || date.getDate() != day.value)
+
+        // Date 객체를 만들 때 월은 0~11
+        const date = new Date(y, m - 1, d);
+
+        // 월과 일이 올바른지 체크
+        if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) {
             return setError(day, msg, "일수가 맞지 않습니다.");
+        }
+
+        setSuccess(year, msg, "");
+        setSuccess(month, msg, "");
         setSuccess(day, msg, "생년월일이 유효합니다.");
     }
 
@@ -377,6 +510,118 @@
         option.textContent = i;
         select.appendChild(option);
     }
+
+
+    $signupForm.on("submit", function (e) {
+        e.preventDefault();
+
+        // 아이디 체크
+        const userId = document.getElementById("userid");
+        const userIdMsg = document.getElementById("userid-msg");
+        if (!userId.value.trim()) {
+            setError(userId, userIdMsg, "아이디를 입력해 주세요.");
+            userId.focus();
+            return;
+        }
+
+        // 비밀번호 체크
+        const pw = document.getElementById("password");
+        const pwMsg = document.getElementById("password-msg");
+        if (!pw.value.trim()) {
+            setError(pw, pwMsg, "비밀번호를 입력해 주세요.");
+            pw.focus();
+            return;
+        }
+        if (pw.classList.contains("invalid")) {
+            pw.focus();
+            return;
+        }
+
+        // 비밀번호 확인
+        const pwChk = document.getElementById("password-check");
+        const pwChkMsg = document.getElementById("password-check-msg");
+        if (!pwChk.value.trim()) {
+            setError(pwChk, pwChkMsg, "비밀번호를 다시 입력해 주세요.");
+            pwChk.focus();
+            return;
+        }
+        if (pwChk.classList.contains("invalid")) {
+            pwChk.focus();
+            return;
+        }
+
+        // 이름 체크
+        const name = document.getElementById("name");
+        const nameMsg = document.getElementById("name-msg");
+        if (!name.value.trim()) {
+            setError(name, nameMsg, "이름을 입력해 주세요.");
+            name.focus();
+            return;
+        }
+
+        // 이메일 체크
+        const email = document.getElementById("email");
+        const emailMsg = document.getElementById("email-msg");
+        const emailCode = document.getElementById("email-code");
+        const emailCodeMsg = document.getElementById("email-code-msg");
+        if (!email.value.trim()) {
+            setError(email, emailMsg, "이메일을 입력해 주세요.");
+            email.focus();
+            return;
+        }
+        if (emailCode.classList.contains("invalid")) {
+            emailCode.focus();
+            return;
+        }
+
+        // 생년월일 체크
+        const year = document.getElementById("birth-year");
+        const month = document.getElementById("birth-month");
+        const day = document.getElementById("birth-day");
+        const birthMsg = document.getElementById("birth-msg");
+        if (!year.value.trim()) {
+            setError(year, birthMsg, "년도를 입력해 주세요.");
+            year.focus();
+            return;
+        }
+        if (!month.value.trim()) {
+            setError(month, birthMsg, "월을 선택해 주세요.");
+            month.focus();
+            return;
+        }
+        if (!day.value.trim()) {
+            setError(day, birthMsg, "일을 입력해 주세요.");
+            day.focus();
+            return;
+        }
+        if (day.classList.contains("invalid")) {
+            day.focus();
+            return;
+        }
+
+        // 모든 검증 통과 시 AJAX 요청
+        $.ajax({
+            url: "/user/insertUserInfo",
+            type: "POST",
+            dataType: "JSON",
+            data: $signupForm.serialize(),
+            success: function (json) {
+                if (json.result === 1) {
+                    // 모달 띄우기
+                    const modal = document.getElementById("signupModal");
+                    modal.style.display = "block";
+
+                    // 버튼 클릭 시 로그인 페이지로 이동
+                    document.getElementById("modalLoginBtn").onclick = function() {
+                        location.href = "/user/login";
+                    };
+                } else {
+                    alert(json.msg);
+                }
+            }
+        });
+    });
+
 </script>
 </body>
 
