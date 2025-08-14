@@ -28,4 +28,38 @@
         AND name = #{name}
         AND email = #{email}
     </select>
+
+    <!-- 회원가입 -->
+    <insert id="insertUserInfo" parameterType="UserInfoDTO">
+        INSERT INTO users
+        (
+         USER_ID,
+         PASSWORD,
+         NAME,
+         EMAIL,
+         BIRTH_DATE
+        )
+        VALUES
+        (
+         #{userId},
+         #{password},
+         #{name},
+         #{email},
+         #{birthDate}
+        )
+    </insert>
+
+    <!-- 아이디 중복 체크 -->
+    <select id="getUserIdExists" parameterType="UserInfoDTO" resultType="UserInfoDTO">
+        SELECT IF(COUNT(USER_ID) > 0, 'Y', 'N') AS EXISTS_YN
+        FROM users
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <!-- 이메일 중복 체크 -->
+    <select id="getUserEmailExists" parameterType="UserInfoDTO" resultType="UserInfoDTO">
+        SELECT IF(COUNT(USER_ID) > 0, 'Y', 'N') AS EXISTS_YN
+        FROM users
+        WHERE EMAIL = #{email}
+    </select>
 </mapper>

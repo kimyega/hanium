@@ -39,6 +39,14 @@ public class UserInfoController {
         return "user/findId";
     }
 
+    // 회원가입 페이지 이동
+    @GetMapping(value = "register")
+    public String register() {
+        log.info("{}.user/register", this.getClass().getName());
+
+        return "user/register";
+    }
+
     // 로그인시 입력한 정보를 DB에서 확인해서 결과를 리턴
     @ResponseBody
     @PostMapping(value = "loginProc")
@@ -149,5 +157,118 @@ public class UserInfoController {
 
         return dto;
     }
+
+    /*
+    *  아이디 중복체크
+    * */
+    @ResponseBody
+    @PostMapping(value = "getUserIdExists")
+    public UserInfoDTO getUserExists(HttpServletRequest request) throws Exception {
+
+        log.info("{}.getUserIdExists Start!", this.getClass().getName());
+
+        String userId = CmmUtil.nvl(request.getParameter("userId"));
+
+        log.info("userId : {}", userId);
+
+        UserInfoDTO pDTO = new UserInfoDTO();
+        pDTO.setUserId(userId);
+
+        UserInfoDTO rDTO = Optional.ofNullable(userInfoService.getUserIdExists(pDTO)).orElseGet(UserInfoDTO::new);
+
+        log.info("{}.getUserIdExists End!", this.getClass().getName());
+
+        return rDTO;
+    }
+
+    /*
+     *  이메일 중복체크
+     * */
+    @ResponseBody
+    @PostMapping(value = "getEmailExists")
+    public UserInfoDTO getEmailExists(HttpServletRequest request) throws Exception {
+
+        log.info("{}.getEmailExists Start!", this.getClass().getName());
+
+        String email = CmmUtil.nvl(request.getParameter("email"));
+
+        log.info("email : {}", email);
+
+        UserInfoDTO pDTO = new UserInfoDTO();
+        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
+
+        UserInfoDTO rDTO = Optional.ofNullable(userInfoService.getEmailExists(pDTO)).orElseGet(UserInfoDTO::new);
+
+        log.info("{}.getEmailExists End!", this.getClass().getName());
+
+        return rDTO;
+    }
+
+    /*
+     *  회원가입
+     * */
+    @ResponseBody
+    @PostMapping(value = "insertUserInfo")
+    public MsgDTO insertUserInfo(HttpServletRequest request) {
+
+        log.info("{}.insertUserInfo Start!", this.getClass().getName());
+
+        int res = 0;
+        String msg = "";
+        MsgDTO dto;
+
+        UserInfoDTO pDTO;
+
+        try {
+            String userId = CmmUtil.nvl(request.getParameter("userId"));
+            String password = CmmUtil.nvl(request.getParameter("password"));
+            String name = CmmUtil.nvl(request.getParameter("name"));
+            String email = CmmUtil.nvl(request.getParameter("email"));
+
+            String birthYear = CmmUtil.nvl(request.getParameter("birthYear"));
+            String birthMonth = CmmUtil.nvl(request.getParameter("birthMonth"));
+            String birthDay = CmmUtil.nvl(request.getParameter("birthDay"));
+            String birthDate = birthYear + "-" + birthMonth + "-" + birthDay;
+
+            log.info("userId : {}", userId);
+            log.info("password : {}", password);
+            log.info("name : {}", name);
+            log.info("email : {}", email);
+            log.info("birthDate : {}", birthDate);
+
+            pDTO = new UserInfoDTO();
+            pDTO.setUserId(userId);
+            pDTO.setPassword(EncryptUtil.encHashSHA256(password));
+            pDTO.setName(name);
+            pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
+            pDTO.setBirthDate(birthDate);
+
+            res = userInfoService.insertUserInfo(pDTO);
+
+            log.info("회원가입 결과 (res) : " + res);
+
+            if(res == 1) {
+                msg = "회원가입 되었습니다.";
+            } else if (res == 2) {
+                msg = "이미 가입된 아이디 입니다.";
+            } else {
+                msg = "오류로 인해 회원가입이 실패하였습니다.";
+            }
+
+        } catch (Exception e) {
+            msg = "실패하였습니다." + e;
+            log.info(e.toString());
+        } finally {
+
+            dto = new MsgDTO();
+            dto.setResult(res);
+            dto.setMsg(msg);
+
+            log.info("{}.insertUserInfo End!", this.getClass().getName());
+        }
+
+        return dto;
+    }
+
 
 }
