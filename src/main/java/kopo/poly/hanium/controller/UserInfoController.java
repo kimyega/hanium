@@ -63,7 +63,7 @@ public class UserInfoController {
             pDTO = new UserInfoDTO();
             pDTO.setUserId(userId);
 
-//          pDTO.setPassword(EncryptUtil.encHashSHA256(password));
+//            pDTO.setPassword(EncryptUtil.encHashSHA256(password));
             pDTO.setPassword(password);
             UserInfoDTO rDTO = userInfoService.getLogin(pDTO);
 
@@ -106,7 +106,7 @@ public class UserInfoController {
 
         UserInfoDTO pDTO = new UserInfoDTO();
         pDTO.setEmail(email);
-//      pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
+//        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
 
         UserInfoDTO rDTO = Optional.ofNullable(userInfoService.emailAuthNumber(pDTO)).orElseGet(UserInfoDTO::new);
 
