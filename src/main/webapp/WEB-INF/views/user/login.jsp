@@ -12,55 +12,14 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <!-- 공통/모달 CSS -->
+    <!-- 공통/모달 CSS (lite) -->
     <link rel="stylesheet" href="/css/table.css" />
     <link rel="stylesheet" href="/css/modal.css" />
 
     <!-- jQuery 먼저 -->
     <script src="/js/jquery-3.6.0.min.js"></script>
-    <!-- 모달 JS (showModal/confirmModal 정의) -->
+    <!-- 모달 JS (lite: window.showModal / window.confirmModal 제공) -->
     <script src="/js/modal.js"></script>
-    <script>
-        // 모달 DOM이 없으면 즉석에서 만들어주는 보조 함수
-        function __ensureModal() {
-            if (document.getElementById('appModal')) return;
-            const el = document.createElement('div');
-            el.id = 'appModal';
-            el.className = 'modal-overlay';
-            el.style.display = 'none';
-            el.innerHTML = `
-    <div class="modal-box">
-      <h3 class="modal-title">알림</h3>
-      <p class="modal-message"></p>
-      <div class="modal-actions" style="display:flex;justify-content:center;gap:10px;">
-        <button type="button" id="modalOk" class="modal-btn">확인</button>
-      </div>
-    </div>`;
-            document.body.appendChild(el);
-        }
-
-        // 외부 modal.js에 showModal이 없으면 여기서 전역으로 제공
-        window.showModal = window.showModal || function(message, onOk){
-            __ensureModal();
-            const ov = document.getElementById('appModal');
-            ov.querySelector('.modal-message').textContent = message || '';
-            ov.style.display = 'flex'; // modal.css가 .show 토글이면 classList.add('show')로 바꿔도 됨
-            const ok = document.getElementById('modalOk');
-            ok.onclick = function(){
-                // ov.classList.remove('show'); // show/hidden 클래스를 쓰는 스타일이면 이걸로
-                ov.style.display = 'none';
-                if (typeof onOk === 'function') onOk();
-            };
-        };
-
-        // z-index 문제로 뒤에 가려질 수 있어 강제로 올려줌
-        (function ensureZ(){
-            const style = document.createElement('style');
-            style.textContent = `.modal-overlay{z-index:99999 !important}`;
-            document.head.appendChild(style);
-        })();
-    </script>
-
 
     <style>
         .main-container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
@@ -103,20 +62,20 @@
             $("#btnLogin").on("click", function () {
                 const f = document.getElementById("f");
 
-                // modal.js가 없거나 showModal이 전역에 없으면 alert로 폴백
-                const useModal = (typeof window.showModal === "function")
-                    ? window.showModal
-                    : (msg, cb) => { alert(msg); if (cb) cb(); };
-
+                // 1) 유효성 검사
                 if (f.userId.value.trim() === "") {
-                    useModal("아이디를 입력하세요.", () => f.userId.focus());
+                    showModal("아이디를 입력하세요.", () => f.userId.focus());
                     return;
                 }
                 if (f.password.value.trim() === "") {
-                    useModal("비밀번호를 입력하세요.", () => f.password.focus());
+                    showModal("비밀번호를 입력하세요.", () => f.password.focus());
                     return;
                 }
 
+                // 2) 로그인 시도 모달 먼저 띄우기
+                showModal("로그인을 시도합니다...");
+
+                // 3) AJAX 로그인
                 $.ajax({
                     url: "/user/loginProc",
                     type: "post",
@@ -124,13 +83,17 @@
                     data: $("#f").serialize(),
                     success: function (json) {
                         if (json.result === 1) {
-                            useModal(json.msg || "로그인이 성공했습니다.", () => location.href = json.redirect || "/");
+                            showModal(json.msg || "로그인에 성공했습니다.", () => {
+                                location.href = json.redirect || "/";
+                            });
                         } else {
-                            useModal(json.msg || "아이디 또는 비밀번호가 올바르지 않습니다.", () => $("#userId").focus());
+                            showModal(json.msg || "아이디 또는 비밀번호가 올바르지 않습니다.", () => {
+                                $("#userId").focus();
+                            });
                         }
                     },
                     error: function () {
-                        useModal("요청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.");
+                        showModal("요청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.");
                     }
                 });
             });
@@ -173,15 +136,6 @@
     </form>
 </div>
 
-<!-- ✅ modal.css/modal.js가 기대하는 공용 마크업 -->
-<div id="appModal" class="modal-overlay" style="display:none;">
-    <div class="modal-box">
-        <h3 class="modal-title">알림</h3>
-        <p class="modal-message"></p>
-        <div class="modal-actions" style="display:flex;justify-content:center;gap:10px;">
-            <button type="button" id="modalOk" class="modal-btn">확인</button>
-        </div>
-    </div>
-</div>
+<!-- ✅ 별도 모달 마크업 불필요: /js/modal.js(lite)가 자동 생성/관리 -->
 </body>
 </html>

@@ -1,84 +1,57 @@
-// ===== modal.js (최종) =====
+/* ===== modal.js (lite) ===== */
+(function () {
+    // 공용 DOM 생성기
+    function ensure(id, withCancel) {
+        let el = document.getElementById(id);
+        if (el) return el;
+        el = document.createElement('div');
+        el.id = id;
+        el.className = 'modal';
+        el.innerHTML = `
+      <div class="modal__box" role="dialog" aria-modal="true">
+        <h3 class="modal__title">${withCancel ? '확인' : '알림'}</h3>
+        <p class="modal__msg"></p>
+        <div class="modal__actions">
+          ${withCancel ? '<button class="btn btn--ghost" data-cancel>취소</button>' : ''}
+          <button class="btn" data-ok>확인</button>
+        </div>
+      </div>`;
+        document.body.appendChild(el);
+        return el;
+    }
 
-// 공용 알림 모달
-window.showModal = function (message, onOk) {
-    const ov = document.getElementById('appModal');
-    if (!ov) { console.warn('[modal] #appModal not found'); return alert(message); }
-    ov.querySelector('.modal-message').textContent = message || '';
-    ov.classList.add('show');                // .show 사용
-    if (getComputedStyle(ov).display === 'none') ov.style.display = 'flex'; // display 방식도 겸처리
-    document.getElementById('modalOk').onclick = function () {
-        ov.classList.remove('show');
-        ov.style.display = 'none';
-        if (typeof onOk === 'function') onOk();
+    function open(el) {
+        el.classList.add('show');
+        document.body.classList.add('modal-open');
+    }
+    function close(el) {
+        el.classList.remove('show');
+        document.body.classList.remove('modal-open');
+    }
+
+    // 알림 모달
+    window.showModal = function (message, onOk) {
+        const el = ensure('appModal', false);
+        el.querySelector('.modal__msg').textContent = message || '';
+        open(el);
+        el.querySelector('[data-ok]').onclick = () => { close(el); onOk && onOk(); };
     };
-};
 
-// 공용 확인 모달 (확인/취소)
-window.confirmModal = function (message, onOk, onCancel) {
-    const ov = document.getElementById('confirmModal');
-    if (!ov) { console.warn('[modal] #confirmModal not found'); return; }
-    ov.querySelector('.modal-message').textContent = message || '';
-    ov.classList.add('show');
-    if (getComputedStyle(ov).display === 'none') ov.style.display = 'flex';
-    const ok = document.getElementById('confirmOk');
-    const cancel = document.getElementById('confirmCancel');
-    ok.onclick = function () { ov.classList.remove('show'); ov.style.display = 'none'; if (typeof onOk === 'function') onOk(); };
-    cancel.onclick = function () { ov.classList.remove('show'); ov.style.display = 'none'; if (typeof onCancel === 'function') onCancel(); };
-};
+    // 확인 모달
+    window.confirmModal = function (message, onOk, onCancel) {
+        const el = ensure('confirmModal', true);
+        el.querySelector('.modal__msg').textContent = message || '';
+        open(el);
+        el.querySelector('[data-ok]').onclick = () => { close(el); onOk && onOk(); };
+        el.querySelector('[data-cancel]').onclick = () => { close(el); onCancel && onCancel(); };
+    };
 
-// (선택) 기본 alert 가로채기
-// window.alert = function (msg) { showModal(String(msg)); };
-
-// ESC로 닫기
-document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') {
-        document.getElementById('appModal')?.classList.remove('show');
-        document.getElementById('appModal')?.style && (document.getElementById('appModal').style.display = 'none');
-        document.getElementById('confirmModal')?.classList.remove('show');
-        document.getElementById('confirmModal')?.style && (document.getElementById('confirmModal').style.display = 'none');
-    }
-});
-
-// ===== 폴백: 마크업이 없거나 modal.js만 단독으로 로드돼도 동작 보장 =====
-(function ensureModal() {
-    // 알림 모달 DOM 자동 생성
-    if (!document.getElementById('appModal')) {
-        const el = document.createElement('div');
-        el.id = 'appModal';
-        el.className = 'modal-overlay';
-        el.style.display = 'none';
-        el.innerHTML = `
-      <div class="modal-box">
-        <h3 class="modal-title">알림</h3>
-        <p class="modal-message"></p>
-        <div class="modal-actions" style="display:flex;justify-content:center;gap:10px;">
-          <button type="button" id="modalOk" class="modal-btn">확인</button>
-        </div>
-      </div>`;
-        document.body.appendChild(el);
-    }
-
-    // (옵션) 확인 모달 DOM 자동 생성
-    if (!document.getElementById('confirmModal')) {
-        const el = document.createElement('div');
-        el.id = 'confirmModal';
-        el.className = 'modal-overlay';
-        el.style.display = 'none';
-        el.innerHTML = `
-      <div class="modal-box">
-        <h3 class="modal-title">확인</h3>
-        <p class="modal-message"></p>
-        <div class="modal-actions" style="display:flex;justify-content:center;gap:10px;">
-          <button type="button" id="confirmCancel" class="modal-btn cancel">취소</button>
-          <button type="button" id="confirmOk" class="modal-btn">확인</button>
-        </div>
-      </div>`;
-        document.body.appendChild(el);
-    }
-
-    // 가려짐 방지
-    const zfix = document.createElement('style');
-    zfix.textContent = `.modal-overlay{z-index:99999 !important}`;
-    document.head.appendChild(zfix);
+    // ESC로 닫기
+    document.addEventListener('keydown', e => {
+        if (e.key !== 'Escape') return;
+        ['appModal','confirmModal'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el && el.classList.contains('show')) close(el);
+        });
+    });
 })();
