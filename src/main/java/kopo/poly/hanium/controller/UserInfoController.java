@@ -73,8 +73,7 @@ public class UserInfoController {
             pDTO = new UserInfoDTO();
             pDTO.setUserId(userId);
 
-//            pDTO.setPassword(EncryptUtil.encHashSHA256(password));
-            pDTO.setPassword(password);
+            pDTO.setPassword(EncryptUtil.encHashSHA256(password));
             UserInfoDTO rDTO = userInfoService.getLogin(pDTO);
 
             if (!kopo.poly.hanium.util.CmmUtil.nvl(rDTO.getUserId()).isEmpty()) {
@@ -110,13 +109,14 @@ public class UserInfoController {
 
         log.info("{}.emailAuthNumber Start!", this.getClass().getName());
 
-        String email = kopo.poly.hanium.util.CmmUtil.nvl(request.getParameter("email"));
+        String email = CmmUtil.nvl(request.getParameter("email"));
 
         log.info("email : {}", email);
 
         UserInfoDTO pDTO = new UserInfoDTO();
-        pDTO.setEmail(email);
-//        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
+        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
+
+        log.info("암호화 email : {}", pDTO.getEmail());
 
         UserInfoDTO rDTO = Optional.ofNullable(userInfoService.emailAuthNumber(pDTO)).orElseGet(UserInfoDTO::new);
 
@@ -138,7 +138,7 @@ public class UserInfoController {
 
         UserInfoDTO pDTO = new UserInfoDTO();
         pDTO.setName(userName);
-        pDTO.setEmail(email);
+        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
 
         UserInfoDTO rDTO = Optional.ofNullable(
                 userInfoService.searchUserIdOrPasswordProc(pDTO)
@@ -468,6 +468,8 @@ public class UserInfoController {
             pDTO.setName(name);
             pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
             pDTO.setBirthDate(birthDate);
+
+            log.info("암호화 email : {}", pDTO.getEmail());
 
             res = userInfoService.insertUserInfo(pDTO);
 

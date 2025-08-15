@@ -33,8 +33,7 @@ public class UserInfoService implements IUserInfoService {
 
             MailDTO mDTO = new MailDTO();
 
-//          mDTO.setToMail(EncryptUtil.decAES128BCBC(kopo.poly.util.CmmUtil.nvl(rDTO.getEmail())));
-            mDTO.setToMail(rDTO.getEmail());
+            mDTO.setToMail(EncryptUtil.decAES128BCBC(kopo.poly.hanium.util.CmmUtil.nvl(rDTO.getEmail())));
             mDTO.setTitle("로그인 알림!");
             mDTO.setContents(kopo.poly.util.DateUtil.getDateTime("yyyy.MM.dd hh:mm:ss") + "에 "
                     + kopo.poly.hanium.util.CmmUtil.nvl(rDTO.getName()) + "님이 로그인하였습니다.");
@@ -55,6 +54,7 @@ public class UserInfoService implements IUserInfoService {
         UserInfoDTO rDTO = Optional.ofNullable(userInfoMapper.emailAuthNumber(pDTO)).orElseGet(UserInfoDTO::new);
 
         log.info("rDTO : {}", rDTO);
+        log.info("rDTO.getExistsYn() : {}", rDTO.getExistsYn());
 
         if (kopo.poly.hanium.util.CmmUtil.nvl(rDTO.getExistsYn()).equals("Y")) {
 
@@ -66,7 +66,6 @@ public class UserInfoService implements IUserInfoService {
             dto.setTitle("아이디/비밀번호 찾기 인증번호 안내"); // 문구만 약간 일반화
             dto.setContents("인증번호는 " + authNumber + " 입니다.");
             dto.setToMail(kopo.poly.hanium.util.CmmUtil.nvl(pDTO.getEmail()));
-//          dto.setToMail(EncryptUtil.decAES128BCBC(kopo.poly.hanium.util.CmmUtil.nvl(pDTO.getEmail())));
 
             mailService.doSendMail(dto);
             dto = null;
