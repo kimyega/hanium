@@ -65,7 +65,7 @@ public class UserInfoService implements IUserInfoService {
 
             dto.setTitle("아이디/비밀번호 찾기 인증번호 안내"); // 문구만 약간 일반화
             dto.setContents("인증번호는 " + authNumber + " 입니다.");
-            dto.setToMail(kopo.poly.hanium.util.CmmUtil.nvl(pDTO.getEmail()));
+            dto.setToMail(CmmUtil.nvl(EncryptUtil.decAES128BCBC(pDTO.getEmail())));
 
             mailService.doSendMail(dto);
             dto = null;
