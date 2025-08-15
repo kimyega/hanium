@@ -8,6 +8,11 @@
 	<!-- 공통 폰트/아이콘/스타일 -->
 	<link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+	<!-- CSS -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link rel="stylesheet" href="/css/table.css" />
 
@@ -97,6 +102,15 @@
 
 <!-- ===== 메인 ===== -->
 <main>
+	<div class="start-container">
+		<img src="/images/start.png" alt="동물 그림" class="start-image" />
+		<div class="start-buttons">
+			<!-- ✅ 회원가입 / 로그인 버튼 경로 수정 -->
+			<!-- index.jsp 내 최종 수정 -->
+			<button class="start-button" onclick="location.href='/user/register'" type="button">회원 가입</button>
+			<button class="start-button" onclick="location.href='/user/login'" type="button">로그인</button>
+
+
 	<section class="hero-wrap">
 		<div class="hero-bg"></div>
 		<div class="hero-overlay"></div>
