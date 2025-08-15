@@ -1,8 +1,0 @@
-secure:
-  datasource:
-    url: jdbc:mariadb://192.168.136.129:3306/myDB
-    username: poly
-    password: 1234
-  mail:
-    username: edwerd0511@naver.com
-    password: ZWK2PF2PKKRK
