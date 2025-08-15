@@ -10,6 +10,11 @@ public interface IUserInfoService {
 
     UserInfoDTO searchUserIdOrPasswordProc(UserInfoDTO pDTO) throws Exception;
 
+    int updatePassword(UserInfoDTO pDTO) throws Exception;
+
+    int deleteUser(UserInfoDTO pDTO) throws Exception;
+
+
     // 아이디 중복체크
     UserInfoDTO getUserIdExists(UserInfoDTO pDTO) throws Exception;
 
