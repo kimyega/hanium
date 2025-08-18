@@ -19,7 +19,7 @@
     <!-- jQuery 먼저 -->
     <script src="/js/jquery-3.6.0.min.js"></script>
     <!-- 모달 JS (lite: window.showModal / window.confirmModal 제공) -->
-    <script src="/js/modal.js"></script>
+    <script src="${pageContext.request.contextPath}/js/modal.js"></script>
 
     <style>
         .main-container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
@@ -84,7 +84,7 @@
                     success: function (json) {
                         if (json.result === 1) {
                             showModal(json.msg || "로그인에 성공했습니다.", () => {
-                                location.href = json.redirect || "/";
+                                location.href = json.redirect || "/index";
                             });
                         } else {
                             showModal(json.msg || "아이디 또는 비밀번호가 올바르지 않습니다.", () => {

@@ -441,10 +441,13 @@
         // ✅ 인증번호가 일치할 경우만 아래 코드 실행됨
         setSuccess(code, msg, "인증되었습니다.");
 
+
         // 입력/버튼 비활성화
-        emailInput.disabled = true;
+
+        emailInput.readOnly = true; // disabled 대신
+        code.readOnly = true;
+
         emailBtn.disabled = true;
-        code.disabled = true;
         emailCodeBtn.disabled = true;
 
         // 스타일 비활성화
