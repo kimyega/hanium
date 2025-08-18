@@ -19,7 +19,7 @@
     <!-- jQuery 먼저 -->
     <script src="/js/jquery-3.6.0.min.js"></script>
     <!-- 모달 JS (lite: window.showModal / window.confirmModal 제공) -->
-    <script src="/js/modal.js"></script>
+    <script src="${pageContext.request.contextPath}/js/modal.js"></script>
 
     <style>
         .main-container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
