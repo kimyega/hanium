@@ -520,5 +520,11 @@ public class UserInfoController {
         return dto;
     }
 
+    @GetMapping(value = "main")
+    public String main() {
+
+        return "user/main";
+    }
+
 
 }

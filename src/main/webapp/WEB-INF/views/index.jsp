@@ -22,6 +22,7 @@
 	<%-- Jquery --%>
 	<script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
 
+
 	<style>
 		:root{
 			--peach:#fca08c;
@@ -117,40 +118,13 @@
 	</div>
 </header>
 
+
 <!-- ===== 메인 ===== -->
-<main>
-	<div class="start-container">
-		<img src="/images/start.png" alt="동물 그림" class="start-image" />
-		<div class="start-buttons">
-			<!-- ✅ 회원가입 / 로그인 버튼 경로 수정 -->
-			<!-- index.jsp 내 최종 수정 -->
-			<button class="start-button" onclick="location.href='/user/register'" type="button">회원 가입</button>
-			<button class="start-button" onclick="location.href='/user/login'" type="button">로그인</button>
-		</div>
+<main class="hero-wrap">
+	<div class="btn-box">
+		<button class="menu-btn" onclick="location.href='/user/register'">회원 가입</button>
+		<button class="menu-btn" onclick="location.href='/user/login'">로그인</button>
 	</div>
-
-	<section class="hero-wrap">
-		<div class="hero-bg"></div>
-		<div class="hero-overlay"></div>
-
-		<div class="menu-stack">
-			<div class="menu-col">
-				<!-- 왼쪽 3버튼 -->
-				<!-- 왼쪽 3버튼 -->
-				<button class="menu-btn" onclick="location.href='/contents/fairytaleList'">
-					<i class="fa-solid fa-book-open-reader"></i> 동화 읽기
-				</button>
-				<button class="menu-btn" onclick="location.href='/contents/makeFairytale'">
-					<i class="fa-solid fa-wand-magic-sparkles"></i> 동화 만들기
-				</button>
-				<button class="menu-btn" onclick="location.href='/contents/quizList'">
-					<i class="fa-solid fa-spell-check"></i> 단어 퀴즈
-				</button>
-
-			</div>
-		</div>
-	</section>
-
 </main>
 
 <%--모달창--%>
