@@ -32,7 +32,7 @@
 		.hero-wrap{
 			width:100%;
 			height:calc(100vh - 80px); /* 헤더 제외한 전체 화면 */
-			background:url('/images/start.png') no-repeat center center;
+			/*background:url('/images/start.png') no-repeat center center;*/
 			background-size:cover;      /* ✅ 화면에 꽉 차게 */
 			display:flex;
 			justify-content:flex-end;   /* 버튼을 아래쪽으로 배치 */

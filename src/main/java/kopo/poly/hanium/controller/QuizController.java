@@ -97,4 +97,16 @@ public class QuizController {
 
         return "index";
     }
+
+    @GetMapping(value = "mypage")
+    public String myPage() {
+
+        return "contents/mypage";
+    }
+
+    @GetMapping(value = "register")
+    public String register() {
+
+        return "contents/register";
+    }
 }
