@@ -9,8 +9,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <link rel="stylesheet" href="/css/table.css" />
+
+    <%-- 모달창 css --%>
+    <link rel="stylesheet" href="/css/headerLogout.css" />
+
+    <%-- Jquery --%>
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
     <style>
 
         main {
@@ -184,21 +190,38 @@
 </head>
 <body>
 
+<!-- 상단바 -->
 <header>
     <div class="header-icon-stack">
         <i class="fa-solid fa-book-open book"></i>
         <i class="fa-solid fa-hands-holding hands"></i>
     </div>
-    <div class="header-logo" onclick="location.href='main.html'">Märchand</div>
+    <div class="header-logo" onclick="location.href='/'">Märchand</div>
     <div class="header-user-area">
-        <div class="header-user-icon">
-            <i class="fa-solid fa-circle-user fa-2xl"></i>
-        </div>
+        <div class="header-user-icon"><i class="fa-solid fa-circle-user fa-xl"></i></div>
         <div class="header-dropdown">
-            <button class="header-dropdown-toggle" id="headerDropdownToggle">홍길동 ▼</button>
+            <button class="header-dropdown-toggle" id="headerDropdownToggle">
+                <%
+                    String uname = (String)session.getAttribute("SS_USER_NAME");
+                    if (uname == null || uname.trim().isEmpty()) { uname = "메뉴"; }
+                %>
+                <%= uname %>
+                <span>▼</span>
+            </button>
             <ul class="header-dropdown-menu" id="headerDropdownMenu">
-                <li onclick="location.href='profile.html'">내 정보</li>
-                <li onclick="location.href='logout.html'">로그아웃</li>
+                <%
+                    if (uname.equals("메뉴")) {
+                %>
+                <li onclick="location.href='/user/login'">로그인</li>
+                <li onclick="location.href='/user/register'">회원가입</li>
+                <%
+                } else {
+                %>
+                <li onclick="location.href='/user/mypage'">내 정보</li>
+                <li id="headerDropDownLogout">로그아웃</li>
+                <%
+                    }
+                %>
             </ul>
         </div>
     </div>
@@ -243,23 +266,22 @@
     </section>
 </main>
 
+<%--모달창--%>
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <h2>메르헨드</h2>
+        <p>로그아웃 완료!!</p>
+        <button id="modalLoginBtn">메인 화면으로</button>
+    </div>
+</div>
+
 <script>
-    const toggle = document.getElementById('headerDropdownToggle');
-    const menu = document.getElementById('headerDropdownMenu');
-
-    toggle.addEventListener('click', function (e) {
-        e.stopPropagation();
-        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    document.addEventListener('click', function () {
-        menu.style.display = 'none';
-    });
 
     const step1 = document.getElementById('step1');
     const step2 = document.getElementById('step2');
     const step3 = document.getElementById('step3');
 
 </script>
+<script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 </body>
 </html>
