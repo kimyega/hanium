@@ -11,182 +11,49 @@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
 
-    <!-- ✅ 공통 상단바 스타일 -->
- 
+    <!-- 공통/모달 CSS (lite) -->
     <link rel="stylesheet" href="/css/table.css" />
+    <link rel="stylesheet" href="/css/modal.css" />
+
+    <%-- 모달창 css --%>
+    <link rel="stylesheet" href="/css/headerLogout.css" />
+
+    <!-- jQuery 먼저 -->
+    <script src="/js/jquery-3.6.0.min.js"></script>
 
     <style>
-        .main-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
+        .main-container { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+        .background-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .background-image img.bg-img { position: absolute; top: 0; left: -20px; width: 100vw; height: 100vh; object-fit: cover; }
 
-
-        .background-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
- 
-            z-index: 0;
-        }
-
-        .background-image img.bg-img {
-            position: absolute;
-            top: 0;
-            left: -20px;   /* ← 여기서 오른쪽으로 이동시키기 위해 조정 */
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-        }
-
-
- 
         .login-wrapper {
-            position: absolute;
-            top: 65%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            border: 6px solid #fca08c;
-            border-radius: 30px;
-            padding: 30px 50px;
-            text-align: left;
-            font-size: 24px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            z-index: 2;
+            position: absolute; top: 65%; left: 50%; transform: translate(-50%, -50%);
+            background: #fff; border: 6px solid #fca08c; border-radius: 30px;
+            padding: 30px 50px; text-align: left; font-size: 24px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15); z-index: 2;
         }
-
-        .login-wrapper label {
-            display: flex;
-            align-items: center;
-            margin: 14px 0;
-        }
-
-        .login-wrapper label span {
-            display: inline-block;
-            width: 100px;
-            text-align: right;
-            margin-right: 10px;
-        }
-
+        .login-wrapper label { display: flex; align-items: center; margin: 14px 0; }
+        .login-wrapper label span { display: inline-block; width: 100px; text-align: right; margin-right: 10px; }
         .login-wrapper input {
-            font-family: 'Cute Font', sans-serif;
-            font-size: 24px;
-            padding: 8px 10px;
-            border: none;
-            border-bottom: 2px solid #ccc;
-            width: 300px;
+            font-family: 'Cute Font', sans-serif; font-size: 24px; padding: 8px 10px;
+            border: none; border-bottom: 2px solid #ccc; width: 300px;
         }
-
-        .login-buttons {
-            display: flex;
-            justify-content: center;
-            margin-top: 25px;
-        }
-
+        .login-buttons { display: flex; justify-content: center; margin-top: 25px; }
         .login-buttons button {
-            font-family: 'Cute Font', sans-serif;
-            font-size: 24px;
-            padding: 12px 30px;
-
-           
-            border: 4px solid #fca08c;
-            border-radius: 50px;
-            background-color: white;
-            cursor: pointer;
-            transition: 0.3s;
+            font-family: 'Cute Font', sans-serif; font-size: 24px; padding: 12px 30px;
+            border: 4px solid #fca08c; border-radius: 50px; background-color: #fff;
+            cursor: pointer; transition: .3s;
         }
+        .login-buttons button:hover { background-color: #fca08c; color: #fff; }
+        .find-links { margin-top: 25px; font-size: 18px; text-align: center; }
+        .find-links a { color: #3b5eff; text-decoration: none; margin: 0 5px; }
+        .find-links a:hover { text-decoration: underline; }
 
-        .login-buttons button:hover {
-            background-color: #fca08c;
-            color: white;
-        }
-
-        .find-links {
-            margin-top: 25px;
-            font-size: 18px;
-            text-align: center;
-        }
-
-        .find-links a {
-            color: #3b5eff;
-            text-decoration: none;
-            margin: 0 5px;
-        }
-
-        .find-links a:hover {
-            text-decoration: underline;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 40px;
-            background-color: #fca08c;
-            z-index: 3;
-        }
-
-        .header-logo {
-            font-size: 26px;
-            font-family: 'Kavoon', cursive;
-        }
-
-        .header-icon-stack {
-            display: flex;
-            gap: 10px;
-            font-size: 24px;
-        }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 12px 40px; background: #fca08c; z-index: 3; }
+        .header-logo { font-size: 26px; font-family: 'Kavoon', cursive; }
+        .header-icon-stack { display: flex; gap: 10px; font-size: 24px; }
     </style>
-    <script>
-        $(document).ready(function () {
-
-            $("#btnLogin").on("click", function () {
-                let f = document.getElementById("f");
-
-                if (f.userId.value === "") {
-                    alert("아이디를 입력하세요.");
-                    f.userId.focus();
-                    return;
-                }
-
-                if (f.password.value === "") {
-                    alert("비밀번호를 입력하세요.");
-                    f.password.focus();
-                    return;
-                }
-
-                // Ajax 호출해서 로그인하기
-                $.ajax({
-                        url: "/user/loginProc",
-                        type: "post", // 전송방식은 Post
-                        dataType: "JSON", // 전송 결과는 JSON으로 받기
-                        data: $("#f").serialize(), // form 태그 내 input 등 객체를 자동으로 전송할 형태로 변경하기
-                        success: function (json) { // /notice/noticeUpdate 호출이 성공했다면..
-
-                            if (json.result === 1) { // 로그인 성공
-                                alert(json.msg); // 메시지 띄우기
-                                location.href = "/"; // 로그인 성공 페이지 이동
-
-                            } else { // 로그인 실패
-                                alert(json.msg); // 메시지 띄우기
-                                $("#userId").focus(); // 아이디 입력 항목에 마우스 커서 이동
-                            }
-
-                        }
-                    }
-                )
-
-            })
-        })
-
-    </script>
 </head>
 
 <body>
@@ -202,9 +69,38 @@
             <i class="fa-solid fa-book-open book"></i>
             <i class="fa-solid fa-hands-holding hands"></i>
         </div>
-        <div class="header-logo">Märchand</div>
+        <div class="header-logo" onclick="location.href='/'">Märchand</div>
+        <div class="header-user-area">
+            <div class="header-user-icon"><i class="fa-solid fa-circle-user fa-xl"></i></div>
+            <div class="header-dropdown">
+                <button class="header-dropdown-toggle" id="headerDropdownToggle">
+                    <%
+                        String uname = (String)session.getAttribute("SS_USER_NAME");
+                        if (uname == null || uname.trim().isEmpty()) { uname = "메뉴"; }
+                    %>
+                    <%= uname %>
+                    <span>▼</span>
+                </button>
+                <ul class="header-dropdown-menu" id="headerDropdownMenu">
+                    <%
+                        if (uname.equals("메뉴")) {
+                    %>
+                    <li onclick="location.href='/user/login'">로그인</li>
+                    <li onclick="location.href='/user/register'">회원가입</li>
+                    <%
+                    } else {
+                    %>
+                    <li onclick="location.href='/user/mypage'">내 정보</li>
+                    <li id="headerDropDownLogout">로그아웃</li>
+                    <%
+                        }
+                    %>
+                </ul>
+            </div>
+        </div>
     </header>
 
+    <!-- 로그인 폼 -->
     <form id="f">
         <div class="login-wrapper">
             <label><span>ID :</span><input type="text" name="userId" id="userId" placeholder="ID를 입력 하세요"></label>
@@ -217,10 +113,88 @@
             <div class="find-links">
                 ID나 비밀번호가 기억이 안나시나요?<br>
                 <a href="/user/findId">ID 찾기</a> /
-                <a href="/contents/findPw">비밀번호 찾기</a>
+                <a href="/user/findPw">비밀번호 찾기</a>
             </div>
         </div>
     </form>
 </div>
+
+<%--모달창--%>
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <h2>메르헨드</h2>
+        <p>로그아웃 완료!!</p>
+        <button id="modalLoginBtn">메인 화면으로</button>
+    </div>
+</div>
+
+<script>
+    // 간단 드롭다운 (table.js 쓰면 생략 가능)
+    const toggle = document.getElementById('headerDropdownToggle');
+    const menu = document.getElementById('headerDropdownMenu');
+    if (toggle && menu){
+        toggle.addEventListener('click', e => {
+            e.stopPropagation();
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        });
+        document.addEventListener('click', () => menu.style.display = 'none');
+
+        // 로그인 여부에 따라 메뉴 항목 토글
+        const nameText = toggle.textContent.trim();
+        const loggedIn = !(nameText === '메뉴' || nameText === '로그인');
+        [...menu.querySelectorAll('li')].forEach(li=>{
+            if (loggedIn && (li.textContent.includes('로그인') || li.textContent.includes('회원가입'))) li.style.display='none';
+            if (!loggedIn && (li.textContent.includes('내 정보') || li.textContent.includes('로그아웃'))) li.style.display='none';
+        });
+    }
+</script>
+<script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
+<!-- 모달 JS (lite: window.showModal / window.confirmModal 제공) -->
+<script src="/js/modal.js"></script>
+<script>
+    $(function () {
+        // Enter로 제출
+        $("#password").on("keydown", function(e){ if(e.key === "Enter") $("#btnLogin").click(); });
+
+        $("#btnLogin").on("click", function () {
+            const f = document.getElementById("f");
+
+            // 1) 유효성 검사
+            if (f.userId.value.trim() === "") {
+                showModal("아이디를 입력하세요.", () => f.userId.focus());
+                return;
+            }
+            if (f.password.value.trim() === "") {
+                showModal("비밀번호를 입력하세요.", () => f.password.focus());
+                return;
+            }
+
+            // 2) 로그인 시도 모달 먼저 띄우기
+            showModal("로그인을 시도합니다...");
+
+            // 3) AJAX 로그인
+            $.ajax({
+                url: "/user/loginProc",
+                type: "post",
+                dataType: "json",
+                data: $("#f").serialize(),
+                success: function (json) {
+                    if (json.result === 1) {
+                        showModal(json.msg || "로그인에 성공했습니다.", () => {
+                            location.href = json.redirect || "/";
+                        });
+                    } else {
+                        showModal(json.msg || "아이디 또는 비밀번호가 올바르지 않습니다.", () => {
+                            $("#userId").focus();
+                        });
+                    }
+                },
+                error: function () {
+                    showModal("요청 중 오류가 발생했습니다.\n잠시 후 다시 시도해 주세요.");
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

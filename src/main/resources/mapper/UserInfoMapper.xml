@@ -29,6 +29,28 @@
         AND email = #{email}
     </select>
 
+
+    <select id="getUserForPassword" parameterType="UserInfoDTO" resultType="UserInfoDTO">
+        SELECT user_id, name, email
+        FROM users
+        WHERE user_id = #{userId}
+          AND email   = #{email}
+            LIMIT 1
+    </select>
+
+    <!-- ▼▼▼ 추가: 비밀번호 업데이트 -->
+    <update id="updateUserPassword" parameterType="UserInfoDTO">
+        UPDATE users
+        SET password = #{password}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- ▼▼▼ 추가: 회원 탈퇴 -->
+    <delete id="deleteUser" parameterType="UserInfoDTO">
+        DELETE FROM users
+        WHERE user_id = #{userId}
+    </delete>
+
     <!-- 회원가입 -->
     <insert id="insertUserInfo" parameterType="UserInfoDTO">
         INSERT INTO users

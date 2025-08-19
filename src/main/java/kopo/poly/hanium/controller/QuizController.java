@@ -1,18 +1,10 @@
 package kopo.poly.hanium.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import kopo.poly.hanium.dto.MsgDTO;
-import kopo.poly.hanium.dto.UserInfoDTO;
-import kopo.poly.hanium.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import kopo.poly.hanium.service.IUserInfoService;
 
 @Slf4j
 @RequestMapping(value = "/contents")
@@ -57,11 +49,7 @@ public class QuizController {
         return "quiz/quizResult";
     }
 
-    @GetMapping(value = "mypage")
-    public String myPage() {
 
-        return "contents/mypage";
-    }
 
 
     @GetMapping(value = "/")
@@ -70,11 +58,7 @@ public class QuizController {
         return "index";
     }
 
-    @GetMapping(value = "findPw")
-    public String findPw() {
 
-        return "user/findPw";
-    }
 
     @GetMapping(value = "haniumstartpage")
     public String haniumstartpage() {
