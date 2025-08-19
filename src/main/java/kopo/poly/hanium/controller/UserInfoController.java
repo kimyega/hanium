@@ -10,14 +10,11 @@ import kopo.poly.hanium.util.EncryptUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -81,7 +78,7 @@ public class UserInfoController {
                 msg = "로그인이 성공했습니다.";
 
                 session.setAttribute("SS_USER_ID", userId);
-                session.setAttribute("SS_USER_NAME", kopo.poly.hanium.util.CmmUtil.nvl(rDTO.getName()));
+                session.setAttribute("SS_USER_NAME", CmmUtil.nvl(rDTO.getName()));
 
             } else {
                 msg = "아이디와 비밀번호가 올바르기 않습니다.";
@@ -99,6 +96,34 @@ public class UserInfoController {
 
             log.info("{}.loginProc End!", this.getClass().getName());
         }
+
+        return dto;
+    }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    @ResponseBody
+    public MsgDTO logout(HttpSession session) {
+
+        log.info("{}.logout Start!", this.getClass().getName());
+
+        int res = 1; // 기본 성공
+        String msg = "";
+
+        MsgDTO dto = new MsgDTO();
+
+        try {
+            session.invalidate();
+            msg = "성공적으로 로그아웃되었습니다.";
+        } catch (Exception e) {
+            res = 0;
+            msg = "로그아웃 중 오류가 발생했습니다.";
+        }
+
+        dto.setResult(res);
+        dto.setMsg(msg);
+
+        log.info("{}.logout End!", this.getClass().getName());
 
         return dto;
     }
@@ -278,15 +303,12 @@ public class UserInfoController {
                 UserInfoDTO pDTO = new UserInfoDTO();
                 pDTO.setUserId(userId);
 
-                // 로그인에서 평문 비교 중이면 아래 라인 유지
-                pDTO.setPassword(password);
-
                 // 로그인에서 해시쓰면 아래로 교체
-                // pDTO.setPassword(EncryptUtil.encHashSHA256(password));
+                pDTO.setPassword(EncryptUtil.encHashSHA256(password));
 
                 UserInfoDTO rDTO = userInfoService.getLogin(pDTO);
 
-                if (rDTO != null && CmmUtil.nvl(rDTO.getUserId()).length() > 0) {
+                if (rDTO != null && !CmmUtil.nvl(rDTO.getUserId()).isEmpty()) {
                     // 비밀번호 일치 → 삭제
                     UserInfoDTO dDTO = new UserInfoDTO();
                     dDTO.setUserId(userId);
