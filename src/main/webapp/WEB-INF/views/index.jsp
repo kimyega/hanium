@@ -28,58 +28,59 @@
 			--peach-border:#f59c8b;
 			--shadow:0 8px 12px rgba(0,0,0,.10);
 		}
-		html,body{height:100%; margin:0; font-family:'Cute Font',sans-serif;}
+		html,body{
+			height:100%; margin:0;
+			font-family:'Cute Font',sans-serif;
+			background:#fff;
+			overflow:hidden; /* ✅ 스크롤 제거 */
+		}
 
 		/* ===== 메인 Hero ===== */
 		.hero-wrap{
+			width:100%;
+			height:calc(100vh - 80px); /* 헤더 제외한 전체 화면 */
+			background:url('/images/start.png') no-repeat center center;
+			background-size:cover;      /* ✅ 화면에 꽉 차게 */
+			display:flex;
+			justify-content:flex-end;   /* 버튼을 아래쪽으로 배치 */
+			align-items:center;         /* 가운데 정렬 */
+			flex-direction:column;
 			position:relative;
-			height:calc(100vh - 72px); /* 상단바 높이에 맞춰 필요시 조정 */
-			min-height:640px;
-			overflow:hidden;
-			isolation:isolate;
-		}
-		/* 전체 배경 이미지 */
-		.hero-bg{
-			position:absolute; inset:0;
-			background: url('/images/index.png') center center / cover no-repeat; /* 이미지 경로만 맞춰주세요 */
-			z-index:0;
-			transform:scale(1.02); /* 가장자리 빈틈 방지용 살짝 확대 */
-		}
-		/* 가독성 오버레이 (좌측 밝게) */
-		.hero-overlay{
-			position:absolute; inset:0; z-index:1;
-			background:linear-gradient(90deg, rgba(255,255,255,.85) 0%, rgba(255,255,255,.55) 35%, rgba(255,255,255,.15) 70%, rgba(255,255,255,0) 100%);
 		}
 
-		/* 왼쪽 버튼 스택 */
-		.menu-stack{
-			position:relative; z-index:2;
-			height:100%; display:flex; align-items:center;
-			padding-left:48px;
+		/* 버튼 */
+		.btn-box{
+			margin-bottom:60px; /* 화면 하단에서 띄우기 */
+			display:flex;
+			gap:40px;
+			justify-content:center;
 		}
-		.menu-col{ display:flex; flex-direction:column; gap:44px; }
 		.menu-btn{
-			display:flex; align-items:center; justify-content:center;
-			width:340px; height:118px; border-radius:60px;
-			border:6px solid var(--peach-border); background:#fff;
-			font-size:38px; cursor:pointer; box-shadow:var(--shadow);
-			transition:transform .1s ease, box-shadow .2s ease, background .2s ease;
+			padding:16px 40px;
+			font-size:28px;
+			border-radius:40px;
+			border:6px solid var(--peach-border);
+			background:#fff;
+			cursor:pointer;
+			box-shadow:var(--shadow);
+			transition:all .2s ease;
 		}
-		.menu-btn:hover{ transform:translateY(-2px); box-shadow:0 12px 18px rgba(0,0,0,.16); background:#fffdfb; }
-		.menu-btn i{ margin-right:14px; }
+		.menu-btn:hover{
+			background:#fffaf7;
+			transform:translateY(-3px);
+			box-shadow:0 14px 20px rgba(0,0,0,.18);
+		}
 
 		/* 반응형 */
-		@media (max-width: 960px){
-			.hero-wrap{ height:auto; min-height:100vh; }
-			.hero-overlay{ background:rgba(255,255,255,.78); }
-			.menu-stack{ justify-content:center; padding:40px 20px; }
-			.menu-btn{ width:min(88vw, 360px); }
+		@media (max-width: 768px){
+			.btn-box{ flex-direction:column; gap:20px; }
+			.menu-btn{ width:80%; margin:0 auto; font-size:22px; }
 		}
 	</style>
 </head>
 <body>
 
-<!-- ===== 상단바 (table.css 구조 사용) ===== -->
+<!-- ===== 상단바 (table.css 구조 건드리지 않음) ===== -->
 <header>
 	<div class="header-icon-stack">
 		<i class="fa-solid fa-book-open book"></i>

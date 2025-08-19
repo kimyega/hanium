@@ -53,7 +53,7 @@ public class MailService implements IMailService {
 
         } catch (Exception e) {
             res = 0;
-            log.info("[ERROR] doSendMail : {}", e);
+            log.info("[ERROR] doSendMail : {}", e.getMessage());
         }
 
         log.info("{}.doSendMail end!", this.getClass().getName());
