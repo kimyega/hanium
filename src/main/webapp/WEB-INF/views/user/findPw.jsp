@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cute+Font&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- 공통 스타일 -->
     <link rel="stylesheet" href="/css/table.css" />
@@ -54,93 +53,6 @@
         .modal-message { font-size:18px; line-height:1.6; margin:10px 0 22px; white-space:pre-line; }
         .modal-actions .verify-button { width:160px; margin:0 auto; }
     </style>
-
-    <script>
-        let emailAuthNumber = "";
-
-        $(function () {
-            $("#btnEmail").on("click", function () { emailExists(); });
-            $("#btnCheck").on("click", function () { doCheck(); });
-            $("#modalOk").on("click", closeModal);
-            $(document).on("keydown", function(e){ if(e.key==="Escape") closeModal(); });
-        });
-
-        /* ===== 모달 유틸 ===== */
-        function showModal(message, onOk) {
-            $("#appModal .modal-title").text("알림");
-            $("#appModal .modal-message").text(message);
-            $("#appModal").addClass("show");
-            // OK 후처리 등록
-            $("#modalOk").data("onOk", onOk || null);
-        }
-        function closeModal() {
-            $("#appModal").removeClass("show");
-            const cb = $("#modalOk").data("onOk");
-            $("#modalOk").data("onOk", null);
-            if (typeof cb === "function") cb();
-        }
-
-        // 1) 이메일 존재 확인 + 아이디/이메일 본인확인 → Step2로
-        function emailExists() {
-            const userId = $("#userId").val()?.trim();
-            const email  = $("#email").val()?.trim();
-
-            if (!email)  { showModal("이메일을 입력하세요.",  () => $("#email").focus());  return; }
-            if (!userId) { showModal("아이디를 입력하세요.", () => $("#userId").focus()); return; }
-
-            $.ajax({
-                url: "/user/emailAuthNumber",
-                type: "POST",
-                dataType: "JSON",
-                data: { email },
-                success: function (json) {
-                    if (json.existsYn === "Y") {
-                        $.ajax({
-                            url: "/user/searchPasswordProc",
-                            type: "POST",
-                            dataType: "JSON",
-                            data: { userId, email },
-                            success: function (r) {
-                                if (r.result === 1) {
-                                    emailAuthNumber = String(json.authNumber);
-                                    $("#hiddenUserId").val(userId);
-                                    $("#hiddenEmail").val(email);
-                                    $("#step1").hide();
-                                    $("#step2").show();
-                                } else {
-                                    showModal(r.msg || "본인 확인에 실패했습니다.");
-                                }
-                            },
-                            error: onAjaxErr
-                        });
-                    } else {
-                        showModal("존재하지 않는 이메일입니다.", () => $("#email").focus());
-                    }
-                },
-                error: onAjaxErr
-            });
-        }
-
-        // 2) 인증번호 확인 → changePw(Reset 모드)로 이동
-        function doCheck() {
-            const code = $("#code").val()?.trim();
-            if (!code) { showModal("인증번호를 입력하세요.", () => $("#code").focus()); return; }
-
-            if (String(code) !== String(emailAuthNumber)) {
-                showModal("인증번호가 일치하지 않습니다.", () => $("#code").focus());
-                return;
-            }
-
-            const uid = encodeURIComponent($("#hiddenUserId").val());
-            window.location.href = "/user/changePw?reset=1&userId=" + uid;
-        }
-
-        function onAjaxErr(xhr) {
-            console.error("AJAX ERROR", xhr.status, xhr.responseText);
-            if (xhr.status === 403) showModal("요청이 차단되었습니다.\n(CSRF 설정을 확인하세요)");
-            else showModal("요청 중 오류가 발생했습니다.");
-        }
-    </script>
 </head>
 <body>
 
@@ -149,14 +61,14 @@
         <i class="fa-solid fa-book-open book"></i>
         <i class="fa-solid fa-hands-holding hands"></i>
     </div>
-    <div class="header-logo" onclick="location.href='main.html'">Märchand</div>
+    <div class="header-logo" onclick="location.href='/main'">Märchand</div>
     <div class="header-user-area">
         <div class="header-user-icon"><i class="fa-solid fa-circle-user fa-2xl"></i></div>
         <div class="header-dropdown">
             <button class="header-dropdown-toggle" id="headerDropdownToggle">홍길동 ▼</button>
             <ul class="header-dropdown-menu" id="headerDropdownMenu">
-                <li onclick="location.href='profile.html'">내 정보</li>
-                <li onclick="location.href='logout.html'">로그아웃</li>
+                <li onclick="location.href='/user/mypage'">내 정보</li>
+                <li onclick="location.href='/logout'">로그아웃</li>
             </ul>
         </div>
     </div>
@@ -193,28 +105,107 @@
         </form>
     </section>
 
-    <!-- 3단계: (비밀번호 찾기는 바로 changePw로 이동하므로 사용 안 함) -->
+    <!-- 3단계: changePw 이동 후 처리 -->
     <section id="step3" class="find-id-box" style="display:none;"></section>
 </main>
 
 <!-- ✅ 공용 알림 모달 -->
-<div id="appModal" class="modal-overlay" style="display:none;">
-    <div class="modal-box" style="
-    width:520px;max-width:calc(100vw - 40px);background:#fff;border:6px solid #fca08c;border-radius:30px;
-    box-shadow:8px 8px 10px rgba(0,0,0,0.15);padding:36px 28px;text-align:center;">
-        <h3 class="modal-title" style="font-size:24px;font-weight:700;margin-bottom:14px;">알림</h3>
-        <p class="modal-message" style="font-size:18px;line-height:1.6;margin:10px 0 22px;white-space:pre-line;"></p>
-        <button type="button" id="modalOk" class="verify-button" style="width:160px;margin:0 auto;">확인</button>
+<div id="appModal" class="modal-overlay">
+    <div class="modal-box">
+        <h3 class="modal-title">알림</h3>
+        <p class="modal-message"></p>
+        <button type="button" id="modalOk" class="verify-button">확인</button>
     </div>
 </div>
 
-<style>
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:9999}
-    .modal-overlay.show{display:flex}
-</style>
-
-
+<!-- ✅ 스크립트는 body 끝으로 이동 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    let emailAuthNumber = "";
+
+    $(function () {
+        $("#btnEmail").on("click", function () { emailExists(); });
+        $("#btnCheck").on("click", function () { doCheck(); });
+        $("#modalOk").on("click", closeModal);
+        $(document).on("keydown", function(e){ if(e.key==="Escape") closeModal(); });
+    });
+
+    /* ===== 모달 유틸 ===== */
+    function showModal(message, onOk) {
+        $("#appModal .modal-title").text("알림");
+        $("#appModal .modal-message").text(message);
+        $("#appModal").addClass("show");
+        $("#modalOk").data("onOk", onOk || null);
+    }
+    function closeModal() {
+        $("#appModal").removeClass("show");
+        const cb = $("#modalOk").data("onOk");
+        $("#modalOk").data("onOk", null);
+        if (typeof cb === "function") cb();
+    }
+
+    // 1) 이메일 존재 확인 + 아이디/이메일 본인확인 → Step2로
+    function emailExists() {
+        const userId = $("#userId").val()?.trim();
+        const email  = $("#email").val()?.trim();
+
+        if (!email)  { showModal("이메일을 입력하세요.",  () => $("#email").focus());  return; }
+        if (!userId) { showModal("아이디를 입력하세요.", () => $("#userId").focus()); return; }
+
+        $.ajax({
+            url: "/user/emailAuthNumber",
+            type: "POST",
+            dataType: "JSON",
+            data: { email },
+            success: function (json) {
+                if (json.existsYn === "Y") {
+                    $.ajax({
+                        url: "/user/searchPasswordProc",
+                        type: "POST",
+                        dataType: "JSON",
+                        data: { userId, email },
+                        success: function (r) {
+                            if (r.result === 1) {
+                                emailAuthNumber = String(json.authNumber);
+                                $("#hiddenUserId").val(userId);
+                                $("#hiddenEmail").val(email);
+                                $("#step1").hide();
+                                $("#step2").show();
+                            } else {
+                                showModal(r.msg || "본인 확인에 실패했습니다.");
+                            }
+                        },
+                        error: onAjaxErr
+                    });
+                } else {
+                    showModal("존재하지 않는 이메일입니다.", () => $("#email").focus());
+                }
+            },
+            error: onAjaxErr
+        });
+    }
+
+    // 2) 인증번호 확인 → changePw(Reset 모드)로 이동
+    function doCheck() {
+        const code = $("#code").val()?.trim();
+        if (!code) { showModal("인증번호를 입력하세요.", () => $("#code").focus()); return; }
+
+        if (String(code) !== String(emailAuthNumber)) {
+            showModal("인증번호가 일치하지 않습니다.", () => $("#code").focus());
+            return;
+        }
+
+        const uid = encodeURIComponent($("#hiddenUserId").val());
+        window.location.href = "/user/changePw?reset=1&userId=" + uid;
+    }
+
+    function onAjaxErr(xhr) {
+        console.error("AJAX ERROR", xhr.status, xhr.responseText);
+        if (xhr.status === 403) showModal("요청이 차단되었습니다.\n(CSRF 설정을 확인하세요)");
+        else showModal("요청 중 오류가 발생했습니다.");
+    }
+
+    // 드롭다운
     const toggle = document.getElementById('headerDropdownToggle');
     const menu = document.getElementById('headerDropdownMenu');
     toggle.addEventListener('click', function (e) {
