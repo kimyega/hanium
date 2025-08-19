@@ -41,6 +41,21 @@ public class UserInfoController {
         return "user/findId";
     }
 
+
+    @GetMapping({"/", "/index"})
+    public String index() {
+        log.info("GET /index");
+        return "index";  // => src/main/webapp/WEB-INF/views/index.jsp
+    }
+
+
+
+    @GetMapping("/main")
+    public String main() {
+        log.info("GET /main");
+        return "main";   // => src/main/webapp/WEB-INF/views/main.jsp
+    }
+
     // 회원가입 페이지 이동
     @GetMapping(value = "register")
     public String register() {
