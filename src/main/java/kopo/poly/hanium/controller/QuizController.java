@@ -1,5 +1,6 @@
 package kopo.poly.hanium.controller;
 
+import kopo.poly.hanium.service.IUserInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
