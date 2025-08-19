@@ -15,7 +15,7 @@
         SELECT
             IF(COUNT(user_id) > 0, 'Y', 'N') AS EXISTS_YN
         FROM users
-        WHERE email = #{email}
+        WHERE email = #{email} AND name = #{name}
     </select>
 
     <select id="getUserId" parameterType="UserInfoDTO" resultType="UserInfoDto">
