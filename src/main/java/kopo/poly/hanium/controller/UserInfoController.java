@@ -38,21 +38,6 @@ public class UserInfoController {
         return "user/findId";
     }
 
-
-    @GetMapping({"/", "/index"})
-    public String index() {
-        log.info("GET /index");
-        return "index";  // => src/main/webapp/WEB-INF/views/index.jsp
-    }
-
-
-
-    @GetMapping("/main")
-    public String main() {
-        log.info("GET /main");
-        return "main";   // => src/main/webapp/WEB-INF/views/main.jsp
-    }
-
     // 회원가입 페이지 이동
     @GetMapping(value = "register")
     public String register() {
@@ -222,7 +207,7 @@ public class UserInfoController {
 
         UserInfoDTO pDTO = new UserInfoDTO();
         pDTO.setUserId(userId);
-        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
+        pDTO.setEmail(email);
 
         UserInfoDTO rDTO = Optional.ofNullable(
                 userInfoService.searchUserIdOrPasswordProc(pDTO) // 내부에서 userId+email 일치 확인
@@ -266,7 +251,8 @@ public class UserInfoController {
                 pDTO.setUserId(userId);
 
                 // ※ 실제 운영 시에는 반드시 해시 적용
-                pDTO.setPassword(EncryptUtil.encHashSHA256(password));
+                // pDTO.setPassword(EncryptUtil.encHashSHA256(password));
+                pDTO.setPassword(password); // 데모/테스트용
 
                 int i = userInfoService.updatePassword(pDTO); // IUserInfoService에 메서드 필요
 
