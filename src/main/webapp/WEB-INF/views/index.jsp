@@ -13,6 +13,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 	<!-- CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link rel="stylesheet" href="/css/table.css" />
 
 	<%-- 모달창 css --%>
@@ -117,7 +118,6 @@
 </header>
 
 <!-- ===== 메인 ===== -->
-
 <main>
 	<div class="start-container">
 		<img src="/images/start.png" alt="동물 그림" class="start-image" />
@@ -163,6 +163,5 @@
 </div>
 
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
-
 </body>
 </html>
