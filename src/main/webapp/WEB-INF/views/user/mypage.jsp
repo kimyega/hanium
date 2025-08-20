@@ -208,7 +208,7 @@
     <div class="modal-content">
         <h2>메르헨드</h2>
         <p>로그아웃 완료!!</p>
-        <button id="modalLoginBtn">메인 화면으로</button>
+        <button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
     </div>
 </div>
 
