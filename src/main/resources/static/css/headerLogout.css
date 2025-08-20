@@ -38,7 +38,7 @@
 }
 
 /* 버튼 */
-#modalLoginBtn {
+.modal-btn {
     padding: 10px 0;      /* 세로 패딩 조금 줄임 */
     width: 100%;
     font-size: 28px;      /* 버튼 글자 약간 작게 조정 */
@@ -50,11 +50,11 @@
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-#modalLoginBtn:hover {
+.modal-btn:hover {
     background-color: #f99074;
 }
 
-#modalLoginBtn:active {
+.modal-btn:active {
     background-color: #e87b5f;
     transform: scale(0.98);
 }

@@ -242,7 +242,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="slide-card" onclick="goToDetail('/contents/quiz1.jsp')">
+				<div class="slide-card" onclick="goToDetail('/contents/quiz')">
 					<div class="card-inner" style="background-color: #a0e7e5">
 						<img src="/images/turtle.png" alt="별주부전">
 						<div class="card-title">
@@ -291,7 +291,7 @@
 	<div class="modal-content">
 		<h2>메르헨드</h2>
 		<p>로그아웃 완료!!</p>
-		<button id="modalLoginBtn">메인 화면으로</button>
+		<button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
 	</div>
 </div>
 
