@@ -13,7 +13,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthInterceptor())
-                .addPathPatterns("/contents/**", "/user/mypage", "/user/withdraw") // 로그인 필요 경로
+                .addPathPatterns("/contents/**", "/make/**", "/user/mypage", "/user/withdraw") // 로그인 필요 경로
                 .excludePathPatterns("/user/login", "/user/loginProc", "/user/register", "/user/findId", "/user/findPw"); // 로그인 제외
     }
 

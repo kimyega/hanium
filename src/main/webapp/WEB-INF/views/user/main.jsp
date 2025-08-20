@@ -127,7 +127,7 @@
             <button class="menu-btn" onclick="location.href='/contents/fairytaleList'">
                 <i class="fa-solid fa-book-open-reader"></i> 동화 읽기
             </button>
-            <button class="menu-btn" onclick="location.href='/contents/makeFairytale'">
+            <button class="menu-btn" onclick="location.href='/make/makeFairytale'">
                 <i class="fa-solid fa-wand-magic-sparkles"></i> 동화 만들기
             </button>
             <button class="menu-btn" onclick="location.href='/contents/quizList'">

@@ -23,16 +23,7 @@ public class QuizController {
 
         return "fairytale/readFairytale";
     }
-    @GetMapping(value = "makeFairytale")
-    public String makePage() {
-
-        return "make/makeFairytale";
-    }
-    @GetMapping(value = "makeFairytaleResult")
-    public String makeResultPage() {
-
-        return "make/makeFairytaleResult";
-    }
+    
     @GetMapping(value = "quiz")
     public String quiz1Page() {
 
@@ -48,16 +39,6 @@ public class QuizController {
 
         return "quiz/quizResult";
     }
-
-
-
-
-    @GetMapping(value = "/")
-    public String indexpage() {
-
-        return "index";
-    }
-
 
 
     @GetMapping(value = "haniumstartpage")
