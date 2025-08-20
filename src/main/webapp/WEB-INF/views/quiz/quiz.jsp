@@ -86,7 +86,6 @@
 			background-color: white;
 		}
 
-
 		/*///////////  정답/오답 모달 디자인 /////////*/
 		.modal-res {
 			display: none;
@@ -190,8 +189,8 @@
 					</fieldset>
 				</div>
 				<div class="card card-dic" id="dicCard">
-					<div class="card-dic-title-text">정답 확인</div> <!-- 버튼 대신 텍스트 -->
-					<div class="card-dic-img">
+					<div class="card-dic-title-text">정답</div> <!-- 버튼 대신 텍스트 -->
+					<div class="card-dic-img" id="cardDicImg">
 						<i class="fa-solid fa-question fa-2xl" style="color: #fca08c;"></i>
 					</div>
 				</div>
@@ -318,11 +317,12 @@
 
 						// ✅ 모달 닫힌 후 카드 이미지 변경
 						const dicCard = document.getElementById("dicCard"); // 카드 DOM 요소 가져오기
+						const icon = document.getElementById("cardDicImg");
 						if (dicCard) {
 							dicCard.style.backgroundImage = "url('/images/language.png')";
 							dicCard.style.backgroundSize = "cover";
 							dicCard.style.backgroundPosition = "center";
-							dicCard.innerHTML = ''; // 기존 텍스트/아이콘 제거
+							icon.remove(); // 기존 텍스트/아이콘 제거
 							isImageShown = true;
 						}
 					}, 2000);
@@ -342,22 +342,6 @@
 		await initPoseModel();
 		detectPose();
 	};
-</script>
-
-<script>
-
-	const dicCard = document.getElementById('dicCard');
-	let isImageShown = false;
-
-	dicCard.addEventListener('click', function () {
-		if (!isImageShown) {
-			dicCard.style.backgroundImage = "url('/images/language.png')"; // 🔁 여기에 원하는 이미지 경로
-			dicCard.style.backgroundSize = "cover";
-			dicCard.style.backgroundPosition = "center";
-			dicCard.innerHTML = ''; // 기존 텍스트/아이콘 제거
-			isImageShown = true;
-		}
-	});
 </script>
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 </body>
