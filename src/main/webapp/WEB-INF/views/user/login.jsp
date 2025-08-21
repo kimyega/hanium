@@ -124,7 +124,7 @@
     <div class="modal-content">
         <h2>메르헨드</h2>
         <p>로그아웃 완료!!</p>
-        <button id="modalLoginBtn">메인 화면으로</button>
+        <button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
     </div>
 </div>
 
@@ -181,7 +181,7 @@
                 success: function (json) {
                     if (json.result === 1) {
                         showModal(json.msg || "로그인에 성공했습니다.", () => {
-                            location.href = json.redirect || "/";
+                            location.href = json.redirect || "/user/main";
                         });
                     } else {
                         showModal(json.msg || "아이디 또는 비밀번호가 올바르지 않습니다.", () => {

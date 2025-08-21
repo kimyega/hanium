@@ -134,11 +134,14 @@ public class UserInfoController {
 
         log.info("{}.emailAuthNumber Start!", this.getClass().getName());
 
+        String userName = CmmUtil.nvl(request.getParameter("userName"));
         String email = CmmUtil.nvl(request.getParameter("email"));
 
+        log.info("userName : {}", userName);
         log.info("email : {}", email);
 
         UserInfoDTO pDTO = new UserInfoDTO();
+        pDTO.setName(userName);
         pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
 
         log.info("암호화 email : {}", pDTO.getEmail());
@@ -518,6 +521,12 @@ public class UserInfoController {
         }
 
         return dto;
+    }
+
+    @GetMapping(value = "main")
+    public String main() {
+
+        return "user/main";
     }
 
 

@@ -156,6 +156,10 @@
 					<div><span class="word">용왕</span> : <span class="result correct">정답</span></div>
 					<div><span class="word">보물</span> : <span class="result correct">정답</span></div>
 					<div><span class="word">생일</span> : <span class="result correct">정답</span></div>
+					<div><span class="word">바다</span> : <span class="result correct">정답</span></div>
+					<div><span class="word">간</span> : <span class="result correct">정답</span></div>
+					<div><span class="word">약속</span> : <span class="result correct">정답</span></div>
+					<div><span class="word">신하</span> : <span class="result correct">정답</span></div>
 				</div>
 			</div>
 			<div class="make-wrapper">
@@ -171,7 +175,7 @@
 	<div class="modal-content">
 		<h2>메르헨드</h2>
 		<p>로그아웃 완료!!</p>
-		<button id="modalLoginBtn">메인 화면으로</button>
+		<button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
 	</div>
 </div>
 
@@ -179,13 +183,9 @@
 
 	const nextBtn = document.querySelector('.button.make');
 
-	nextBtn.addEventListener('click', function () {
-		alert('저장되었습니다.');
-	});
-
 	document.getElementById('quizSaveBtn').addEventListener('click', function () {
 		const form = document.getElementById('f');
-		form.action = '/contents/quizList';
+		form.action = '/quiz/quizList';
 		form.method = 'get';
 		form.submit();
 	});

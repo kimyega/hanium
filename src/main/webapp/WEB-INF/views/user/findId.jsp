@@ -115,14 +115,14 @@
         })
 
         function emailExists(f) {
-            if (f.email.value === "") {
-                alert("이메일을 입력하세요.");
+            if (f.userName.value === "") {
+                alert("이름을 입력하세요.");
                 f.email.focus();
                 return;
             }
 
-            if (f.userName.value === "") {
-                alert("이름을 입력하세요.");
+            if (f.email.value === "") {
+                alert("이메일을 입력하세요.");
                 f.email.focus();
                 return;
             }
@@ -143,7 +143,7 @@
                         document.getElementById("hiddenUserName").value = f.userName.value;
                         document.getElementById("hiddenEmail").value = f.email.value;
                     } else {
-                        alert("존재하지 않는 메일 입니다.")
+                        alert("존재하지 않는 이름 또는 메일 입니다.")
                         f.email.focus();
                     }
                 }
@@ -271,7 +271,7 @@
     <div class="modal-content">
         <h2>메르헨드</h2>
         <p>로그아웃 완료!!</p>
-        <button id="modalLoginBtn">메인 화면으로</button>
+        <button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
     </div>
 </div>
 
