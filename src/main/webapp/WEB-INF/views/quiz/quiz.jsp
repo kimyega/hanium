@@ -1,4 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="kopo.poly.hanium.dto.SignWordsDTO" %>
+<%
+	List<SignWordsDTO> rList = (List<SignWordsDTO>) request.getAttribute("rList");
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -187,9 +192,9 @@
 <form id="f">
 	<main>
 		<div class="top-bar">
-			<button class="button top-home-button" onclick="location.href='/home.html'">
+			<a class="button top-home-button" onclick="location.href='/home.html'">
 				<i class="fa-solid fa-house fa-2xl"></i>
-			</button>
+			</a>
 			<div class="top-title">단어 퀴즈</div>
 			<div style="width: 60px;"></div>
 		</div>
@@ -371,7 +376,16 @@
 <%--하드코딩으로 퀴즈 단어 변경--%>
 <script>
 	// -------------------- 퀴즈 문제 데이터 --------------------
-	const quizWords = ["토끼", "자라", "동물", "용왕", "보물", "생일", "바다", "간", "약속", "신하"];
+	const quizWords = [
+		<%
+            for (int i = 0; i < rList.size(); i++) {
+                String word = rList.get(i).getWord();
+        %>
+		"<%= word %>"<%= (i < rList.size() - 1) ? "," : "" %>
+		<%
+            }
+        %>
+	];
 	let currentIndex = 0;
 
 	const prevBtn = document.getElementById("prevBtn");
