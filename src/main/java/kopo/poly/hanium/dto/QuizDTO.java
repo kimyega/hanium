@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class QuizDTO {
-    private String quizId;
+    private int quizId;
     private String title;
     private String description;
     private String createdAt;

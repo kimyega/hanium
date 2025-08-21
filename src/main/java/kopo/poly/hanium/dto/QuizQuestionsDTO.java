@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class QuizQuestionsDTO {
-    private String questionId;
-    private String quizId;
-    private String wordId;
+    private int questionId;
+    private int quizId;
+    private int wordId;
 }
