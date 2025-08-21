@@ -130,7 +130,7 @@
             <button class="menu-btn" onclick="location.href='/make/makeFairytale'">
                 <i class="fa-solid fa-wand-magic-sparkles"></i> 동화 만들기
             </button>
-            <button class="menu-btn" onclick="location.href='/contents/quizList'">
+            <button class="menu-btn" onclick="location.href='/quiz/quizList'">
                 <i class="fa-solid fa-spell-check"></i> 단어 퀴즈
             </button>
         </div>
