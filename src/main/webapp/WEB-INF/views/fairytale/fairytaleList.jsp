@@ -212,12 +212,13 @@
 
 		<div class="slide-container">
 			<div class="slide-card-wrapper" id="slideCardWrapper">
-				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
+				<div class="slide-card" onclick="goToDetail('/contents/readFairytale?storyId=1')">
 					<div class="card-inner" style="background-color: #fca0b3">
 						<img src="/images/pig.png" alt="아기돼지 삼형제">
 						<div class="card-title">아기돼지 삼형제</div>
 					</div>
 				</div>
+
 				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
 					<div class="card-inner" style="background-color: #ffd167">
 						<img src="/images/castle.png" alt="코딩 왕자">
@@ -270,7 +271,7 @@
 	<div class="modal-content">
 		<h2>메르헨드</h2>
 		<p>로그아웃 완료!!</p>
-		<button id="modalLoginBtn">메인 화면으로</button>
+		<button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
 	</div>
 </div>
 

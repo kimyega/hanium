@@ -151,14 +151,8 @@
 				<div class="made card card-img">
 					<img src="/images/castle.png" alt="없습니다.">
 				</div>
-				<div class="made contents">
-					<p>
-						옛날 옛날에 용궁에 용왕님이 살고 있었는데,
-						어느날 용왕님이 죽을병에 걸리고 말았어요.
-					</p>
-					<p>
-						용왕님의 <span class="highlight underline">병</span>을 고치려면 <span class="highlight underline">토끼</span>의 간이 필요해요
-					</p>
+				<div id="gptResultBox" class="made contents" >
+
 				</div>
 			</div>
 			<div class="make-wrapper-two">
@@ -175,9 +169,29 @@
 	<div class="modal-content">
 		<h2>메르헨드</h2>
 		<p>로그아웃 완료!!</p>
-		<button id="modalLoginBtn">메인 화면으로</button>
+		<button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
 	</div>
 </div>
+
+<script>
+	$(document).ready(function() {
+		// 페이지 로딩 시 세션에서 gptResult 가져오기
+		$.getJSON('${pageContext.request.contextPath}/make/makeFairytaleResultData', function(data) {
+			const gptResultBox = document.getElementById("gptResultBox");
+
+			console.log(data.gptResult);
+
+			// 결과가 있으면 삽입, 없으면 기본 메시지
+			if (data && data.gptResult) {
+				gptResultBox.innerText = data.gptResult;
+			} else {
+				gptResultBox.innerText = "동화 생성 결과가 없습니다.";
+			}
+		}).fail(function(err) {
+			console.error("결과를 가져오는데 실패했습니다.", err);
+		});
+	});
+</script>
 
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 </body>

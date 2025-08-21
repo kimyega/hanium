@@ -13,7 +13,6 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 	<!-- CSS -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link rel="stylesheet" href="/css/table.css" />
 
 	<%-- 모달창 css --%>
@@ -132,7 +131,7 @@
 	<div class="modal-content">
 		<h2>메르헨드</h2>
 		<p>로그아웃 완료!!</p>
-		<button id="modalLoginBtn">메인 화면으로</button>
+		<button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
 	</div>
 </div>
 
