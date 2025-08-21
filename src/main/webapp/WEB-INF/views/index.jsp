@@ -13,7 +13,6 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 	<!-- CSS -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link rel="stylesheet" href="/css/table.css" />
 
 	<%-- 모달창 css --%>
@@ -21,7 +20,6 @@
 
 	<%-- Jquery --%>
 	<script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
-
 
 	<style>
 		:root{
