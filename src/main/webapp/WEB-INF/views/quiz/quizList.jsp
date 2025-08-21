@@ -1,4 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="kopo.poly.hanium.dto.QuizDTO" %>
+<%@ page import="kopo.poly.hanium.util.CmmUtil" %>
+<%
+	List<QuizDTO> rList = (List<QuizDTO>) request.getAttribute("rList");
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -201,9 +207,9 @@
 <form id="f">
 	<main>
 		<div class="top-bar">
-			<button class="button top-home-button" onclick="location.href='/home.html'">
+			<a class="button top-home-button" onclick="location.href='/user/main'">
 				<i class="fa-solid fa-house fa-2xl"></i>
-			</button>
+			</a>
 			<div class="top-search">
 				<i class="fa-solid fa-magnifying-glass fa-sm search-icon" onclick="focusInput()"></i>
 				<input id="searchInput" class="search-bar" type="text" placeholder="동화를 검색해보세요..." />
@@ -215,6 +221,19 @@
 
 		<div class="slide-container">
 			<div class="slide-card-wrapper" id="slideCardWrapper">
+				<%
+					for (QuizDTO dto : rList) {
+				%>
+				<div class="slide-card" onclick="goToDetail('/quiz/quizInfo?nSeq=<%=CmmUtil.nvl(String.valueOf(dto.getQuizId()))%>')">
+					<div class="card-inner" style="background-color: #fca0b3">
+						<img src="/images/turtle.png" alt="아기돼지 삼형제">
+						<div class="card-title">
+							<%=CmmUtil.nvl(dto.getTitle())%>
+							<div class="card-quiz-score">100점</div>
+						</div>
+					</div>
+				</div>
+				<% } %>
 				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
 					<div class="card-inner" style="background-color: #fca0b3">
 						<img src="/images/pig.png" alt="아기돼지 삼형제">
@@ -242,15 +261,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="slide-card" onclick="goToDetail('/contents/quiz')">
-					<div class="card-inner" style="background-color: #a0e7e5">
-						<img src="/images/turtle.png" alt="별주부전">
-						<div class="card-title">
-							별주부전
-							<div class="card-quiz-score">100점</div>
-						</div>
-					</div>
-				</div>
 				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
 					<div class="card-inner" style="background-color: #d3a4ff">
 						<img src="/images/heungbu.png" alt="흥부놀부">
@@ -266,6 +276,14 @@
 						<div class="card-title">
 							메르헨 동산
 							<div class="card-quiz-score">100점</div>
+						</div>
+					</div>
+				</div>
+				<div class="slide-card" onclick="goToDetail('/make/makeFairytale')">
+					<div class="card-inner" style="background-color: #fca0b3">
+						<img src="/images/plus.png" alt="플러스">
+						<div class="card-title" style="background-color: #fca0b3">
+							동화생성
 						</div>
 					</div>
 				</div>

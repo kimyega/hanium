@@ -1,4 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="kopo.poly.hanium.dto.SignWordsDTO" %>
+<%
+	List<SignWordsDTO> rList = (List<SignWordsDTO>) request.getAttribute("rList");
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -68,10 +73,19 @@
 			width: 200px;
 			height: 80px;
 		}
+
 		.make-wrapper button:hover {
 			background-color: #fca08c;
 			color: white;
 		}
+
+		#saveBtnWrapper {
+			display: none;
+			position: absolute;
+			left: 94.5%;
+			transform: translateX(-50%);
+		}
+
 		.quiz-container {
 			display: flex;
 			justify-content: center;
@@ -126,6 +140,15 @@
 			margin-top: 20px;
 		}
 
+		/*버튼 디자인*/
+		.footer-two {
+			display: flex;
+			justify-content: space-between;  /* 양 끝 정렬 */
+			align-items: center;
+			margin-top: 40px;
+			position: relative;
+		}
+
 	</style>
 </head>
 
@@ -169,9 +192,9 @@
 <form id="f">
 	<main>
 		<div class="top-bar">
-			<button class="button top-home-button" onclick="location.href='/home.html'">
+			<a class="button top-home-button" onclick="location.href='/home.html'">
 				<i class="fa-solid fa-house fa-2xl"></i>
-			</button>
+			</a>
 			<div class="top-title">단어 퀴즈</div>
 			<div style="width: 60px;"></div>
 		</div>
@@ -184,7 +207,7 @@
 				</div>
 				<div class="card text-card">
 					<fieldset class="quiz-container">
-						<legend>1 / 10</legend>
+						<legend class="lengend-score">1 / 10</legend>
 						<h1>자라</h1>
 					</fieldset>
 				</div>
@@ -196,14 +219,21 @@
 				</div>
 			</div>
 
-			<div class="footer">
+			<div class="footer-two">
+				<button type="button" class="button" id="prevBtn">
+					<i class="fa-solid fa-arrow-left fa-2xl"></i>
+				</button>
 				<div class="page-number">1</div>
 				<button type="button" class="button" id="nextBtn">
 					<i class="fa-solid fa-arrow-right fa-2xl"></i>
 				</button>
+				<div class="make-wrapper" style="display: none" id="saveBtnWrapper">
+					<button type="button" class="button make" id="quizResultBtn">퀴즈결과</button>
+				</div>
 			</div>
 		</div>
 	</main>
+	<input type="hidden" name="quizId" value="<%= request.getParameter("nSeq") %>" />
 </form>
 
 <%--모달창--%>
@@ -294,6 +324,7 @@
 					modalShown = true;
 
 					const isCorrect = Math.random() < 0.8;
+					quizResults[currentIndex] = isCorrect;
 					const modal = document.getElementById("answerModal");
 					const msg = document.getElementById("answerMessage");
 					const symbol = document.getElementById("answerSymbol");
@@ -343,6 +374,126 @@
 		detectPose();
 	};
 </script>
+
+<%--퀴즈 단어 변경--%>
+<script>
+	// -------------------- 퀴즈 문제 데이터 --------------------
+	const quizWords = [
+		<%
+            for (int i = 0; i < rList.size(); i++) {
+                String word = rList.get(i).getWord();
+        %>
+		"<%= word %>"<%= (i < rList.size() - 1) ? "," : "" %>
+		<%
+            }
+        %>
+	];
+	// 각 단어의 결과 저장 (true = 정답, false = 오답)
+	let quizResults = new Array(quizWords.length).fill(null);
+	let currentIndex = 0;
+
+	const prevBtn = document.getElementById("prevBtn");
+	const nextBtn = document.getElementById("nextBtn");
+
+	// -------------------- 페이지 업데이트 함수 --------------------
+	function updateQuizPage() {
+		// 문제 텍스트
+		document.querySelector(".quiz-container h1").innerText = quizWords[currentIndex];
+
+		console.log(currentIndex);
+		console.log(quizWords.length);
+
+		// legend: 1 / 10 형식
+		document.querySelector(".lengend-score").innerText = currentIndex + 1 + "/" + quizWords.length;
+
+		// footer 페이지 번호
+		document.querySelector(".page-number").innerText = currentIndex + 1;
+
+		// 정답 카드 초기화
+		const dicCard = document.getElementById("dicCard");
+		dicCard.style.backgroundImage = "none";
+		dicCard.innerHTML = `
+            <div class="card-dic-title-text">정답</div>
+            <div class="card-dic-img" id="cardDicImg">
+                <i class="fa-solid fa-question fa-2xl" style="color: #fca08c;"></i>
+            </div>
+        `;
+
+		// 모션인식 리셋
+		modalShown = false;
+		greenStartTime = null;
+		isImageShown = false;
+
+		// 버튼 제어
+		prevBtn.style.visibility = (currentIndex === 0) ? "hidden" : "visible";
+		nextBtn.style.visibility = (currentIndex === quizWords.length - 1) ? "hidden" : "visible";
+		prevBtn.style.pointerEvents = (currentIndex === 0) ? "none" : "auto";
+		nextBtn.style.pointerEvents = (currentIndex === quizWords.length - 1) ? "none" : "auto";
+
+		// 마지막 페이지일 때 저장 버튼 보이기
+		const saveWrapper = document.getElementById("saveBtnWrapper");
+		if (currentIndex === quizWords.length - 1) {
+			saveWrapper.style.display = "flex"; // flex로 하면 가운데 정렬 가능
+		} else {
+			saveWrapper.style.display = "none";
+		}
+	}
+
+	// -------------------- 버튼 이벤트 --------------------
+	nextBtn.addEventListener("click", () => {
+		if (currentIndex < quizWords.length - 1) {
+			currentIndex++;
+			updateQuizPage();
+		}
+	});
+
+	prevBtn.addEventListener("click", () => {
+		if (currentIndex > 0) {
+			currentIndex--;
+			updateQuizPage();
+		}
+	});
+
+	// 초기화
+	updateQuizPage();
+</script>
+
+<script>
+
+	document.getElementById('quizResultBtn').addEventListener('click', function () {
+		const form = document.getElementById('f');
+		form.action = '/quiz/quizResult';
+		form.method = 'post';
+
+		// 기존 hidden input 제거
+		document.querySelectorAll('.quiz-hidden-input').forEach(e => e.remove());
+
+		// 단어와 결과를 함께 전송
+		quizWords.forEach((word, index) => {
+			const result = quizResults[index];
+
+			// 단어
+			const wordInput = document.createElement("input");
+			wordInput.type = "hidden";
+			wordInput.name = "words";
+			wordInput.value = word;
+			wordInput.classList.add("quiz-hidden-input");
+			form.appendChild(wordInput);
+
+			// 결과
+			const resultInput = document.createElement("input");
+			resultInput.type = "hidden";
+			resultInput.name = "results";
+			resultInput.value = result;
+			resultInput.classList.add("quiz-hidden-input");
+			form.appendChild(resultInput);
+		});
+
+		form.submit();
+	});
+
+</script>
+
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 </body>
 </html>

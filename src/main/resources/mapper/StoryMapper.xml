@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kopo.poly.hanium.mapper.StoryMapper">
+
+    <!-- 동화 목록 -->
+    <select id="getAllStories" resultType="kopo.poly.hanium.dto.StoryDTO">
+        SELECT story_id    AS storyId,
+               title,
+               summary,
+               cover_image AS coverImage,
+               created_at  AS createdAt
+        FROM stories
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 특정 동화 페이지들 -->
+    <select id="getPagesByStoryId" parameterType="int" resultType="kopo.poly.hanium.dto.StoryPageDTO">
+        SELECT page_id       AS pageId,
+               story_id      AS storyId,
+               page_number   AS pageNumber,
+               content_text  AS contentText,
+               content_image AS contentImage
+        FROM story_pages
+        WHERE story_id = #{storyId}
+        ORDER BY page_number ASC
+    </select>
+
+    <!-- 특정 동화 기본 정보 (단일 조회 by ID) -->
+    <select id="getStoryById" parameterType="int" resultType="kopo.poly.hanium.dto.StoryDTO">
+        SELECT story_id    AS storyId,
+               title,
+               summary,
+               cover_image AS coverImage,
+               created_at  AS createdAt
+        FROM stories
+        WHERE story_id = #{storyId}
+    </select>
+
+    <!-- 특정 동화 기본 정보 (단일 조회 by TITLE) -->
+    <select id="getStoryByTitle" parameterType="string" resultType="kopo.poly.hanium.dto.StoryDTO">
+        SELECT story_id    AS storyId,
+               title,
+               summary,
+               cover_image AS coverImage,
+               created_at  AS createdAt
+        FROM stories
+        WHERE title = #{title}
+            LIMIT 1
+    </select>
+
+    <!-- getStoryById와 동일한 기능의 별칭 (서비스에서 사용 중) -->
+    <select id="selectStoryInfo" parameterType="int" resultType="kopo.poly.hanium.dto.StoryDTO">
+        SELECT story_id    AS storyId,
+               title,
+               summary,
+               cover_image AS coverImage,
+               created_at  AS createdAt
+        FROM stories
+        WHERE story_id = #{storyId}
+    </select>
+
+</mapper>

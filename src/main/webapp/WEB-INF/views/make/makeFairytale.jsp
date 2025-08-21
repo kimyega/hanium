@@ -235,6 +235,28 @@
 			transform: translateY(2px); /* 눌리는 효과 */
 			box-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* 그림자 줄이기 */
 		}
+
+		/*로딩 모달*/
+		.modal-loading-res {
+			display: none;
+			position: fixed;
+			z-index: 9999;
+			left: 0; top: 0;
+			width: 100%; height: 100%;
+			background: rgba(0,0,0,0.5);
+		}
+
+		.modal-loading-con {
+			background: white;
+			border-radius: 15px;
+			padding: 30px;
+			text-align: center;
+			width: 500px;
+			margin: 200px auto;
+			font-family: 'Cute Font', sans-serif;
+			font-size: 30px;
+			border: 8px solid #f9b59e;
+		}
 	</style>
 </head>
 
@@ -279,9 +301,9 @@
 <form id="f">
 	<main>
 		<div class="top-bar">
-			<button class="button top-home-button" onclick="location.href='/home.html'">
+			<a class="button top-home-button" onclick="location.href='/user/main'">
 				<i class="fa-solid fa-house fa-2xl"></i>
-			</button>
+			</a>
 			<div class="top-title">동화 만들기</div>
 			<div style="width: 60px;"></div>
 		</div>
@@ -338,6 +360,14 @@
 	</div>
 </div>
 
+<!-- 로딩 모달 -->
+<div id="loadingModal" class="modal-loading-res">
+	<div class="modal-loading-con">
+		<h2>동화 생성 중...</h2>
+		<p>잠시만 기다려주세요</p>
+		<i class="fa-solid fa-spinner fa-spin" style="font-size: 60px; margin-top: 20px;"></i>
+	</div>
+</div>
 
 <%--실시간 캠 관련 javascript--%>
 <script>
@@ -357,11 +387,18 @@
 	let lastLeft = null, lastRight = null;
 
 	// 🔥 랜덤 단어 풀
-	const testWords = ["공주", "왕자", "마녀", "구두", "성", "모험", "마법", "동화", "용", "숲"];
+	let testWords = ["공주", "왕자", "마녀", "구두", "성", "모험", "마법", "동화", "용", "숲"];
 
 	// 랜덤 단어 뽑기 함수
 	function getRandomWord() {
-		return testWords[Math.floor(Math.random() * testWords.length)];
+		if (testWords.length === 0) {
+			return null; // 모든 단어를 다 뽑았으면 null 반환
+		}
+		const index = Math.floor(Math.random() * testWords.length);
+		const word = testWords[index];
+		// 뽑은 단어를 배열에서 제거
+		testWords.splice(index, 1);
+		return word;
 	}
 
 	// Pose 모델 초기화
@@ -373,6 +410,14 @@
 		);
 		console.log("MoveNet 모델 로드 완료");
 	}
+
+	// 캠 연결
+	navigator.mediaDevices.getUserMedia({ video: true, audio: false }) // 미디어 장치(예: 카메라, 마이크)에 액세스할 수 있는 미디어 스트림을 반환하는 스트림
+			.then(function (stream) {
+				video.srcObject = stream; // HTML <video> 요소의 srcObject 속성에 할당함으로써, 사용자의 웹캠으로 부터 비디오를 보여주는 작업
+			});
+
+	const screen = video; // 테두리 변경 대상
 
 	// 자세 추정 함수
 	async function detectPose() {
@@ -425,13 +470,8 @@
 
 	// 다시 입력 버튼
 	resetBtn.addEventListener("click", () => {
-		// wordContent.innerText = "";
-		// currentWord = "";
-
-		// 🔥 다음 테스트용 랜덤 단어 자동 설정
-		currentWord = getRandomWord();
-		wordContent.innerText = currentWord;
-		// 🔥 다음 테스트용 랜덤 단어 자동 설정
+		wordContent.innerText = "";
+		currentWord = "";
 
 		modalShown = false;
 		greenStartTime = null;
@@ -447,13 +487,8 @@
 			listContent.innerText = wordList.join(", ");
 			$('#legendCount').text(wordList.length + ' / ' + maxWords);
 
-			// wordContent.innerText = "";
-			// currentWord = "";
-
-			// 🔥 다음 테스트용 랜덤 단어 자동 설정
-			currentWord = getRandomWord();
-			wordContent.innerText = currentWord;
-			// 🔥 다음 테스트용 랜덤 단어 자동 설정
+			wordContent.innerText = "";
+			currentWord = "";
 
 			modalShown = false;
 			greenStartTime = null;
@@ -477,9 +512,6 @@
 		}
 	});
 
-	// 🔥 캠 없이 테스트용 초기 단어
-	currentWord = getRandomWord();
-	wordContent.innerText = currentWord;
 </script>
 <script>
 	$('#submitBtn').click(function(e) {
@@ -497,6 +529,9 @@
 			form.append('<input type="hidden" name="words" value="' + word + '">');
 		});
 
+		// 🔥 로딩 모달 표시
+		$('#loadingModal').show();
+
 		// serialize()로 form 데이터 전송
 		$.ajax({
 			url: '/make/makeFairytaleRequest',
@@ -509,6 +544,7 @@
 			},
 			error: function(err) {
 				console.error(err);
+				$('#loadingModal').hide(); // 오류 시 로딩 숨기기
 			}
 		});
 	});

@@ -1,4 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	String[] words = (String[]) request.getAttribute("words");
+	String[] results = (String[]) request.getAttribute("results");
+	int score = (request.getAttribute("score") != null) ? (int) request.getAttribute("score") : 0;
+	int total = (request.getAttribute("total") != null) ? (int) request.getAttribute("total") : 1; // 나누기 0 방지
+	int percentScore = (int) (((double) score / total) * 100);
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -61,6 +68,10 @@
 
 		.result.correct {
 			color: #29B969;
+		}
+
+		.result.wrong {
+			color: #ff3333;
 		}
 
 		.make-wrapper {
@@ -147,19 +158,24 @@
 		<div class="container">
 			<div class="card-wrapper">
 				<div class="card card-img">
-					<div class="score-text">100점</div>
+					<div class="score-text"><%= percentScore %>점</div>
 				</div>
 				<div class="score-result">
-					<div><span class="word">토끼</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">자라</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">동물</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">용왕</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">보물</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">생일</span> : <span class="result correct">정답</span></div>
+					<% if (words != null && results != null) {
+						for (int i = 0; i < words.length; i++) {
+							String word = words[i];
+							boolean isCorrect = "true".equals(results[i]);
+					%>
+					<div>
+						<span class="word"><%= word %></span> : <span class="result <%= isCorrect ? "correct" : "wrong" %>"> <%= isCorrect ? "정답" : "오답" %> </span>
+					</div>
+					<%     }
+					}
+					%>
 				</div>
 			</div>
 			<div class="make-wrapper">
-				<button type="button" class="button make" id="quizSaveBtn">저장하기</button>
+				<button type="button" class="button make" id="quizSaveBtn">퀴즈목록</button>
 			</div>
 		</div>
 
@@ -179,13 +195,9 @@
 
 	const nextBtn = document.querySelector('.button.make');
 
-	nextBtn.addEventListener('click', function () {
-		alert('저장되었습니다.');
-	});
-
 	document.getElementById('quizSaveBtn').addEventListener('click', function () {
 		const form = document.getElementById('f');
-		form.action = '/contents/quizList';
+		form.action = '/quiz/quizList';
 		form.method = 'get';
 		form.submit();
 	});
