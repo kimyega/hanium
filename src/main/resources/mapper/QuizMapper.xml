@@ -21,4 +21,12 @@
         WHERE qq.quiz_id = #{quizId}
     </select>
 
+    <!--    퀴즈 결과 저장 쿼리-->
+    <insert id="saveQuizResult" parameterType="QuizResultsDTO">
+        INSERT INTO quiz_results (user_id, quiz_id, score, total)
+        VALUES (#{userId}, #{quizId}, #{score}, #{total})
+            ON DUPLICATE KEY UPDATE
+                                 score = #{score},
+                                 total = #{total}
+    </insert>
 </mapper>

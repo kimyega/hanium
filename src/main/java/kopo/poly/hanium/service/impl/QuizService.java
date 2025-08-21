@@ -2,6 +2,7 @@ package kopo.poly.hanium.service.impl;
 
 import kopo.poly.hanium.dto.QuizDTO;
 import kopo.poly.hanium.dto.QuizQuestionsDTO;
+import kopo.poly.hanium.dto.QuizResultsDTO;
 import kopo.poly.hanium.dto.SignWordsDTO;
 import kopo.poly.hanium.mapper.IQuizMapper;
 import kopo.poly.hanium.service.IQuizService;
@@ -22,6 +23,16 @@ public class QuizService implements IQuizService {
     public List<SignWordsDTO> getQuizInfo(QuizQuestionsDTO pDTO) throws Exception {
         log.info("{}.getQuizInfo start!", this.getClass().getName());
         return quizMapper.getQuizInfo(pDTO);
+    }
+
+    @Override
+    public void saveQuizResult(QuizResultsDTO pDTO) throws Exception {
+
+        log.info("{}.saveQuizResult start!", this.getClass().getName());
+
+        quizMapper.saveQuizResult(pDTO);
+
+        log.info("{}.saveQuizResult start!", this.getClass().getName());
     }
 
     // 퀴즈 리스트 불러오기
