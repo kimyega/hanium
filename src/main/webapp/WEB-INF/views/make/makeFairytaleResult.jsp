@@ -11,6 +11,12 @@
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 	<link rel="stylesheet" href="/css/table.css" />
+
+	<%-- 모달창 css --%>
+	<link rel="stylesheet" href="/css/headerLogout.css" />
+
+	<%-- Jquery --%>
+	<script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
 	<style>
 		.made {
 			background-color: #fff;
@@ -95,21 +101,38 @@
 </head>
 
 <body>
+<!-- 상단바 -->
 <header>
 	<div class="header-icon-stack">
 		<i class="fa-solid fa-book-open book"></i>
 		<i class="fa-solid fa-hands-holding hands"></i>
 	</div>
-	<div class="header-logo" onclick="location.href='/home.html'">Märchand</div>
+	<div class="header-logo" onclick="location.href='/'">Märchand</div>
 	<div class="header-user-area">
-		<div class="header-user-icon">
-			<i class="fa-solid fa-circle-user fa-2xl"></i>
-		</div>
+		<div class="header-user-icon"><i class="fa-solid fa-circle-user fa-xl"></i></div>
 		<div class="header-dropdown">
-			<button class="header-dropdown-toggle" id="headerDropdownToggle">홍길동 ⏷</button>
+			<button class="header-dropdown-toggle" id="headerDropdownToggle">
+				<%
+					String uname = (String)session.getAttribute("SS_USER_NAME");
+					if (uname == null || uname.trim().isEmpty()) { uname = "메뉴"; }
+				%>
+				<%= uname %>
+				<span>▼</span>
+			</button>
 			<ul class="header-dropdown-menu" id="headerDropdownMenu">
-				<li onclick="location.href='/profile.html'">내 정보</li>
-				<li onclick="location.href='/logout.html'">로그아웃</li>
+				<%
+					if (uname.equals("메뉴")) {
+				%>
+				<li onclick="location.href='/user/login'">로그인</li>
+				<li onclick="location.href='/user/register'">회원가입</li>
+				<%
+				} else {
+				%>
+				<li onclick="location.href='/user/mypage'">내 정보</li>
+				<li id="headerDropDownLogout">로그아웃</li>
+				<%
+					}
+				%>
 			</ul>
 		</div>
 	</div>
@@ -128,14 +151,8 @@
 				<div class="made card card-img">
 					<img src="/images/castle.png" alt="없습니다.">
 				</div>
-				<div class="made contents">
-					<p>
-						옛날 옛날에 용궁에 용왕님이 살고 있었는데,
-						어느날 용왕님이 죽을병에 걸리고 말았어요.
-					</p>
-					<p>
-						용왕님의 <span class="highlight underline">병</span>을 고치려면 <span class="highlight underline">토끼</span>의 간이 필요해요
-					</p>
+				<div id="gptResultBox" class="made contents" >
+
 				</div>
 			</div>
 			<div class="make-wrapper-two">
@@ -147,18 +164,35 @@
 	</main>
 </form>
 
+<%--모달창--%>
+<div id="signupModal" class="modal">
+	<div class="modal-content">
+		<h2>메르헨드</h2>
+		<p>로그아웃 완료!!</p>
+		<button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
+	</div>
+</div>
+
 <script>
-	const toggle = document.getElementById('headerDropdownToggle');
-	const menu = document.getElementById('headerDropdownMenu');
+	$(document).ready(function() {
+		// 페이지 로딩 시 세션에서 gptResult 가져오기
+		$.getJSON('${pageContext.request.contextPath}/make/makeFairytaleResultData', function(data) {
+			const gptResultBox = document.getElementById("gptResultBox");
 
-	toggle.addEventListener('click', function (e) {
-		e.stopPropagation();
-		menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-	});
+			console.log(data.gptResult);
 
-	document.addEventListener('click', function () {
-		menu.style.display = 'none';
+			// 결과가 있으면 삽입, 없으면 기본 메시지
+			if (data && data.gptResult) {
+				gptResultBox.innerText = data.gptResult;
+			} else {
+				gptResultBox.innerText = "동화 생성 결과가 없습니다.";
+			}
+		}).fail(function(err) {
+			console.error("결과를 가져오는데 실패했습니다.", err);
+		});
 	});
 </script>
+
+<script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 </body>
 </html>

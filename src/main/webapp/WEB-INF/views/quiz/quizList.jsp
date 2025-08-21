@@ -1,4 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="kopo.poly.hanium.dto.QuizDTO" %>
+<%@ page import="kopo.poly.hanium.util.CmmUtil" %>
+<%
+	List<QuizDTO> rList = (List<QuizDTO>) request.getAttribute("rList");
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,10 +13,13 @@
 	<!-- Google Fonts: Kavoon, Cute Font -->
 	<link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Kavoon&display=swap" rel="stylesheet">
-
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 	<link rel="stylesheet" href="/css/table.css" />
+	<%-- 모달창 css --%>
+	<link rel="stylesheet" href="/css/headerLogout.css" />
+
+	<script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
 	<style>
 		.top-search {
 			position: relative;
@@ -158,21 +167,38 @@
 </head>
 
 <body>
+<!-- 상단바 -->
 <header>
 	<div class="header-icon-stack">
 		<i class="fa-solid fa-book-open book"></i>
 		<i class="fa-solid fa-hands-holding hands"></i>
 	</div>
-	<div class="header-logo" onclick="location.href='/home.html'">Märchand</div>
+	<div class="header-logo" onclick="location.href='/'">Märchand</div>
 	<div class="header-user-area">
-		<div class="header-user-icon">
-			<i class="fa-solid fa-circle-user fa-2xl"></i>
-		</div>
+		<div class="header-user-icon"><i class="fa-solid fa-circle-user fa-xl"></i></div>
 		<div class="header-dropdown">
-			<button class="header-dropdown-toggle" id="headerDropdownToggle">홍길동 ⏷</button>
+			<button class="header-dropdown-toggle" id="headerDropdownToggle">
+				<%
+					String uname = (String)session.getAttribute("SS_USER_NAME");
+					if (uname == null || uname.trim().isEmpty()) { uname = "메뉴"; }
+				%>
+				<%= uname %>
+				<span>▼</span>
+			</button>
 			<ul class="header-dropdown-menu" id="headerDropdownMenu">
-				<li onclick="location.href='/profile.html'">내 정보</li>
-				<li onclick="location.href='/logout.html'">로그아웃</li>
+				<%
+					if (uname.equals("메뉴")) {
+				%>
+				<li onclick="location.href='/user/login'">로그인</li>
+				<li onclick="location.href='/user/register'">회원가입</li>
+				<%
+				} else {
+				%>
+				<li onclick="location.href='/user/mypage'">내 정보</li>
+				<li id="headerDropDownLogout">로그아웃</li>
+				<%
+					}
+				%>
 			</ul>
 		</div>
 	</div>
@@ -181,9 +207,9 @@
 <form id="f">
 	<main>
 		<div class="top-bar">
-			<button class="button top-home-button" onclick="location.href='/home.html'">
+			<a class="button top-home-button" onclick="location.href='/user/main'">
 				<i class="fa-solid fa-house fa-2xl"></i>
-			</button>
+			</a>
 			<div class="top-search">
 				<i class="fa-solid fa-magnifying-glass fa-sm search-icon" onclick="focusInput()"></i>
 				<input id="searchInput" class="search-bar" type="text" placeholder="동화를 검색해보세요..." />
@@ -195,6 +221,19 @@
 
 		<div class="slide-container">
 			<div class="slide-card-wrapper" id="slideCardWrapper">
+				<%
+					for (QuizDTO dto : rList) {
+				%>
+				<div class="slide-card" onclick="goToDetail('/quiz/quizInfo?nSeq=<%=CmmUtil.nvl(dto.getQuizId())%>')">
+					<div class="card-inner" style="background-color: #fca0b3">
+						<img src="/images/turtle.png" alt="아기돼지 삼형제">
+						<div class="card-title">
+							<%=CmmUtil.nvl(dto.getTitle())%>
+							<div class="card-quiz-score">100점</div>
+						</div>
+					</div>
+				</div>
+				<% } %>
 				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
 					<div class="card-inner" style="background-color: #fca0b3">
 						<img src="/images/pig.png" alt="아기돼지 삼형제">
@@ -222,15 +261,6 @@
 						</div>
 					</div>
 				</div>
-				<div class="slide-card" onclick="goToDetail('/contents/quiz1.jsp')">
-					<div class="card-inner" style="background-color: #a0e7e5">
-						<img src="/images/turtle.png" alt="별주부전">
-						<div class="card-title">
-							별주부전
-							<div class="card-quiz-score">100점</div>
-						</div>
-					</div>
-				</div>
 				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
 					<div class="card-inner" style="background-color: #d3a4ff">
 						<img src="/images/heungbu.png" alt="흥부놀부">
@@ -246,6 +276,14 @@
 						<div class="card-title">
 							메르헨 동산
 							<div class="card-quiz-score">100점</div>
+						</div>
+					</div>
+				</div>
+				<div class="slide-card" onclick="goToDetail('/make/makeFairytale')">
+					<div class="card-inner" style="background-color: #fca0b3">
+						<img src="/images/plus.png" alt="플러스">
+						<div class="card-title" style="background-color: #fca0b3">
+							동화생성
 						</div>
 					</div>
 				</div>
@@ -266,20 +304,18 @@
 	</main>
 </form>
 
+<%--모달창--%>
+<div id="signupModal" class="modal">
+	<div class="modal-content">
+		<h2>메르헨드</h2>
+		<p>로그아웃 완료!!</p>
+		<button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
+	</div>
+</div>
+
 <script src="${pageContext.request.contextPath}/js/listSlide.js"></script>
 
 <script>
-	const toggle = document.getElementById('headerDropdownToggle');
-	const menu = document.getElementById('headerDropdownMenu');
-
-	toggle.addEventListener('click', function (e) {
-		e.stopPropagation();
-		menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-	});
-
-	document.addEventListener('click', function () {
-		menu.style.display = 'none';
-	});
 
 	function goToDetail(url) {
 		window.location.href = url;
@@ -290,6 +326,7 @@
 	}
 
 </script>
+<script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 
 </body>
 </html>

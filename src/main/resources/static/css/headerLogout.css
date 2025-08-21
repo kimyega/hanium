@@ -1,0 +1,60 @@
+/*** 모달 창 CSS ***/
+
+/* 모달 배경 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+/* 모달 박스 */
+.modal-content {
+    background-color: #fff;
+    margin: 12% auto;
+    padding: 30px 25px;
+    border: 8px solid #f9b59e;
+    border-radius: 40px;
+    width: 450px;      /* 가로로 조금 늘림 */
+    text-align: center;
+    font-family: 'Cute Font', sans-serif;
+}
+
+/* 제목 */
+.modal-content h2 {
+    font-size: 56px;  /* 제목 좀 더 크게 */
+    margin-bottom: 15px;
+}
+
+/* 내용 */
+.modal-content p {
+    font-size: 40px;  /* 요청하신 대로 40px */
+    margin-bottom: 25px;
+}
+
+/* 버튼 */
+.modal-btn {
+    padding: 10px 0;      /* 세로 패딩 조금 줄임 */
+    width: 100%;
+    font-size: 28px;      /* 버튼 글자 약간 작게 조정 */
+    border-radius: 30px;
+    border: 4px solid #f4c2a5;
+    background-color: #fca88f;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.modal-btn:hover {
+    background-color: #f99074;
+}
+
+.modal-btn:active {
+    background-color: #e87b5f;
+    transform: scale(0.98);
+}
