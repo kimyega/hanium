@@ -224,7 +224,7 @@
 				<%
 					for (QuizDTO dto : rList) {
 				%>
-				<div class="slide-card" onclick="goToDetail('/quiz/quiz')">
+				<div class="slide-card" onclick="goToDetail('/quiz/quizInfo?nSeq=<%=CmmUtil.nvl(dto.getQuizId())%>')">
 					<div class="card-inner" style="background-color: #fca0b3">
 						<img src="/images/turtle.png" alt="아기돼지 삼형제">
 						<div class="card-title">

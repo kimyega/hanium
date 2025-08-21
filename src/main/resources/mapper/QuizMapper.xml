@@ -9,4 +9,16 @@
         FROM quizzes
     </select>
 
+    <!--    퀴즈 문제 불러오기 쿼리-->
+    <select id="getQuizInfo" resultType="SignWordsDTO">
+        SELECT
+            sw.word_id,
+            sw.word,
+            sw.description
+        FROM quiz_questions qq
+                 JOIN sign_words sw
+                      ON qq.word_id = sw.word_id
+        WHERE qq.quiz_id = #{quizId}
+    </select>
+
 </mapper>
