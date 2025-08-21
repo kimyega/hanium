@@ -1,38 +1,30 @@
 package kopo.poly.hanium.controller;
 
+import kopo.poly.hanium.dto.QuizDTO;
+import kopo.poly.hanium.service.IQuizService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 @Slf4j
-@RequestMapping(value = "/contents")
+@RequestMapping(value = "/quiz")
 @RequiredArgsConstructor
 @Controller
 public class QuizController {
 
-
-    @GetMapping(value = "fairytaleList")
-    public String quizPage() {
-
-        return "fairytale/fairytaleList";
-    }
-    @GetMapping(value = "readFairytale")
-    public String haniumPage() {
-
-        return "fairytale/readFairytale";
-    }
+    private final IQuizService quizService;
     
     @GetMapping(value = "quiz")
     public String quiz1Page() {
 
         return "quiz/quiz";
-    }
-    @GetMapping(value = "quizList")
-    public String quizListPage() {
-
-        return "quiz/quizList";
     }
     @GetMapping(value = "quizResult")
     public String quizResultPage() {
@@ -40,34 +32,19 @@ public class QuizController {
         return "quiz/quizResult";
     }
 
+    // 퀴즈 리스트 불러오기
+    @GetMapping(value = "quizList")
+    public String quizList(ModelMap model)
+            throws Exception {
 
-    @GetMapping(value = "haniumstartpage")
-    public String haniumstartpage() {
+        log.info("{}.QuizList start!", this.getClass().getName());
 
-        return "contents/haniumstartpage";
-    }
+        List<QuizDTO> rList = Optional.ofNullable(quizService.getQuizList()).orElseGet(ArrayList::new);
 
-    @GetMapping(value = "haniumIDfound01")
-    public String haniumIDfound01() {
+        model.addAttribute("rList", rList);
 
-        return "contents/haniumIDfound01";
-    }
+        log.info("{}.QuizList end!", this.getClass().getName());
 
-    @GetMapping(value = "haniumpassword")
-    public String haniumpassword() {
-
-        return "contents/haniumpassword";
-    }
-
-    @GetMapping(value = "hanium-login")
-    public String haniumlogin() {
-
-        return "contents/hanium-login";
-    }
-
-    @GetMapping(value = "index")
-    public String index() {
-
-        return "index";
+        return "quiz/quizList";
     }
 }
