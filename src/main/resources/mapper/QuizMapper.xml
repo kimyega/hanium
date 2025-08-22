@@ -31,7 +31,7 @@
     </insert>
 
     <!--    퀴즈 점수 불러오기-->
-    <select id="selectQuizResultByUserAndQuiz" parameterType="map" resultType="QuizResultsDTO">
+    <select id="selectQuizResultByUserAndQuiz" parameterType="QuizDTO" resultType="QuizResultsDTO">
         SELECT user_id, quiz_id, score, total, taken_at
         FROM quiz_results
         WHERE user_id = #{userId}

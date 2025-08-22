@@ -16,8 +16,8 @@ public interface IQuizService {
     List<SignWordsDTO> getQuizInfo(QuizQuestionsDTO pDTO) throws Exception;
 
     // 퀴즈 결과 저장
-    void saveQuizResult(QuizResultsDTO pDTO) throws Exception;
+    int saveQuizResult(QuizResultsDTO pDTO) throws Exception;
 
     // 퀴즈 점수 불러오기
-    QuizResultsDTO getQuizResultByUserAndQuiz(String userId, int quizId) throws Exception;
+    QuizResultsDTO getQuizResultByUserAndQuiz(QuizDTO pDTO) throws Exception;
 }

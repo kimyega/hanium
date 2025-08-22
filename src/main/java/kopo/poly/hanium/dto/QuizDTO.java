@@ -13,6 +13,7 @@ public class QuizDTO {
     private String description;
     private String createdAt;
 
+    private String userId;
     private Integer score; // 사용자 점수
     private Integer total; // 전체 문제 수
     private LocalDateTime takenAt; // 저장한 날짜
