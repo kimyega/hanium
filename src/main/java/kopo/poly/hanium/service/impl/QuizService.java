@@ -22,6 +22,7 @@ public class QuizService implements IQuizService {
     // 퀴즈 문제 불러오기
     public List<SignWordsDTO> getQuizInfo(QuizQuestionsDTO pDTO) throws Exception {
         log.info("{}.getQuizInfo start!", this.getClass().getName());
+
         return quizMapper.getQuizInfo(pDTO);
     }
 
@@ -33,6 +34,13 @@ public class QuizService implements IQuizService {
         quizMapper.saveQuizResult(pDTO);
 
         log.info("{}.saveQuizResult start!", this.getClass().getName());
+    }
+
+    @Override
+    public QuizResultsDTO getQuizResultByUserAndQuiz(String userId, int quizId) throws Exception {
+        log.info("{}.getQuizResultByUserAndQuiz start!", this.getClass().getName());
+
+        return quizMapper.selectQuizResultByUserAndQuiz(userId, quizId);
     }
 
     // 퀴즈 리스트 불러오기
