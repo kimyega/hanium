@@ -168,41 +168,7 @@
 
 <body>
 <!-- 상단바 -->
-<header>
-	<div class="header-icon-stack">
-		<i class="fa-solid fa-book-open book"></i>
-		<i class="fa-solid fa-hands-holding hands"></i>
-	</div>
-	<div class="header-logo" onclick="location.href='/'">Märchand</div>
-	<div class="header-user-area">
-		<div class="header-user-icon"><i class="fa-solid fa-circle-user fa-xl"></i></div>
-		<div class="header-dropdown">
-			<button class="header-dropdown-toggle" id="headerDropdownToggle">
-				<%
-					String uname = (String)session.getAttribute("SS_USER_NAME");
-					if (uname == null || uname.trim().isEmpty()) { uname = "메뉴"; }
-				%>
-				<%= uname %>
-				<span>▼</span>
-			</button>
-			<ul class="header-dropdown-menu" id="headerDropdownMenu">
-				<%
-					if (uname.equals("메뉴")) {
-				%>
-				<li onclick="location.href='/user/login'">로그인</li>
-				<li onclick="location.href='/user/register'">회원가입</li>
-				<%
-				} else {
-				%>
-				<li onclick="location.href='/user/mypage'">내 정보</li>
-				<li id="headerDropDownLogout">로그아웃</li>
-				<%
-					}
-				%>
-			</ul>
-		</div>
-	</div>
-</header>
+<%@ include file="../includes/header.jsp"%>
 
 <form id="f">
 	<main>
@@ -221,72 +187,16 @@
 
 		<div class="slide-container">
 			<div class="slide-card-wrapper" id="slideCardWrapper">
-				<%
-					for (QuizDTO dto : rList) {
-				%>
-				<div class="slide-card" onclick="goToDetail('/quiz/quizInfo?nSeq=<%=CmmUtil.nvl(String.valueOf(dto.getQuizId()))%>')">
-					<div class="card-inner" style="background-color: #fca0b3">
-						<img src="/images/turtle.png" alt="아기돼지 삼형제">
-						<div class="card-title">
-							<%=CmmUtil.nvl(dto.getTitle())%>
-							<div class="card-quiz-score">100점</div>
-						</div>
-					</div>
-				</div>
-				<% } %>
-				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
-					<div class="card-inner" style="background-color: #fca0b3">
-						<img src="/images/pig.png" alt="아기돼지 삼형제">
-						<div class="card-title">
-							아기돼지 삼형제
-							<div class="card-quiz-score">100점</div>
-						</div>
-					</div>
-				</div>
-				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
-					<div class="card-inner" style="background-color: #ffd167">
-						<img src="/images/castle.png" alt="코딩 왕자">
-						<div class="card-title">
-							코딩 왕자
-							<div class="card-quiz-score">100점</div>
-						</div>
-					</div>
-				</div>
-				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
-					<div class="card-inner" style="background-color: #ff93c9">
-						<img src="/images/hansel.png" alt="헨젤과 그레텔">
-						<div class="card-title">
-							헨젤과 그레텔
-							<div class="card-quiz-score">100점</div>
-						</div>
-					</div>
-				</div>
-				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
-					<div class="card-inner" style="background-color: #d3a4ff">
-						<img src="/images/heungbu.png" alt="흥부놀부">
-						<div class="card-title">
-							흥부놀부
-							<div class="card-quiz-score">100점</div>
-						</div>
-					</div>
-				</div>
-				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
-					<div class="card-inner" style="background-color: #ffe9a7">
-						<img src="/images/castle.png" alt="메르헨 동산">
-						<div class="card-title">
-							메르헨 동산
-							<div class="card-quiz-score">100점</div>
-						</div>
-					</div>
-				</div>
-				<div class="slide-card" onclick="goToDetail('/make/makeFairytale')">
-					<div class="card-inner" style="background-color: #fca0b3">
-						<img src="/images/plus.png" alt="플러스">
-						<div class="card-title" style="background-color: #fca0b3">
-							동화생성
-						</div>
-					</div>
-				</div>
+
+<%--				동화 생성--%>
+<%--				<div class="slide-card" onclick="goToDetail('/make/makeFairytale')">--%>
+<%--					<div class="card-inner" style="background-color: #fca0b3">--%>
+<%--						<img src="/images/plus.png" alt="플러스">--%>
+<%--						<div class="card-title" style="background-color: #fca0b3">--%>
+<%--							동화생성--%>
+<%--						</div>--%>
+<%--					</div>--%>
+<%--				</div>--%>
 			</div>
 		</div>
 
@@ -314,6 +224,46 @@
 </div>
 
 <script src="${pageContext.request.contextPath}/js/listSlide.js"></script>
+
+<script>
+	$(document).ready(function () {
+		$.ajax({
+			url: '/quiz/quizListLoad',
+			method: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				var wrapper = $('#slideCardWrapper');
+				wrapper.empty(); // 기존 카드 지우기
+
+				var cardColors = ["#fca0b3", "#ffd167", "#ff93c9", "#d3a4ff", "#ffe9a7"];
+
+				$.each(data, function (i, q) {
+					var bgColor = cardColors[i % cardColors.length];
+
+					var scoreHtml = (q.score != null && q.total != null && q.total !== 0)
+							? Math.round((q.score / q.total) * 100) + '점'
+							: '미응시';
+
+					var card = '<div class="slide-card" onclick="goToDetail(\'/quiz/quizInfo?nSeq=' + q.quizId + '\')">' +
+							'<div class="card-inner" style="background-color: ' + bgColor + '">' +
+							'<img src="/images/turtle.png" alt="동화 이미지">' +
+							'<div class="card-title">' +
+							q.title +
+							'<div class="card-quiz-score">' + scoreHtml + '</div>' +
+							'</div>' +
+							'</div>' +
+							'</div>';
+
+					wrapper.append(card);
+				});
+			},
+			error: function (xhr, status, error) {
+				console.error('퀴즈 목록 로딩 실패:', error);
+			}
+		});
+	});
+
+</script>
 
 <script>
 

@@ -15,6 +15,8 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/css/table.css" />
 
+    <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+
     <style>
         :root{
             --peach:#fca08c;
@@ -92,39 +94,15 @@
 </head>
 <body>
 
-<!-- ===== 상단바 (table.css 구조 사용) ===== -->
-<header>
-    <div class="header-icon-stack">
-        <i class="fa-solid fa-book-open book"></i>
-        <i class="fa-solid fa-hands-holding hands"></i>
-    </div>
-    <div class="header-logo" onclick="location.href='/'">Märchand</div>
-    <div class="header-user-area">
-        <div class="header-user-icon"><i class="fa-solid fa-circle-user fa-2xl"></i></div>
-        <div class="header-dropdown">
-            <button class="header-dropdown-toggle" id="headerDropdownToggle">
-                <%
-                    String uname = (String)session.getAttribute("SS_USER_NAME");
-                    if (uname == null || uname.trim().isEmpty()) { uname = "메뉴"; }
-                %>
-                <%= uname %> ▼
-            </button>
-            <ul class="header-dropdown-menu" id="headerDropdownMenu">
-                <li onclick="location.href='/user/mypage'">내 정보</li>
-                <li onclick="location.href='/user/login'">로그인</li>
-                <li onclick="location.href='/user/register'">회원가입</li>
-                <li onclick="location.href='/'">로그아웃</li>
-            </ul>
-        </div>
-    </div>
-</header>
+<!-- 상단바 -->
+<%@ include file="../includes/header.jsp"%>
 
 <!-- ===== 메인 ===== -->
 <main class="hero-wrap">
     <div class="hero-content">
         <!-- 왼쪽 버튼 -->
         <div class="menu-col">
-            <button class="menu-btn" onclick="location.href='/contents/fairytaleList'">
+            <button class="menu-btn" onclick="location.href='/fairytale/fairytaleList'">
                 <i class="fa-solid fa-book-open-reader"></i> 동화 읽기
             </button>
             <button class="menu-btn" onclick="location.href='/make/makeFairytale'">
@@ -142,17 +120,6 @@
     </div>
 </main>
 
-<script>
-    // 드롭다운
-    const toggle = document.getElementById('headerDropdownToggle');
-    const menu = document.getElementById('headerDropdownMenu');
-    if (toggle && menu){
-        toggle.addEventListener('click', e => {
-            e.stopPropagation();
-            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-        });
-        document.addEventListener('click', () => menu.style.display = 'none');
-    }
-</script>
+<script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 </body>
 </html>

@@ -1,4 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="kopo.poly.hanium.dto.QuizDTO" %>
+<%@ page import="kopo.poly.hanium.util.CmmUtil" %>
+<%
+    List<QuizDTO> rList = (List<QuizDTO>) request.getAttribute("rList");
+%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -18,6 +24,7 @@
 
     <%-- Jquery --%>
     <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <style>
@@ -134,41 +141,7 @@
 </style>
 
 <body>
-<header>
-    <div class="header-icon-stack">
-        <i class="fa-solid fa-book-open book"></i>
-        <i class="fa-solid fa-hands-holding hands"></i>
-    </div>
-    <div class="header-logo" onclick="location.href='/'">Märchand</div>
-    <div class="header-user-area">
-        <div class="header-user-icon"><i class="fa-solid fa-circle-user fa-xl"></i></div>
-        <div class="header-dropdown">
-            <button class="header-dropdown-toggle" id="headerDropdownToggle">
-                <%
-                    String uname = (String)session.getAttribute("SS_USER_NAME");
-                    if (uname == null || uname.trim().isEmpty()) { uname = "메뉴"; }
-                %>
-                <%= uname %>
-                <span>▼</span>
-            </button>
-            <ul class="header-dropdown-menu" id="headerDropdownMenu">
-                <%
-                    if (uname.equals("메뉴")) {
-                %>
-                <li onclick="location.href='/user/login'">로그인</li>
-                <li onclick="location.href='/user/register'">회원가입</li>
-                <%
-                } else {
-                %>
-                <li onclick="location.href='/user/mypage'">내 정보</li>
-                <li id="headerDropDownLogout">로그아웃</li>
-                <%
-                    }
-                %>
-            </ul>
-        </div>
-    </div>
-</header>
+<%@ include file="../includes/header.jsp"%>
 
 <main class="mypage-main">
     <h2>마이페이지</h2>
@@ -194,10 +167,8 @@
                 <th>응시 날짜</th>
             </tr>
             </thead>
-            <tbody>
             <tbody id="quizTableBody">
-            <!-- 자바스크립트로 동적으로 추가될 예정 -->
-            </tbody>
+
             </tbody>
         </table>
     </section>
@@ -213,53 +184,52 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/user/quizHistory',
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                const tbody = $('#quizTableBody');
+                tbody.empty();
+                console.log(data)
 
-    // 🔽 퀴즈 데이터 배열
-    const quizData = [
-        { title: '기초 수어 단어', score: 8, total: 10, date: '2025-07-20' },
-        { title: '동물 관련 수어', score: 6, total: 10, date: '2025-07-22' },
-        { title: '색깔 수어 표현', score: 9, total: 10, date: '2025-07-23' },
-        { title: '감정 표현 수어', score: 10, total: 10, date: '2025-07-24' }
-    ];
+                if (data.length === 0) {
+                    tbody.append('<tr><td colspan="4">퀴즈 기록이 없습니다.</td></tr>');
+                } else {
+                    data.forEach(q => {
+                        const date = q.takenAt ? q.takenAt.split('T')[0] : '-';
+                        const score = q.score !== null && q.total !== null && q.total !== 0
+                            ? Math.round((q.score / q.total) * 100) + '점'
+                            : '-';
 
-    // 🔽 렌더링 함수
-    const quizTableBody = document.getElementById('quizTableBody');
-
-    quizData.forEach(q => {
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-      <td>${q.title}</td>
-      <td>${q.score}</td>
-      <td>${q.total}</td>
-      <td>${q.date}</td>
-    `;
-
-        quizTableBody.appendChild(row);
+                        const tr = $('<tr></tr>');
+                        tr.append($('<td></td>').text(q.title));
+                        tr.append($('<td></td>').text(score));
+                        tr.append($('<td></td>').text(q.total));
+                        tr.append($('<td></td>').text(date));
+                        tr.css('cursor', 'pointer');  // 마우스 포인터가 클릭 가능한 모양으로 변경
+                        tr.on('click', function() {
+                            window.location.href = '/quiz/quizInfo?nSeq=' + q.quizId;
+                        })
+                        tr.on('mouseenter', function() {
+                            $(this).css('background-color', '#cce4ff');
+                        }).on('mouseleave', function() {
+                            $(this).css('background-color', '');
+                        });
+                        $('#quizTableBody').append(tr);
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('퀴즈 데이터 로딩 실패:', error);
+                $('#quizTableBody').append('<tr><td colspan="4">데이터 불러오기 실패</td></tr>');
+            }
+        });
     });
 </script>
-<script>
-    // 간단 드롭다운 (table.js 쓰면 생략 가능)
-    const toggle = document.getElementById('headerDropdownToggle');
-    const menu = document.getElementById('headerDropdownMenu');
-    if (toggle && menu){
-        toggle.addEventListener('click', e => {
-            e.stopPropagation();
-            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-        });
-        document.addEventListener('click', () => menu.style.display = 'none');
 
-        // 로그인 여부에 따라 메뉴 항목 토글
-        const nameText = toggle.textContent.trim();
-        const loggedIn = !(nameText === '메뉴' || nameText === '로그인');
-        [...menu.querySelectorAll('li')].forEach(li=>{
-            if (loggedIn && (li.textContent.includes('로그인') || li.textContent.includes('회원가입'))) li.style.display='none';
-            if (!loggedIn && (li.textContent.includes('내 정보') || li.textContent.includes('로그아웃'))) li.style.display='none';
-        });
-    }
-</script>
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 
 </body>
-
 </html>

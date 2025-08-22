@@ -18,5 +18,8 @@ public interface IQuizMapper {
     List<SignWordsDTO> getQuizInfo(QuizQuestionsDTO pDTO) throws Exception;
 
     // 퀴즈 결과 저장
-    void saveQuizResult(QuizResultsDTO dto) throws Exception;
+    void saveQuizResult(QuizResultsDTO pDTO) throws Exception;
+
+    // 퀴즈 점수 불러오기
+    QuizResultsDTO selectQuizResultByUserAndQuiz(String userId, int quizId) throws Exception;
 }
