@@ -18,4 +18,6 @@ public interface IQuizService {
     // 퀴즈 결과 저장
     void saveQuizResult(QuizResultsDTO pDTO) throws Exception;
 
+    // 퀴즈 점수 불러오기
+    QuizResultsDTO getQuizResultByUserAndQuiz(String userId, int quizId) throws Exception;
 }

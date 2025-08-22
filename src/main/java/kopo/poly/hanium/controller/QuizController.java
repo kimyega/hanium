@@ -13,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +34,8 @@ public class QuizController {
 
         return "quiz/quiz";
     }
+
+    // 퀴즈 결과 페이지
     @PostMapping(value = "quizResult")
     public String quizResult(HttpServletRequest request, HttpSession session) throws Exception{
 
@@ -73,6 +75,7 @@ public class QuizController {
             }
         }
 
+        request.setAttribute("quizId", quizId);
         request.setAttribute("score", correctCount);
         request.setAttribute("total", totalCount);
         request.setAttribute("wrongWords", wrongWords);
@@ -86,20 +89,32 @@ public class QuizController {
 
     // 퀴즈 리스트 불러오기
     @GetMapping(value = "quizList")
-    public String quizList(ModelMap model)
-            throws Exception {
+    public String quizList() {
 
-        log.info("{}.QuizList start!", this.getClass().getName());
+        return "quiz/quizList";
+    }
 
-        String userId = (String) model.getAttribute("SS_USER_ID");
+    @GetMapping(value = "quizListLoad")
+    @ResponseBody
+    public List<QuizDTO> quizListLoad(HttpSession session) throws Exception {
+
+        log.info("{}.quizListLoad start!", this.getClass().getName());
+
+        String userId = (String) session.getAttribute("SS_USER_ID");
 
         List<QuizDTO> rList = Optional.ofNullable(quizService.getQuizList()).orElseGet(ArrayList::new);
 
-        model.addAttribute("rList", rList);
+        for (QuizDTO quiz : rList) {
+            QuizResultsDTO qResult = quizService.getQuizResultByUserAndQuiz(userId, quiz.getQuizId());
+            if (qResult != null) {
+                quiz.setScore(qResult.getScore());
+                quiz.setTotal(qResult.getTotal());
+            }
+        }
 
-        log.info("{}.QuizList end!", this.getClass().getName());
+        log.info("{}.quizListLoad end!", this.getClass().getName());
 
-        return "quiz/quizList";
+        return rList; // JSON 형태로 자동 변환됨
     }
 
     // 퀴즈 풀기 페이지

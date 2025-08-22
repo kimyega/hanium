@@ -161,26 +161,7 @@
 </head>
 
 <body>
-<header>
-    <!-- 기존 헤더 유지 -->
-    <div class="header-icon-stack">
-        <i class="fa-solid fa-book-open book"></i>
-        <i class="fa-solid fa-hands-holding hands"></i>
-    </div>
-    <div class="header-logo" onclick="location.href='/home.html'">Märchand</div>
-    <div class="header-user-area">
-        <div class="header-user-icon">
-            <i class="fa-solid fa-circle-user fa-2xl"></i>
-        </div>
-        <div class="header-dropdown">
-            <button class="header-dropdown-toggle" id="headerDropdownToggle">홍길동 ⏷</button>
-            <ul class="header-dropdown-menu" id="headerDropdownMenu">
-                <li onclick="location.href='/profile.html'">내 정보</li>
-                <li onclick="location.href='/logout.html'">로그아웃</li>
-            </ul>
-        </div>
-    </div>
-</header>
+<%@ include file="../includes/header.jsp"%>
 
 <main>
     <div class="signup-container">
