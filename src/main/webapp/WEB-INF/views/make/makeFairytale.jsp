@@ -335,6 +335,15 @@
 	</div>
 </div>
 
+<!-- 검사 모달 -->
+<div id="checkModal" class="modal-res">
+	<div class="modal-con">
+		<h2>알림</h2>
+		<p id="checkModalMsg"></p>
+		<button id="checkModalBtn" class="word-button">확인</button>
+	</div>
+</div>
+
 <%--실시간 캠 관련 javascript--%>
 <script>
 	const video = document.getElementById('video');
@@ -456,6 +465,10 @@
 			wordContent.innerText = "";
 			currentWord = "";
 
+			// 🔥 랜덤 단어 표시
+			currentWord = getRandomWord();
+			wordContent.innerText = currentWord;
+
 			modalShown = false;
 			greenStartTime = null;
 		}
@@ -478,14 +491,36 @@
 		}
 	});
 
+	// 🔥 랜덤 단어 표시
+	currentWord = getRandomWord();
+	wordContent.innerText = currentWord;
 </script>
 <script>
+	$('#checkModalBtn').click(function() {
+		$('#checkModal').css("display", "none");
+	});
+
 	$('#submitBtn').click(function(e) {
 		e.preventDefault(); // 기본 제출 막기
 
 		const form = $('#f');
 		const listContentDiv = document.querySelector(".list-content");
 		const words = listContentDiv.innerText.split(", ").filter(w => w);
+		const mainName = $('#listMainName').val().trim();
+
+		// 검사 1: 단어가 2개 이상인지 확인
+		if (words.length < 2) {
+			$('#checkModalMsg').text("최소 2가지 이상의 단어를 입력해주세요");
+			$('#checkModal').show();
+			return;
+		}
+
+		// 검사 2: 주인공 이름 입력 확인
+		if (!mainName) {
+			$('#checkModalMsg').text("주인공 이름을 입력해 주세요");
+			$('#checkModal').show();
+			return;
+		}
 
 		// 기존 hidden input 제거
 		form.find('input[name="words"]').remove();
