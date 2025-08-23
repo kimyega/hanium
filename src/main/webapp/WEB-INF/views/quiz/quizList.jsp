@@ -239,6 +239,7 @@
 
 				$.each(data, function (i, q) {
 					var bgColor = cardColors[i % cardColors.length];
+					console.log(data);
 
 					var scoreHtml = (q.score != null && q.total != null && q.total !== 0)
 							? Math.round((q.score / q.total) * 100) + '점'
