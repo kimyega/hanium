@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kopo.poly.hanium.mapper.IMakeMapper">
+
+    <insert id="insertAiGeneratedStories" parameterType="AiGeneratedStoriesDTO" useGeneratedKeys="true" keyProperty="aiStoryId">
+        INSERT INTO ai_generated_stories
+        (
+         USER_ID,
+         CHARACTER_NAME,
+         STORY_TEXT,
+         IMAGE_URL
+        )
+        VALUES
+        (
+         #{userId},
+         #{characterName},
+         #{storyText},
+         #{imageUrl}
+        )
+    </insert>
+
+    <select id="getAiGeneratedStories" parameterType="AiGeneratedStoriesDTO" resultType="AiGeneratedStoriesDTO">
+        SELECT USER_ID, CHARACTER_NAME, STORY_TEXT, IMAGE_URL, CREATED_AT
+        FROM (
+                 SELECT *,
+                        ROW_NUMBER() OVER (PARTITION BY USER_ID ORDER BY CREATED_AT DESC) AS rn
+                 FROM ai_generated_stories
+             ) t
+        WHERE rn = 1
+          AND USER_ID = #{userId};
+    </select>
+
+    <insert id="insertAiGeneratedStoryPages" parameterType="AiGeneratedStoryPagesDTO">
+        INSERT INTO ai_generated_story_pages
+        (
+            AI_STORY_ID,
+            PAGE_NUMBER,
+            CONTENT_TEXT,
+            CONTENT_IMAGE
+        )
+        VALUES
+            (
+                #{aiStoryId},
+                #{pageNumber},
+                #{contentText},
+                #{contentImage}
+            )
+    </insert>
+
+    <select id="getAiGeneratedStoryPages" parameterType="AiGeneratedStoryPagesDTO" resultType="AiGeneratedStoryPagesDTO">
+        SELECT CONTENT_TEXT, CONTENT_IMAGE
+        FROM ai_generated_story_pages
+        WHERE AI_STORY_ID = #{aiStoryId}
+        AND   PAGE_NUMBER = #{pageNumber}
+    </select>
+</mapper>

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class FairytaleDTO {
+public class GptDTO {
   private String mainName;
   private List<String> words;
   private String gptResult;
