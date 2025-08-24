@@ -38,7 +38,7 @@ public class GptService {
               Map.of("role", "user", "content", prompt)
       });
       body.put("temperature", 0.7);       // 온도 조절 가능
-      body.put("max_tokens", 500);        // 토큰 수 제한
+      body.put("max_tokens", 800);        // 토큰 수 제한
 
       // 요청 로그
       log.info("GPT 요청 Body: {}", new ObjectMapper().writeValueAsString(body));

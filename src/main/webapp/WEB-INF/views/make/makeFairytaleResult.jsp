@@ -55,13 +55,13 @@
 		.made-card-wrapper {
 			width: 60%;
 			display: flex;
-			justify-content: space-between;
 			gap: 0;
 			margin: 15px auto 0 auto;
-			margin-top: 15px;
 			box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
 			border-radius: 10px;
 			border: 15px solid #fca08c;
+			position: relative; /* 버튼을 내부 절대 위치로 배치하려면 필요 */
+			justify-content: center; /* 카드 안 이미지/텍스트 중앙 배치 */
 		}
 
 		.make-wrapper-two {
@@ -97,46 +97,106 @@
 			background-color: #fca08c;
 			color: white;
 		}
+
+		.page-number {
+			margin-top: 40px;
+			text-decoration: none;
+		}
+
+		.page-control-left,
+		.page-control-right {
+			position: absolute;
+			top: 50%; /* 세로 중앙 */
+		}
+
+		.page-control-right {
+			right: 30px;
+		}
+
+		.page-control-left {
+			left: 30px;
+		}
+
+		/* 저장 모달 내용 */
+		.save-modal-content {
+			text-align: center;
+			padding: 30px;
+		}
+
+		/* 제목 입력 input */
+		.fairy-tale-title-input {
+			width: 80%;
+			margin-top: 70px;
+			font-size: 20px;
+			border: none;
+			border-bottom: 3px solid #fca08c;
+			outline: none;
+			text-align: center;
+			padding: 5px;
+		}
+
+		/* 저장 버튼 */
+		.save-btn {
+			margin-top: 20px;
+		}
+
+
+		/* 공통 모달 배경 */
+		.modal {
+			display: none; /* 기본은 숨김 */
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: rgba(0, 0, 0, 0.5);
+		}
+
+		/* 모달 내용 박스 */
+		.modal-content {
+			background: #fff;
+			margin: 10% auto; /* 화면 중앙 정렬 */
+			padding: 40px; /* 여백 넉넉하게 */
+			border-radius: 15px;
+			width: 600px;  /* 가로 크기 늘림 */
+			max-width: 80%; /* 화면이 작을 때는 자동 줄어듦 */
+			height: 500px;
+			text-align: center;
+			box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+
+		}
+
+		/* 저장 모달 전용 크기 조정 */
+		.save-modal-content {
+			padding: 50px;
+			width: 600px;
+			max-width: 85%;
+		}
+
+		.fairy-tale-title-input {
+			width: 80%;
+			margin-top: 20px;
+			font-size: 34px;   /* 글씨 크기 키움 */
+			border: none;
+			border-bottom: 3px solid #fca08c;
+			outline: none;
+			text-align: center;
+			padding: 5px;
+			transition: border-color 0.2s;
+		}
+
+		.fairy-tale-title-input.input-error {
+			border-bottom: 3px solid red;
+		}
+
 	</style>
 </head>
 
 <body>
 <!-- 상단바 -->
-<header>
-	<div class="header-icon-stack">
-		<i class="fa-solid fa-book-open book"></i>
-		<i class="fa-solid fa-hands-holding hands"></i>
-	</div>
-	<div class="header-logo" onclick="location.href='/'">Märchand</div>
-	<div class="header-user-area">
-		<div class="header-user-icon"><i class="fa-solid fa-circle-user fa-xl"></i></div>
-		<div class="header-dropdown">
-			<button class="header-dropdown-toggle" id="headerDropdownToggle">
-				<%
-					String uname = (String)session.getAttribute("SS_USER_NAME");
-					if (uname == null || uname.trim().isEmpty()) { uname = "메뉴"; }
-				%>
-				<%= uname %>
-				<span>▼</span>
-			</button>
-			<ul class="header-dropdown-menu" id="headerDropdownMenu">
-				<%
-					if (uname.equals("메뉴")) {
-				%>
-				<li onclick="location.href='/user/login'">로그인</li>
-				<li onclick="location.href='/user/register'">회원가입</li>
-				<%
-				} else {
-				%>
-				<li onclick="location.href='/user/mypage'">내 정보</li>
-				<li id="headerDropDownLogout">로그아웃</li>
-				<%
-					}
-				%>
-			</ul>
-		</div>
-	</div>
-</header>
+<%@ include file="../includes/header.jsp"%>
 
 <form id="f">
 	<main>
@@ -147,20 +207,26 @@
 		</div>
 
 		<div class="container">
-			<div class="made-card-wrapper">
-				<div class="made card card-img">
-					<img src="/images/castle.png" alt="없습니다.">
+			<div class="make-wrapper-one">
+				<button id="prevPage" class="page-control-left button page-btn">
+					<i class="fa-solid fa-arrow-left fa-2xl"></i>
+				</button>
+				<div class="made-card-wrapper">
+					<div id="gptResultImage" class="made card card-img"></div>
+					<div id="gptResultBox" class="made contents"></div>
 				</div>
-				<div id="gptResultBox" class="made contents" >
-
-				</div>
+				<button id="nextPage" class="page-control-right button page-btn">
+					<i class="fa-solid fa-arrow-right fa-2xl"></i>
+				</button>
 			</div>
 			<div class="make-wrapper-two">
-				<button class="button make" onclick="location.href='/pre-page.html'">다시 만들기</button>
-				<button class="button make" onclick="location.href='/next-page.html'">동화생성</button>
+				<button type="button" class="button make" onclick="location.href='/make/makeFairytale'">다시 만들기</button>
+				<div class="page-number">
+					<span id="pageNumber">1</span> / <span id="totalPages">?</span>
+				</div>
+				<button type="button" class="button make">동화 저장하기</button>
 			</div>
 		</div>
-
 	</main>
 </form>
 
@@ -173,24 +239,122 @@
 	</div>
 </div>
 
+<!-- 동화 저장 모달 -->
+<div id="saveModal" class="modal">
+	<div class="modal-content save-modal-content">
+		<h2>동화 제목을 입력해 주세요</h2>
+		<p id="titleError" style="color:red; margin-top:10px; visibility:hidden;">제목을 입력해 주세요</p>
+		<input type="text" id="fairyTaleTitle" placeholder="제목 입력" class="fairy-tale-title-input">
+		<br><br>
+		<button id="saveFairyTaleBtn" class="modal-btn save-btn">저장하기</button>
+	</div>
+</div>
+
 <script>
 	$(document).ready(function() {
-		// 페이지 로딩 시 세션에서 gptResult 가져오기
-		$.getJSON('${pageContext.request.contextPath}/make/makeFairytaleResultData', function(data) {
-			const gptResultBox = document.getElementById("gptResultBox");
+		let currentPage = 1;
+		let totalPages = Number('${not empty sessionScope.STORY_TOTAL_PAGES ? sessionScope.STORY_TOTAL_PAGES : 1}');
 
-			console.log(data.gptResult);
+		// totalPages 표시
+		$("#totalPages").text(totalPages);
 
-			// 결과가 있으면 삽입, 없으면 기본 메시지
-			if (data && data.gptResult) {
-				gptResultBox.innerText = data.gptResult;
-			} else {
-				gptResultBox.innerText = "동화 생성 결과가 없습니다.";
+		function loadPage(page) {
+			$.ajax({
+				url: '/make/makeFairytaleResultByPage',
+				type: 'GET',
+				data: { pageNumber: page },
+				dataType: 'json',
+				success: function(data) {
+					const gptResultBox = $("#gptResultBox");
+					const gptResultImage = $("#gptResultImage");
+
+					if (data) {
+						let html = "";
+						let imageHtml = "";
+						let imgPath;
+
+						if (data.contentText) {
+							html += "<p>" + data.contentText + "</p>";
+						}
+
+						if (data.contentImage) {
+							// 실제 URL이 아니므로 기본 이미지 사용
+							// $("#gptResultBox").append("<p>이미지 설명: " + data.contentImage + "</p>");
+							imgPath = "/images/castle.png"; // 또는 GPT 이미지 생성 로직으로 바꿀 수 있음
+						} else {
+							imgPath = "/images/castle.png";
+						}
+
+						imageHtml += '<img src="' + imgPath + '" alt="기본 이미지" style="max-width:100%;">';
+
+						console.log("이미지 Html : ", imageHtml);
+						console.log("텍스트 Html : ", html);
+
+						gptResultBox.html(html || "내용이 없습니다.");
+						gptResultImage.html(imageHtml);
+
+						// 현재 페이지 업데이트
+						$("#pageNumber").text(page);
+
+						console.log("페이지 로드 완료 :", page);
+					}
+				},
+				error: function(err) {
+					console.error("페이지 요청 실패:", err);
+				}
+			});
+		}
+
+		// 초기 페이지 로드
+		loadPage(currentPage);
+
+		// 이전 버튼
+		$("#prevPage").click(function(e) {
+			e.preventDefault();
+			if (currentPage > 1) {
+				currentPage--;
+				loadPage(currentPage);
+				console.log("현재 페이지 : ", currentPage);
 			}
-		}).fail(function(err) {
-			console.error("결과를 가져오는데 실패했습니다.", err);
+
+		});
+		// 다음 버튼
+		$("#nextPage").click(function(e) {
+			e.preventDefault();
+			if (currentPage < totalPages) {
+				currentPage++;
+				loadPage(currentPage);
+				console.log("현재 페이지 : ", currentPage);
+			}
 		});
 	});
+
+
+
+	// "동화 저장하기" 버튼 눌렀을 때 모달 열기
+	$(".make-wrapper-two .button.make:last").click(function() {
+		$("#saveModal").css("display", "flex");
+	});
+
+	// 모달 저장 버튼
+	$("#saveFairyTaleBtn").click(function() {
+		let title = $("#fairyTaleTitle").val().trim();
+
+		if (title === "") {
+			$("#titleError").css("visibility", "visible");  // 메시지 표시
+			$("#fairyTaleTitle").addClass("input-error");   // 밑줄 빨간색
+			$("#fairyTaleTitle").focus();
+			return;
+		}
+
+		// 정상 입력 시
+		$("#titleError").css("visibility", "hidden");
+		$("#fairyTaleTitle").removeClass("input-error");
+
+		console.log("저장할 동화 제목:", title);
+		$("#saveModal").css("display", "none");
+	});
+
 </script>
 
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>

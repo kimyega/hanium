@@ -1,4 +1,12 @@
+<%@ page import="kopo.poly.hanium.util.CmmUtil" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+	String[] words = (String[]) request.getAttribute("words");
+	String[] results = (String[]) request.getAttribute("results");
+	int score = (request.getAttribute("score") != null) ? (int) request.getAttribute("score") : 0;
+	int total = (request.getAttribute("total") != null) ? (int) request.getAttribute("total") : 1; // 나누기 0 방지
+	int percentScore = (int) (((double) score / total) * 100);
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -63,14 +71,21 @@
 			color: #29B969;
 		}
 
-		.make-wrapper {
-			display: flex;
-			justify-content: flex-end;
-			align-items: center;
-			margin-top: 10px;
+		.result.wrong {
+			color: #ff3333;
 		}
 
-		.make-wrapper  button {
+		.make-wrapper-two {
+			display: flex;
+			justify-content: space-between; /* 버튼을 양쪽 끝으로 정렬 */
+			align-items: center;
+			margin-top: 10px;
+			width: 100%; /* 전체 너비 사용 */
+			padding: 0 0; /* 좌우 여백 조절 (원하면 조정 가능) */
+			box-sizing: border-box;
+		}
+
+		.make-wrapper-two button {
 			font-family: 'Cute Font', sans-serif;
 			font-size: 35px;
 			padding: 30px 90px;
@@ -83,63 +98,29 @@
 			align-items: center;
 			justify-content: center;
 			line-height: 1.2;
-			white-space: nowrap;         /* 🔥 줄바꿈 방지 */
+			white-space: nowrap;
 			writing-mode: horizontal-tb;
 			width: 200px;
 			height: 80px;
 		}
-		.make-wrapper button:hover {
+
+		.make-wrapper-two button:hover {
 			background-color: #fca08c;
 			color: white;
 		}
-
 	</style>
 </head>
 
 <body>
 <!-- 상단바 -->
-<header>
-	<div class="header-icon-stack">
-		<i class="fa-solid fa-book-open book"></i>
-		<i class="fa-solid fa-hands-holding hands"></i>
-	</div>
-	<div class="header-logo" onclick="location.href='/'">Märchand</div>
-	<div class="header-user-area">
-		<div class="header-user-icon"><i class="fa-solid fa-circle-user fa-xl"></i></div>
-		<div class="header-dropdown">
-			<button class="header-dropdown-toggle" id="headerDropdownToggle">
-				<%
-					String uname = (String)session.getAttribute("SS_USER_NAME");
-					if (uname == null || uname.trim().isEmpty()) { uname = "메뉴"; }
-				%>
-				<%= uname %>
-				<span>▼</span>
-			</button>
-			<ul class="header-dropdown-menu" id="headerDropdownMenu">
-				<%
-					if (uname.equals("메뉴")) {
-				%>
-				<li onclick="location.href='/user/login'">로그인</li>
-				<li onclick="location.href='/user/register'">회원가입</li>
-				<%
-				} else {
-				%>
-				<li onclick="location.href='/user/mypage'">내 정보</li>
-				<li id="headerDropDownLogout">로그아웃</li>
-				<%
-					}
-				%>
-			</ul>
-		</div>
-	</div>
-</header>
+<%@ include file="../includes/header.jsp"%>
 
 <form id="f">
 	<main>
 		<div class="top-bar">
-			<button class="button top-home-button" onclick="location.href='/home.html'">
+			<a class="button top-home-button" onclick="location.href='/user/main'">
 				<i class="fa-solid fa-house fa-2xl"></i>
-			</button>
+			</a>
 			<div class="top-title">체점 결과</div>
 			<div style="width: 60px;"></div>
 		</div>
@@ -147,26 +128,28 @@
 		<div class="container">
 			<div class="card-wrapper">
 				<div class="card card-img">
-					<div class="score-text">100점</div>
+					<div class="score-text"><%= percentScore %>점</div>
 				</div>
 				<div class="score-result">
-					<div><span class="word">토끼</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">자라</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">동물</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">용왕</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">보물</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">생일</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">바다</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">간</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">약속</span> : <span class="result correct">정답</span></div>
-					<div><span class="word">신하</span> : <span class="result correct">정답</span></div>
+					<% if (words != null && results != null) {
+						for (int i = 0; i < words.length; i++) {
+							String word = words[i];
+							boolean isCorrect = "true".equals(results[i]);
+					%>
+					<div>
+						<span class="word"><%= word %></span> : <span class="result <%= isCorrect ? "correct" : "wrong" %>"> <%= isCorrect ? "정답" : "오답" %> </span>
+					</div>
+					<%     }
+					}
+					%>
 				</div>
 			</div>
-			<div class="make-wrapper">
-				<button type="button" class="button make" id="quizSaveBtn">저장하기</button>
+			<div class="make-wrapper-two">
+				<button type="button" id="reTryBtn">다시풀기</button>
+				<button type="button" class="button make" id="quizSaveBtn">퀴즈목록</button>
 			</div>
 		</div>
-
+		<input type="hidden" name="nSeq" value="<%= request.getAttribute("quizId") %>">
 	</main>
 </form>
 
@@ -181,11 +164,16 @@
 
 <script>
 
-	const nextBtn = document.querySelector('.button.make');
-
 	document.getElementById('quizSaveBtn').addEventListener('click', function () {
 		const form = document.getElementById('f');
 		form.action = '/quiz/quizList';
+		form.method = 'get';
+		form.submit();
+	});
+
+	document.getElementById('reTryBtn').addEventListener('click', function () {
+		const form = document.getElementById('f');
+		form.action = '/quiz/quizInfo';
 		form.method = 'get';
 		form.submit();
 	});

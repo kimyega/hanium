@@ -1,4 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="kopo.poly.hanium.dto.SignWordsDTO" %>
+<%
+	List<SignWordsDTO> rList = (List<SignWordsDTO>) request.getAttribute("rList");
+%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -148,48 +153,14 @@
 </head>
 
 <body>
-<header>
-	<div class="header-icon-stack">
-		<i class="fa-solid fa-book-open book"></i>
-		<i class="fa-solid fa-hands-holding hands"></i>
-	</div>
-	<div class="header-logo" onclick="location.href='/'">Märchand</div>
-	<div class="header-user-area">
-		<div class="header-user-icon"><i class="fa-solid fa-circle-user fa-xl"></i></div>
-		<div class="header-dropdown">
-			<button class="header-dropdown-toggle" id="headerDropdownToggle">
-				<%
-					String uname = (String)session.getAttribute("SS_USER_NAME");
-					if (uname == null || uname.trim().isEmpty()) { uname = "메뉴"; }
-				%>
-				<%= uname %>
-				<span>▼</span>
-			</button>
-			<ul class="header-dropdown-menu" id="headerDropdownMenu">
-				<%
-					if (uname.equals("메뉴")) {
-				%>
-				<li onclick="location.href='/user/login'">로그인</li>
-				<li onclick="location.href='/user/register'">회원가입</li>
-				<%
-				} else {
-				%>
-				<li onclick="location.href='/user/mypage'">내 정보</li>
-				<li id="headerDropDownLogout">로그아웃</li>
-				<%
-					}
-				%>
-			</ul>
-		</div>
-	</div>
-</header>
+<%@ include file="../includes/header.jsp"%>
 
 <form id="f">
 	<main>
 		<div class="top-bar">
-			<button class="button top-home-button" onclick="location.href='/home.html'">
+			<a class="button top-home-button" onclick="location.href='/user/main'">
 				<i class="fa-solid fa-house fa-2xl"></i>
-			</button>
+			</a>
 			<div class="top-title">단어 퀴즈</div>
 			<div style="width: 60px;"></div>
 		</div>
@@ -228,6 +199,7 @@
 			</div>
 		</div>
 	</main>
+	<input type="hidden" name="quizId" value="<%= request.getParameter("nSeq") %>" />
 </form>
 
 <%--모달창--%>
@@ -318,6 +290,7 @@
 					modalShown = true;
 
 					const isCorrect = Math.random() < 0.8;
+					quizResults[currentIndex] = isCorrect;
 					const modal = document.getElementById("answerModal");
 					const msg = document.getElementById("answerMessage");
 					const symbol = document.getElementById("answerSymbol");
@@ -368,10 +341,21 @@
 	};
 </script>
 
-<%--하드코딩으로 퀴즈 단어 변경--%>
+<%--퀴즈 단어 변경--%>
 <script>
 	// -------------------- 퀴즈 문제 데이터 --------------------
-	const quizWords = ["토끼", "자라", "동물", "용왕", "보물", "생일", "바다", "간", "약속", "신하"];
+	const quizWords = [
+		<%
+            for (int i = 0; i < rList.size(); i++) {
+                String word = rList.get(i).getWord();
+        %>
+		"<%= word %>"<%= (i < rList.size() - 1) ? "," : "" %>
+		<%
+            }
+        %>
+	];
+	// 각 단어의 결과 저장 (true = 정답, false = 오답)
+	let quizResults = new Array(quizWords.length).fill(null);
 	let currentIndex = 0;
 
 	const prevBtn = document.getElementById("prevBtn");
@@ -445,7 +429,32 @@
 	document.getElementById('quizResultBtn').addEventListener('click', function () {
 		const form = document.getElementById('f');
 		form.action = '/quiz/quizResult';
-		form.method = 'get';
+		form.method = 'post';
+
+		// 기존 hidden input 제거
+		document.querySelectorAll('.quiz-hidden-input').forEach(e => e.remove());
+
+		// 단어와 결과를 함께 전송
+		quizWords.forEach((word, index) => {
+			const result = quizResults[index];
+
+			// 단어
+			const wordInput = document.createElement("input");
+			wordInput.type = "hidden";
+			wordInput.name = "words";
+			wordInput.value = word;
+			wordInput.classList.add("quiz-hidden-input");
+			form.appendChild(wordInput);
+
+			// 결과
+			const resultInput = document.createElement("input");
+			resultInput.type = "hidden";
+			resultInput.name = "results";
+			resultInput.value = result;
+			resultInput.classList.add("quiz-hidden-input");
+			form.appendChild(resultInput);
+		});
+
 		form.submit();
 	});
 

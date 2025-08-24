@@ -1,8 +1,12 @@
 package kopo.poly.hanium.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import kopo.poly.hanium.dto.FairytaleDTO;
+import kopo.poly.hanium.dto.AiGeneratedStoriesDTO;
+import kopo.poly.hanium.dto.AiGeneratedStoryPagesDTO;
+import kopo.poly.hanium.service.IMakeService;
 import kopo.poly.hanium.service.impl.GptService;
 import kopo.poly.hanium.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,7 @@ import java.util.*;
 public class MakeController {
 
   private final GptService gptService;
+  private final IMakeService makeService;
 
   @GetMapping(value = "makeFairytale")
   public String makePage() {
@@ -35,34 +40,44 @@ public class MakeController {
     return "make/makeFairytaleResult";
   }
 
-  @GetMapping("makeFairytaleResultData")
+  @GetMapping("makeFairytaleResultByPage")
   @ResponseBody
-  public Map<String, String> getFairytaleResult(HttpSession session) {
+  public AiGeneratedStoryPagesDTO getFairytaleResult(HttpServletRequest request, HttpSession session) throws Exception {
 
     log.info("{}.getFairytaleResult Start!!", this.getClass().getSimpleName());
 
-    FairytaleDTO pDTO = (FairytaleDTO) session.getAttribute("fairytaleDTO");
+    Long aiStoryId = Optional.ofNullable(session.getAttribute("LAST_STORY_ID"))
+            .map(id -> (Long) id)
+            .orElse(0L);
+    String pageNumber = CmmUtil.nvl(request.getParameter("pageNumber"));
 
-    log.info("FairytaleDTO GPT 결과 : {}", pDTO.getGptResult());
+    AiGeneratedStoryPagesDTO pDTO = new AiGeneratedStoryPagesDTO();
+    pDTO.setAiStoryId(aiStoryId);
+    pDTO.setPageNumber(pageNumber);
 
-    Map<String, String> result = new HashMap<>();
+    log.info("aiStoryId: {}", aiStoryId);
+    log.info("pageNumber: {}", pageNumber);
 
-    if (pDTO != null) {
-      result.put("gptResult", pDTO.getGptResult());
-    } else {
-      result.put("gptResult", "결과가 없습니다.");
-    }
+    // 페이지별 내용 조회
+    AiGeneratedStoryPagesDTO rDTO = makeService.getAiGeneratedStoryPages(pDTO);
+
+    log.info("페이지 별 내용: {}", rDTO.getContentText());
 
     log.info("{}.getFairytaleResult End!!", this.getClass().getSimpleName());
 
-    return result; // 자동으로 JSON 형태로 변환됨
+    return rDTO;
   }
+
 
   @PostMapping("makeFairytaleRequest")
   @ResponseBody
-  public String makeFairytaleRequest(HttpServletRequest request, HttpSession session) {
+  public String makeFairytaleRequest(HttpServletRequest request, HttpSession session) throws Exception {
 
     log.info("{}.makeFairytaleRequest Start!!", this.getClass().getSimpleName());
+
+    String userId = CmmUtil.nvl((String) session.getAttribute("SS_USER_ID"));
+
+    log.info("세션 userId: {}", userId);
 
     // mainName 안전 처리
     String mainName = CmmUtil.nvl(request.getParameter("mainName"));
@@ -76,24 +91,57 @@ public class MakeController {
     log.info("받은 DTO mainName: {} / words: {}", mainName, words);
 
     // GPT 프롬프트 생성
-    String prompt = "다음 단어들을 사용해서 " + mainName +
-            "을 주인공으로 하는 짧은 동화를 만들어줘: " +
-            String.join(", ", words);
+
+    String prompt = "다음 단어들을 사용해서 \"" + mainName + "\"를 주인공으로 하는 짧은 동화를 만들어줘.\n" +
+            "총 5 ~ 7 페이지로 나누어 작성하고, 각 페이지는 3~5문장 정도로 해줘.\n" +
+            "출력은 JSON 형식으로, 페이지 번호, 내용, 이미지 설명을 포함하도록 해줘.\n" +
+            "출력은 절대 ```json 같은 코드 블록 없이 순수 JSON으로만 반환해줘.\n" +
+            "예시 JSON 형식:\n" +
+            "[\n" +
+            "    {\"pageNumber\": 1, \"contentText\": \"첫 번째 페이지 내용...\", \"contentImage\": \"이미지 설명\"},\n" +
+            "    {\"pageNumber\": 2, \"contentText\": \"두 번째 페이지 내용...\", \"contentImage\": \"이미지 설명\"},\n" +
+            "    ...\n" +
+            "]\n" +
+            "사용할 단어: " + String.join(", ", words);
+
     log.info("GPT 프롬프트: {}", prompt);
 
     // GPT API 호출
     String gptResult = gptService.generateText(prompt);
     log.info("GPT 응답 결과 : {}", gptResult);
 
-    // DTO에 담기
-    FairytaleDTO dto = new FairytaleDTO();
-    dto.setMainName(mainName);
-    dto.setWords(words);
-    dto.setGptResult(gptResult);
+    AiGeneratedStoriesDTO pDTO = new AiGeneratedStoriesDTO();
+    pDTO.setUserId(userId);
+    pDTO.setCharacterName(mainName);
+    pDTO.setStoryText(gptResult);
+    pDTO.setImageUrl("");
 
-    // 세션에 DTO 저장
-    session.setAttribute("fairytaleDTO", dto);
-    log.info("DTO 세션 저장 완료: {}", dto.getGptResult());
+    int res = makeService.insertAiGeneratedStories(pDTO);
+    Long aiStoryId = pDTO.getAiStoryId();
+
+    log.info("저장 결과 : {}", res);
+    log.info("aiStoryId : {}", aiStoryId);
+
+    if (res > 0) {
+      session.setAttribute("AI_STORY_RES", res);
+      session.setAttribute("LAST_STORY_ID", aiStoryId);
+    }
+
+    // JSON 파싱
+    ObjectMapper mapper = new ObjectMapper();
+    List<AiGeneratedStoryPagesDTO> aiStoryPagesList = mapper.readValue(
+            gptResult,
+            new TypeReference<>() {}
+    );
+
+    int totalPages = aiStoryPagesList.size();
+    session.setAttribute("STORY_TOTAL_PAGES", totalPages);
+
+    for (AiGeneratedStoryPagesDTO page : aiStoryPagesList) {
+      page.setAiStoryId(aiStoryId); // 전체 스토리 ID 연결
+      makeService.insertAiGeneratedStoryPages(page); // 서비스 → Mapper → DB insert
+    }
+
 
     log.info("{}.makeFairytaleRequest End!!", this.getClass().getSimpleName());
 

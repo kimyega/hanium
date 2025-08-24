@@ -3,7 +3,10 @@ package kopo.poly.hanium.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kopo.poly.hanium.dto.MsgDTO;
+import kopo.poly.hanium.dto.QuizDTO;
+import kopo.poly.hanium.dto.QuizResultsDTO;
 import kopo.poly.hanium.dto.UserInfoDTO;
+import kopo.poly.hanium.service.IQuizService;
 import kopo.poly.hanium.service.IUserInfoService;
 import kopo.poly.hanium.util.CmmUtil;
 import kopo.poly.hanium.util.EncryptUtil;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -24,6 +29,7 @@ import java.util.Optional;
 public class UserInfoController {
 
     private final IUserInfoService userInfoService;
+    private final IQuizService quizService;
 
     // 로그인 페이지 이동
     @GetMapping(value = "login")
@@ -188,10 +194,37 @@ public class UserInfoController {
         return dto;
     }
     @GetMapping(value = "mypage")
-    public String myPage() {
+    public String myPage(){
 
         return "user/mypage";
     }
+
+    // 퀴즈 결과만 반환하는 API (JSON 응답)
+    @ResponseBody
+    @GetMapping("quizHistory")
+    public List<QuizDTO> getQuizHistory(HttpSession session) throws Exception {
+        log.info("{}.getQuizHistory Start!", this.getClass().getName());
+
+        String userId = (String) session.getAttribute("SS_USER_ID");
+
+        List<QuizDTO> rList = Optional.ofNullable(quizService.getQuizList()).orElseGet(ArrayList::new);
+
+        for (QuizDTO quiz : rList) {
+            quiz.setUserId(userId);
+            QuizResultsDTO qResult = quizService.getQuizResultByUserAndQuiz(quiz);
+            if (qResult != null) {
+                quiz.setScore(qResult.getScore());
+                quiz.setTotal(qResult.getTotal());
+                quiz.setTakenAt(qResult.getTakenAt());
+            }
+        }
+
+        log.info("{}.getQuizHistory End!", this.getClass().getName());
+
+        return rList;
+    }
+
+
     // 비밀번호 찾기 페이지 이동
     @GetMapping(value = "findPw")
     public String findPw() {
