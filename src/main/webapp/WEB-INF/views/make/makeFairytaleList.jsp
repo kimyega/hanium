@@ -224,6 +224,7 @@
 				console.error("세션 저장 요청 실패", err);
 			}
 		});
+
 	}
 
 	function focusInput() {

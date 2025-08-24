@@ -299,6 +299,7 @@
             </div>
         </div>
     </main>
+
 </form>
 
 <%--모달창--%>
@@ -485,6 +486,7 @@
             });
         });
     });
+
 </script>
 
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
