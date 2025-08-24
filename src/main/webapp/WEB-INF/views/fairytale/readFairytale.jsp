@@ -37,71 +37,93 @@
 	<!-- jQuery -->
 	<script src="${pageContext.request.contextPath}/js/jquery-3.6.0.min.js"></script>
 	<style>
-	/* ===== 카드 숨김/보임 ===== */
-	.card-wrapper {
-	display: none;
-	position: relative;   /* ✅ 퀴즈 버튼 위치 기준점 */
-	}
-	.card-wrapper.active {
-	display: flex;
-	}
+		/* ===== 카드 숨김/보임 ===== */
+		.card-wrapper {
+			display: none;
+			position: relative;   /* ✅ 퀴즈 버튼 위치 기준점 */
+		}
+		.card-wrapper.active {
+			display: flex;
+		}
 
-	/* ===== 퀴즈 버튼 ===== */
-	.make-wrapper {
-		position: fixed;   /* 화면에 고정 */
-		right: 60px;       /* 오른쪽 끝에서 30px */
-		bottom: 30px;      /* 아래 끝에서 30px */
-		margin: 0;
-		z-index: 999;      /* 다른 요소보다 위에 보이게 */
-	}
+		/* ===== 퀴즈 버튼 ===== */
+		.make-wrapper {
+			position: fixed;   /* 화면에 고정 */
+			right: 60px;       /* 오른쪽 끝에서 30px */
+			bottom: 30px;      /* 아래 끝에서 30px */
+			margin: 0;
+			z-index: 999;      /* 다른 요소보다 위에 보이게 */
+		}
 
-	.make-wrapper button {
-		font-family: 'Cute Font', sans-serif;
-		font-size: 35px;
-		border-radius: 100px;
-		border: 8px solid #fca08c;
-		background-color: white;
-		cursor: pointer;
+		.make-wrapper button {
+			font-family: 'Cute Font', sans-serif;
+			font-size: 35px;
+			border-radius: 100px;
+			border: 8px solid #fca08c;
+			background-color: white;
+			cursor: pointer;
 
-		/* ✅ 글씨 중앙 정렬 */
-		display: flex;
-		align-items: center;     /* 세로 가운데 */
-		justify-content: center; /* 가로 가운데 */
+			/* ✅ 글씨 중앙 정렬 */
+			display: flex;
+			align-items: center;     /* 세로 가운데 */
+			justify-content: center; /* 가로 가운데 */
 
-		width: 200px;
-		height: 80px;
-		padding: 0;              /* 패딩 제거 (중앙 정렬 방해 안 하도록) */
-		line-height: normal;     /* ✅ 고정 line-height 대신 normal */
-		white-space: nowrap;
-	}
+			width: 200px;
+			height: 80px;
+			padding: 0;              /* 패딩 제거 (중앙 정렬 방해 안 하도록) */
+			line-height: normal;     /* ✅ 고정 line-height 대신 normal */
+			white-space: nowrap;
+		}
 
-	.make-wrapper button:hover {
-		background-color: #fca08c;
-		color: white;
-	}
+		.make-wrapper button:hover {
+			background-color: #fca08c;
+			color: white;
+		}
 
 
-	/* ===== 하단 네비게이션 ===== */
-	.footer {
-	position: relative;
-	width: 100%;
-	max-width: 100%;
-	margin: 50px auto 0 auto;
-	padding: 0 20px;
-	box-sizing: border-box;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	}
+		/* ===== 하단 네비게이션 ===== */
+		.footer {
+			position: relative;
+			width: 100%;
+			max-width: 100%;
+			margin: 50px auto 0 auto;
+			padding: 0 20px;
+			box-sizing: border-box;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
 
-	/* 버튼은 table.css의 .button 그대로 사용 */
-	#prevBtn, #nextBtn {
-	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
-	}
-	#prevBtn { left: 5px; }
-	#nextBtn { right: 5px; }
+		/* 버튼은 table.css의 .button 그대로 사용 */
+		#prevBtn, #nextBtn {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+		}
+		#prevBtn { left: 5px; }
+		#nextBtn { right: 5px; }
+
+
+		.story-text {
+			font-size: 32px;         /* 글씨 크게 */
+			line-height: 1.8;        /* 줄 간격 */
+			text-align: center;      /* 가운데 정렬 */
+			white-space: pre-line;   /* DB에 저장된 줄바꿈 반영 */
+			word-break: keep-all;    /* 한국어 단어 단위 줄바꿈 */
+			font-family: 'Cute Font', sans-serif;  /* Figma 같은 느낌 */
+		}
+
+		.signWord {
+			cursor: pointer;
+			transition: color 0.3s, font-weight 0.3s;
+		}
+
+		.signWord.highlight {
+			color: blue;
+			font-weight: bold;
+			text-decoration: underline;
+		}
+
 	</style>
 </head>
 <body>
@@ -178,25 +200,40 @@
 		<div class="card-wrapper <%= (i==0) ? "active" : "" %>" data-index="<%= i %>">
 			<div class="card card-img">
 				<img
-						src="<%= (img != null && !img.equals("")) ? img : "/images/pig.png" %>"
+						src="<%= (p.getContentImage() != null && !p.getContentImage().isEmpty())
+                ? ("/images/" + p.getContentImage())
+                : "/images/default.png" %>"
 						alt="동화 이미지"
 						onerror="this.src='/images/default.png'"/>
 			</div>
 
 			<div class="card text-card">
-				<%= (text != null) ? text : "" %>
+				<p class="story-text">
+					<%
+						if (text != null && !text.isEmpty()) {
+							String[] keywords = {"돼지", "나무", "집"};
+
+							for (String keyword : keywords) {
+								if (text.contains(keyword)) {
+									text = text.replaceAll(keyword,
+											"<span class='signWord'>" + keyword + "</span>");
+								}
+							}
+							out.print(text);
+						}
+					%>
+				</p>
 			</div>
 
-			<div class="card card-dic">
+
+			<div class="card card-dic" id="dicBox">
 				<div class="card-dic-title">수어 사전</div>
 				<div class="card-dic-img">
-					<img
-							src="<%= (signImg != null && !signImg.equals("")) ? signImg : "/images/language.png" %>"
-							alt="수어 이미지"
-							onerror="this.src='/images/language.png'"/>
+					<!-- ✅ 항상 default.png로 시작 -->
+					<img id="dicImg" src="/images/default.png" alt="수어 이미지"
+						 onerror="this.src='/images/default.png'"/>
 				</div>
-				<!-- ✅ signWord가 '수어 사전'일 때는 출력 안 함 -->
-				<p><%= (signWord != null && !signWord.equals("수어 사전")) ? signWord : "" %></p>
+				<p id="dicWord"></p>
 			</div>
 
 		</div>
@@ -279,6 +316,65 @@
 	// 초기화
 	show(idx);
 
+	document.addEventListener("DOMContentLoaded", function() {
+		const dictImg = document.getElementById("dicImg");   // ✅ dicImg
+		const dictWord = document.getElementById("dicWord"); // ✅ dicWord
+		const dictBox = document.getElementById("dicBox");   // ✅ dicBox
+		const defaultImg = "/images/default.png";
+
+		if (!dictImg || !dictWord || !dictBox) {
+			console.error("❌ dicImg / dicWord / dicBox 요소를 찾을 수 없습니다.");
+			return;
+		}
+
+		// 단어 클릭 이벤트
+		document.querySelectorAll(".signWord").forEach(span => {
+			span.addEventListener("click", function(e) {
+				e.stopPropagation();
+
+				const alreadyHighlighted = this.classList.contains("highlight");
+
+				// 모든 단어 강조 해제
+				document.querySelectorAll(".signWord").forEach(w => w.classList.remove("highlight"));
+
+				if (alreadyHighlighted) {
+					// 다시 클릭 → 초기화 (default.png)
+					dictImg.src = defaultImg;
+					dictWord.textContent = "수어 사전";
+				} else {
+					// 강조 표시
+					this.classList.add("highlight");
+
+					// ✅ 모든 단어 클릭 시 무조건 language.png 보여주기
+					dictImg.src = "/images/language.png";
+					dictWord.textContent = this.textContent;
+				}
+
+
+			});
+		});
+
+		// 사전 칸 빈 영역 클릭 → 전체 초기화
+		dictBox.addEventListener("click", function(e) {
+			if (e.target === dictBox) {
+				document.querySelectorAll(".signWord").forEach(w => w.classList.remove("highlight"));
+				dictImg.src = defaultImg;
+				dictWord.textContent = "수어 사전";
+			}
+
+			function showImage(word) {
+				const dictImg = document.getElementById("dicImg");
+				const dictWord = document.getElementById("dicWord");
+
+				dictImg.src = "/images/default.png"; // ✅ 항상 default.png
+				dictWord.textContent = word; // 클릭한 단어 그대로 표시
+			}
+
+		});
+	});
+
+
+
 </script>
 
 <!-- ✅ 공통 드롭다운/로그아웃 JS -->
@@ -286,3 +382,4 @@
 
 </body>
 </html>
+

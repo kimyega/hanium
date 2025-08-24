@@ -124,7 +124,7 @@
     <div class="hero-content">
         <!-- 왼쪽 버튼 -->
         <div class="menu-col">
-            <button class="menu-btn" onclick="location.href='/contents/fairytaleList'">
+            <button class="menu-btn" onclick="location.href='/fairytale/fairytaleList'">
                 <i class="fa-solid fa-book-open-reader"></i> 동화 읽기
             </button>
             <button class="menu-btn" onclick="location.href='/make/makeFairytale'">
