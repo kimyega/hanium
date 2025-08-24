@@ -40,13 +40,19 @@ public class MakeController {
     return "make/makeFairytaleResult";
   }
 
+  @GetMapping("makeFairytaleList")
+  public String makeFairytaleList() {
+    return "make/makeFairytaleList";
+  }
+
+
   @GetMapping("makeFairytaleResultByPage")
   @ResponseBody
   public AiGeneratedStoryPagesDTO getFairytaleResult(HttpServletRequest request, HttpSession session) throws Exception {
 
     log.info("{}.getFairytaleResult Start!!", this.getClass().getSimpleName());
 
-    Long aiStoryId = Optional.ofNullable(session.getAttribute("LAST_STORY_ID"))
+    Long aiStoryId = Optional.ofNullable(session.getAttribute("AI_STORY_ID"))
             .map(id -> (Long) id)
             .orElse(0L);
     String pageNumber = CmmUtil.nvl(request.getParameter("pageNumber"));
@@ -91,7 +97,6 @@ public class MakeController {
     log.info("받은 DTO mainName: {} / words: {}", mainName, words);
 
     // GPT 프롬프트 생성
-
     String prompt = "다음 단어들을 사용해서 \"" + mainName + "\"를 주인공으로 하는 짧은 동화를 만들어줘.\n" +
             "총 5 ~ 7 페이지로 나누어 작성하고, 각 페이지는 3~5문장 정도로 해줘.\n" +
             "출력은 JSON 형식으로, 페이지 번호, 내용, 이미지 설명을 포함하도록 해줘.\n" +
@@ -124,7 +129,7 @@ public class MakeController {
 
     if (res > 0) {
       session.setAttribute("AI_STORY_RES", res);
-      session.setAttribute("LAST_STORY_ID", aiStoryId);
+      session.setAttribute("AI_STORY_ID", aiStoryId);
     }
 
     // JSON 파싱
@@ -139,12 +144,105 @@ public class MakeController {
 
     for (AiGeneratedStoryPagesDTO page : aiStoryPagesList) {
       page.setAiStoryId(aiStoryId); // 전체 스토리 ID 연결
-      makeService.insertAiGeneratedStoryPages(page); // 서비스 → Mapper → DB insert
+      int pageRes = makeService.insertAiGeneratedStoryPages(page); // 서비스 → Mapper → DB insert
     }
-
 
     log.info("{}.makeFairytaleRequest End!!", this.getClass().getSimpleName());
 
     return "/make/makeFairytaleResult";
   }
+
+  @GetMapping("deleteAiGeneratedStories")
+  @ResponseBody
+  public int deleteAiGeneratedStories(HttpSession session) {
+
+    log.info("{}.deleteAiGeneratedStories Start!!", this.getClass().getSimpleName());
+
+    // 세션에서 삭제할 동화 ID 가져오기 (세션에 ai_story_id 저장해놨다고 가정)
+    Long aiStoryId = (Long) session.getAttribute("AI_STORY_ID");
+
+    if (aiStoryId == null) {
+      log.warn("세션에 AI_STORY_ID 없음");
+      return 0; // 실패
+    }
+
+    AiGeneratedStoriesDTO pDTO = new AiGeneratedStoriesDTO();
+    pDTO.setAiStoryId(aiStoryId);
+
+    int res = 0;
+    try {
+      // Service 호출해서 DB 삭제
+      res = makeService.deleteAiGeneratedStories(pDTO);
+
+      // 세션에서 값 제거
+      session.removeAttribute("AI_STORY_ID");
+
+    } catch (Exception e) {
+      log.error("AI 동화 삭제 실패", e);
+      res = 0;
+    }
+
+    log.info("결과 : {}", res);
+
+    log.info("{}.deleteAiGeneratedStories End!!", this.getClass().getSimpleName());
+
+    return res; // 1=성공, 0=실패
+  }
+
+  @GetMapping("getAiGeneratedStoriesList")
+  @ResponseBody
+  public List<AiGeneratedStoriesDTO> getAiGeneratedStoriesList(HttpSession session) throws Exception {
+
+    log.info("{}.getAiGeneratedStoriesList Start!!", this.getClass().getSimpleName());
+
+    String userId = (String) session.getAttribute("SS_USER_ID"); // 로그인 유저 기준 조회
+
+    AiGeneratedStoriesDTO pDTO = new AiGeneratedStoriesDTO();
+    pDTO.setUserId(userId);
+
+    List<AiGeneratedStoriesDTO> rList = makeService.getAiGeneratedStoriesList(pDTO);
+
+    if (rList.isEmpty()) {
+      log.info("조회 결과 없음");
+    } else {
+      log.info("조회된 개수: {}", rList.size());
+    }
+
+    log.info("{}.getAiGeneratedStoriesList End!!", this.getClass().getSimpleName());
+
+    return rList; // JSON 자동 변환
+  }
+
+  @PostMapping("/updateFairyTaleTitle")
+  @ResponseBody
+  public int updateFairyTaleTitle(HttpServletRequest request, HttpSession session) {
+
+    log.info("{}.saveFairyTaleTitle Start!!", this.getClass().getSimpleName());
+
+    String title = request.getParameter("title");
+    Long aiStoryId = (Long) session.getAttribute("AI_STORY_ID");
+
+    if(aiStoryId == null || title == null || title.trim().isEmpty()) {
+      log.warn("저장 실패: aiStoryId 또는 title 없음");
+      return 0; // 실패
+    }
+
+    AiGeneratedStoriesDTO pDTO = new AiGeneratedStoriesDTO();
+    pDTO.setAiStoryId(aiStoryId);
+    pDTO.setTitle(title);
+
+    int res = 0;
+    try {
+      res = makeService.updateAiGeneratedStories(pDTO);
+      log.info("저장 결과: {}", res);
+    } catch(Exception e) {
+      log.error("동화 제목 저장 실패", e);
+      res = 0;
+    }
+
+    log.info("{}.updateFairyTaleTitle End!!", this.getClass().getSimpleName());
+
+    return res; // 1=성공, 0=실패
+  }
+
 }

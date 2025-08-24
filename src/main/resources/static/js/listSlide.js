@@ -1,15 +1,17 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const wrapper = document.getElementById('slideCardWrapper');
-    const cardCount = document.querySelectorAll('.slide-card').length;
-    const cardsPerPage = 3;
+window.initSlide = function() {
     let currentIndex = 0;
+    const wrapper = document.getElementById('slideCardWrapper');
+    const cardsPerPage = 3;
 
-    function slide(direction, event) {
-        if (event) event.preventDefault();  // 버튼 기본 동작 방지
+    console.log("initSlide 함수 안");
+
+    function slide(direction) {
+        const cardCount = document.querySelectorAll('.slide-card').length;
 
         const maxIndex = Math.ceil(cardCount / cardsPerPage) - 1;
-        currentIndex += direction;
+        console.log("slide 함수 안");
 
+        currentIndex += direction;
         if (currentIndex < 0) currentIndex = 0;
         if (currentIndex > maxIndex) currentIndex = maxIndex;
 
@@ -17,16 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
         wrapper.style.transform = `translateX(-${offset}%)`;
     }
 
-    // 버튼 클릭 시 슬라이드 기능 호출
     const leftButton = document.querySelector('.slide.left');
     const rightButton = document.querySelector('.slide.right');
 
-    if (leftButton && rightButton) {
-        leftButton.addEventListener('click', function (event) {
-            slide(-1, event);
-        });
-        rightButton.addEventListener('click', function (event) {
-            slide(1, event);
-        });
-    }
-});
+    if (leftButton) leftButton.addEventListener('click', () => slide(-1));
+    if (rightButton) rightButton.addEventListener('click', () => slide(1));
+};

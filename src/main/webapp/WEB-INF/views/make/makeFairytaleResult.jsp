@@ -201,7 +201,7 @@
 <form id="f">
 	<main>
 		<div class="top-bar">
-			<button class="button top-home-button" onclick="location.href='/home.html'">
+			<button type="button" class="button top-home-button" onclick="location.href='/user/main'">
 				<i class="fa-solid fa-house fa-2xl"></i>
 			</button>
 		</div>
@@ -220,7 +220,7 @@
 				</button>
 			</div>
 			<div class="make-wrapper-two">
-				<button type="button" class="button make" onclick="location.href='/make/makeFairytale'">다시 만들기</button>
+				<button type="button" id="remakeFairytale" class="button make">다시 만들기</button>
 				<div class="page-number">
 					<span id="pageNumber">1</span> / <span id="totalPages">?</span>
 				</div>
@@ -341,19 +341,55 @@
 		let title = $("#fairyTaleTitle").val().trim();
 
 		if (title === "") {
-			$("#titleError").css("visibility", "visible");  // 메시지 표시
-			$("#fairyTaleTitle").addClass("input-error");   // 밑줄 빨간색
+			$("#titleError").css("visibility", "visible");
+			$("#fairyTaleTitle").addClass("input-error");
 			$("#fairyTaleTitle").focus();
 			return;
 		}
 
-		// 정상 입력 시
 		$("#titleError").css("visibility", "hidden");
 		$("#fairyTaleTitle").removeClass("input-error");
 
-		console.log("저장할 동화 제목:", title);
-		$("#saveModal").css("display", "none");
+		$.ajax({
+			url: '/make/updateFairyTaleTitle',
+			type: 'POST',
+			data: { title: title }, // 일반 폼 데이터 방식
+			success: function(res) {
+				if(res === 1) {
+					alert("동화 제목 저장 완료!");
+					window.location.href = '/make/makeFairytaleList';
+				} else {
+					alert("동화 제목 저장 실패!");
+				}
+			},
+			error: function(err) {
+				console.error("AJAX 요청 실패:", err);
+			}
+		});
 	});
+
+
+	// 다시 만들기 버튼 클릭시 삭제후 /make/makeFairytale 로 이동
+	$("#remakeFairytale").click(function(e) {
+		e.preventDefault();
+
+		$.ajax({
+			url: '/make/deleteAiGeneratedStories',
+			type: 'GET',
+			success: function(res) {
+				if (res === 1) {
+					console.log("삭제 성공");
+					window.location.href = '/make/makeFairytale'; // 삭제 후 이동
+				} else {
+					alert("삭제 실패");
+				}
+			},
+			error: function(err) {
+				console.error("삭제 요청 실패", err);
+			}
+		});
+	});
+
 
 </script>
 

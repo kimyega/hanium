@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -35,11 +37,17 @@ public class MakeService implements IMakeService {
   }
 
   @Override
-  public AiGeneratedStoriesDTO getAiGeneratedStories(AiGeneratedStoriesDTO pDTO) throws Exception {
+  public List<AiGeneratedStoriesDTO> getAiGeneratedStoriesList(AiGeneratedStoriesDTO pDTO) throws Exception {
 
     log.info("{}.getAiGeneratedStories Start!", this.getClass().getName());
 
-    AiGeneratedStoriesDTO rDTO = makeMapper.getAiGeneratedStories(pDTO);
+    List<AiGeneratedStoriesDTO> rDTO = makeMapper.getAiGeneratedStoriesList(pDTO);
+
+    if (rDTO.isEmpty()) {
+      log.info("조회 결과 없음");
+    } else {
+      log.info("조회된 개수: {}", rDTO.size());
+    }
 
     log.info("{}.getAiGeneratedStories End!", this.getClass().getName());
 
@@ -75,5 +83,29 @@ public class MakeService implements IMakeService {
     log.info("{}.getAiGeneratedStoryPages End!", this.getClass().getName());
 
     return rDTO;
+  }
+
+  @Override
+  public int deleteAiGeneratedStories(AiGeneratedStoriesDTO pDTO) throws Exception {
+
+    log.info("{}.deleteAiGeneratedStories Start!", this.getClass().getName());
+
+    int res = makeMapper.deleteAiGeneratedStories(pDTO);
+
+    log.info("{}.deleteAiGeneratedStories End!", this.getClass().getName());
+
+    return res;
+  }
+
+  @Override
+  public int updateAiGeneratedStories(AiGeneratedStoriesDTO pDTO) throws Exception {
+
+    log.info("{}.updateAiGeneratedStories Start!", this.getClass().getName());
+
+    int res = makeMapper.updateAiGeneratedStories(pDTO);
+
+    log.info("{}.updateAiGeneratedStories End!", this.getClass().getName());
+
+    return res;
   }
 }
