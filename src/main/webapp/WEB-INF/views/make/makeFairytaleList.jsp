@@ -208,8 +208,22 @@
 
 <script>
 
-	function goToDetail(url) {
-		window.location.href = url;
+	function goToDetail(aiStoryId) {
+		$.ajax({
+			url: '/make/setAiStoryId',
+			type: 'POST',
+			data: { aiStoryId: aiStoryId },
+			success: function(res) {
+				if(res === 1){
+					window.location.href = "/make/makeFairytaleResult";
+				} else {
+					alert("세션 저장 실패");
+				}
+			},
+			error: function(err) {
+				console.error("세션 저장 요청 실패", err);
+			}
+		});
 	}
 
 	function focusInput() {
@@ -242,7 +256,7 @@
 					let randomColor = pastelColors[Math.floor(Math.random() * pastelColors.length)];
 
 					let cardHtml =
-							'<div class="slide-card" onclick="goToDetail(\'/contents/readFairytale?storyId=' + story.aiStoryId + '\')">' +
+							'<div class="slide-card" onclick="goToDetail(' + story.aiStoryId + ')">' +
 							'<div class="card-inner" style="background-color: ' + randomColor + '">' +
 							'<img src="' + (story.imageUrl || '/images/default.png') + '" alt="' + story.title + '">' +
 							'<div class="card-title">' + story.title + '</div>' +
