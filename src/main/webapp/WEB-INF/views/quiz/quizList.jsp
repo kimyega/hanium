@@ -247,7 +247,7 @@
 
 					var card = '<div class="slide-card" onclick="goToDetail(\'/quiz/quizInfo?nSeq=' + q.quizId + '\')">' +
 							'<div class="card-inner" style="background-color: ' + bgColor + '">' +
-							'<img src="/images/turtle.png" alt="동화 이미지">' +
+							'<img src="' + q.description + '" alt="동화 이미지">' +
 							'<div class="card-title">' +
 							q.title +
 							'<div class="card-quiz-score">' + scoreHtml + '</div>' +

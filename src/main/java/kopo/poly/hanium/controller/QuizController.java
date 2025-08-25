@@ -2,7 +2,10 @@ package kopo.poly.hanium.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import kopo.poly.hanium.dto.*;
+import kopo.poly.hanium.dto.QuizzesDTO;
+import kopo.poly.hanium.dto.QuizQuestionsDTO;
+import kopo.poly.hanium.dto.QuizResultsDTO;
+import kopo.poly.hanium.dto.SignWordsDTO;
 import kopo.poly.hanium.service.IQuizService;
 import kopo.poly.hanium.util.CmmUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +28,7 @@ import java.util.Optional;
 public class QuizController {
 
     private final IQuizService quizService;
-
+    
     @GetMapping(value = "quiz")
     public String quizPage() {
 
@@ -109,6 +112,7 @@ public class QuizController {
             if (qResult != null) {
                 quiz.setScore(qResult.getScore());
                 quiz.setTotal(qResult.getTotal());
+                quiz.setDescription(qResult.getDescription());
             }
         }
 

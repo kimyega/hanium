@@ -32,9 +32,10 @@
 
     <!--    퀴즈 점수 불러오기-->
     <select id="selectQuizResultByUserAndQuiz" parameterType="QuizzesDTO" resultType="QuizResultsDTO">
-        SELECT USER_ID, QUIZ_ID, SCORE, TOTAL, TAKEN_AT
-        FROM quiz_results
-        WHERE USER_ID = #{userId}
-          AND QUIZ_ID = #{quizId}
+        SELECT r.USER_ID, r.QUIZ_ID, r.SCORE, r.TOTAL, r.TAKEN_AT, q.DESCRIPTION
+        FROM quiz_results r
+                 JOIN quizzes q ON r.quiz_id = q.quiz_id
+        WHERE r.USER_ID = #{userId}
+          AND r.QUIZ_ID = #{quizId}
     </select>
 </mapper>

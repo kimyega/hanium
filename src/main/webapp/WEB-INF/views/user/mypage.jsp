@@ -146,7 +146,7 @@
 <main class="mypage-main">
     <h2>마이페이지</h2>
 
-    <button class="mypage-btn" onclick="location.href='/make/makeFairytaleList'">
+    <button class="mypage-btn" onclick="location.href='/user/changePw'">
         <i class="fa-solid fa-book"></i>
         <span>내가 만든 동화</span>
         <i class="fa-solid fa-chevron-right"></i>
@@ -229,6 +229,7 @@
                             $('#quizTableBody').append(tr);
                         }
                     });
+
                 }
             },
             error: function (xhr, status, error) {
