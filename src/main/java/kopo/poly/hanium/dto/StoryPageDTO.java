@@ -10,4 +10,5 @@ public class StoryPageDTO {
     private int pageNumber;    // page_number
     private String contentText; // content_text
     private String contentImage; // content_image (nullable)
+
 }
