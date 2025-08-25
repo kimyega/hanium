@@ -2,7 +2,7 @@ package kopo.poly.hanium.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import kopo.poly.hanium.dto.QuizDTO;
+import kopo.poly.hanium.dto.QuizzesDTO;
 import kopo.poly.hanium.dto.QuizQuestionsDTO;
 import kopo.poly.hanium.dto.QuizResultsDTO;
 import kopo.poly.hanium.dto.SignWordsDTO;
@@ -96,7 +96,7 @@ public class QuizController {
 
     @GetMapping(value = "quizListLoad")
     @ResponseBody
-    public List<QuizDTO> quizListLoad(HttpSession session) throws Exception {
+    public List<QuizzesDTO> quizListLoad(HttpSession session) throws Exception {
 
         log.info("{}.quizListLoad start!", this.getClass().getName());
 
@@ -104,14 +104,15 @@ public class QuizController {
 
         log.info("userId : {}", userId);
 
-        List<QuizDTO> rList = Optional.ofNullable(quizService.getQuizList()).orElseGet(ArrayList::new);
+        List<QuizzesDTO> rList = Optional.ofNullable(quizService.getQuizList()).orElseGet(ArrayList::new);
 
-        for (QuizDTO quiz : rList) {
+        for (QuizzesDTO quiz : rList) {
             quiz.setUserId(userId);
             QuizResultsDTO qResult = quizService.getQuizResultByUserAndQuiz(quiz);
             if (qResult != null) {
                 quiz.setScore(qResult.getScore());
                 quiz.setTotal(qResult.getTotal());
+                quiz.setDescription(qResult.getDescription());
             }
         }
 
