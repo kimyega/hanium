@@ -156,8 +156,7 @@ public class MakeController {
     ObjectMapper mapper = new ObjectMapper();
     List<AiGeneratedStoryPagesDTO> aiStoryPagesList = mapper.readValue(
             gptResult,
-            new TypeReference<>() {
-            }
+            new TypeReference<>() {}
     );
 
     int totalPages = aiStoryPagesList.size();
@@ -234,6 +233,7 @@ public class MakeController {
     return rList; // JSON 자동 변환
   }
 
+
   @PostMapping("updateFairyTaleTitle")
   @ResponseBody
   public int updateFairyTaleTitle(HttpServletRequest request, HttpSession session) {
@@ -243,7 +243,9 @@ public class MakeController {
     String title = request.getParameter("title");
     Long aiStoryId = (Long) session.getAttribute("AI_STORY_ID");
 
-    if (aiStoryId == null || title == null || title.trim().isEmpty()) {
+
+    if(aiStoryId == null || title == null || title.trim().isEmpty()) {
+
       log.warn("저장 실패: aiStoryId 또는 title 없음");
       return 0; // 실패
     }
@@ -256,6 +258,7 @@ public class MakeController {
     try {
       res = makeService.updateAiGeneratedStories(pDTO);
       log.info("저장 결과: {}", res);
+
     } catch (Exception e) {
       log.error("동화 제목 저장 실패", e);
       res = 0;
