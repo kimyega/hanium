@@ -30,7 +30,7 @@ public class QuizController {
     private final IQuizService quizService;
     
     @GetMapping(value = "quiz")
-    public String quiz1Page() {
+    public String quizPage() {
 
         return "quiz/quiz";
     }
@@ -102,10 +102,13 @@ public class QuizController {
 
         String userId = (String) session.getAttribute("SS_USER_ID");
 
+        log.info("userId : {}", userId);
+
         List<QuizDTO> rList = Optional.ofNullable(quizService.getQuizList()).orElseGet(ArrayList::new);
 
         for (QuizDTO quiz : rList) {
-            QuizResultsDTO qResult = quizService.getQuizResultByUserAndQuiz(userId, quiz.getQuizId());
+            quiz.setUserId(userId);
+            QuizResultsDTO qResult = quizService.getQuizResultByUserAndQuiz(quiz);
             if (qResult != null) {
                 quiz.setScore(qResult.getScore());
                 quiz.setTotal(qResult.getTotal());

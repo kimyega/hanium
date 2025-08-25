@@ -219,10 +219,10 @@
 		</div>
 
 		<div class="slide-btn-container">
-			<button type="button" class="slide left" onclick="slide(-1, event)">
+			<button type="button" class="slide left" >
 				<i class="fa-solid fa-arrow-left fa-2xl"></i>
 			</button>
-			<button type="button" class="slide right" onclick="slide(1, event)">
+			<button type="button" class="slide right" >
 				<i class="fa-solid fa-arrow-right fa-2xl"></i>
 			</button>
 		</div>

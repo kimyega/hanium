@@ -27,13 +27,22 @@ public class QuizService implements IQuizService {
     }
 
     @Override
-    public void saveQuizResult(QuizResultsDTO pDTO) throws Exception {
+    public int saveQuizResult(QuizResultsDTO pDTO) throws Exception {
 
         log.info("{}.saveQuizResult start!", this.getClass().getName());
 
-        quizMapper.saveQuizResult(pDTO);
+        int res = quizMapper.saveQuizResult(pDTO);
 
         log.info("{}.saveQuizResult start!", this.getClass().getName());
+
+        return res;
+    }
+
+    @Override
+    public QuizResultsDTO getQuizResultByUserAndQuiz(QuizDTO pDTO) throws Exception {
+        log.info("{}.getQuizResultByUserAndQuiz start!", this.getClass().getName());
+
+        return quizMapper.selectQuizResultByUserAndQuiz(pDTO);
     }
 
     @Override

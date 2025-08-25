@@ -1,24 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="java.util.List" %>
-<%@ page import="kopo.poly.hanium.dto.QuizDTO" %>
-<%@ page import="kopo.poly.hanium.util.CmmUtil" %>
-<%
-	List<QuizDTO> rList = (List<QuizDTO>) request.getAttribute("rList");
-%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 	<meta charset="UTF-8">
-	<title>퀴즈 목록</title>
+	<title>동화 목록</title>
 	<!-- Google Fonts: Kavoon, Cute Font -->
 	<link href="https://fonts.googleapis.com/css2?family=Kavoon&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Cute+Font&family=Kavoon&display=swap" rel="stylesheet">
+
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 	<link rel="stylesheet" href="/css/table.css" />
+
 	<%-- 모달창 css --%>
 	<link rel="stylesheet" href="/css/headerLogout.css" />
 
+	<%-- Jquery --%>
 	<script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
 	<style>
 		.top-search {
@@ -157,12 +154,6 @@
 		.slide-card {
 			cursor: pointer;
 		}
-
-		.card-quiz-score {
-			position: absolute;
-			right: 0.75rem;
-			color: #29B969;
-		}
 	</style>
 </head>
 
@@ -173,9 +164,9 @@
 <form id="f">
 	<main>
 		<div class="top-bar">
-			<a class="button top-home-button" onclick="location.href='/user/main'">
+			<button type="button" class="button top-home-button" onclick="location.href='/user/main'">
 				<i class="fa-solid fa-house fa-2xl"></i>
-			</a>
+			</button>
 			<div class="top-search">
 				<i class="fa-solid fa-magnifying-glass fa-sm search-icon" onclick="focusInput()"></i>
 				<input id="searchInput" class="search-bar" type="text" placeholder="동화를 검색해보세요..." />
@@ -187,24 +178,14 @@
 
 		<div class="slide-container">
 			<div class="slide-card-wrapper" id="slideCardWrapper">
-
-<%--				동화 생성--%>
-<%--				<div class="slide-card" onclick="goToDetail('/make/makeFairytale')">--%>
-<%--					<div class="card-inner" style="background-color: #fca0b3">--%>
-<%--						<img src="/images/plus.png" alt="플러스">--%>
-<%--						<div class="card-title" style="background-color: #fca0b3">--%>
-<%--							동화생성--%>
-<%--						</div>--%>
-<%--					</div>--%>
-<%--				</div>--%>
 			</div>
 		</div>
 
 		<div class="slide-btn-container">
-			<button type="button" class="slide left" onclick="slide(-1, event)">
+			<button type="button" class="slide left">
 				<i class="fa-solid fa-arrow-left fa-2xl"></i>
 			</button>
-			<button type="button" class="slide right" onclick="slide(1, event)">
+			<button type="button" class="slide right">
 				<i class="fa-solid fa-arrow-right fa-2xl"></i>
 			</button>
 		</div>
@@ -223,60 +204,85 @@
 	</div>
 </div>
 
-<script src="${pageContext.request.contextPath}/js/listSlide.js"></script>
+<script src="${pageContext.request.contextPath}/js/listSlide.js?v=1"></script>
 
 <script>
-	$(document).ready(function () {
+
+	function goToDetail(aiStoryId) {
 		$.ajax({
-			url: '/quiz/quizListLoad',
-			method: 'GET',
-			dataType: 'json',
-			success: function (data) {
-				var wrapper = $('#slideCardWrapper');
-				wrapper.empty(); // 기존 카드 지우기
-
-				var cardColors = ["#fca0b3", "#ffd167", "#ff93c9", "#d3a4ff", "#ffe9a7"];
-
-				$.each(data, function (i, q) {
-					var bgColor = cardColors[i % cardColors.length];
-					console.log(data);
-
-					var scoreHtml = (q.score != null && q.total != null && q.total !== 0)
-							? Math.round((q.score / q.total) * 100) + '점'
-							: '미응시';
-
-					var card = '<div class="slide-card" onclick="goToDetail(\'/quiz/quizInfo?nSeq=' + q.quizId + '\')">' +
-							'<div class="card-inner" style="background-color: ' + bgColor + '">' +
-							'<img src="/images/turtle.png" alt="동화 이미지">' +
-							'<div class="card-title">' +
-							q.title +
-							'<div class="card-quiz-score">' + scoreHtml + '</div>' +
-							'</div>' +
-							'</div>' +
-							'</div>';
-
-					wrapper.append(card);
-				});
+			url: '/make/setAiStoryId',
+			type: 'POST',
+			data: { aiStoryId: aiStoryId },
+			success: function(res) {
+				if(res === 1){
+					window.location.href = "/make/makeFairytaleResult";
+				} else {
+					alert("세션 저장 실패");
+				}
 			},
-			error: function (xhr, status, error) {
-				console.error('퀴즈 목록 로딩 실패:', error);
+			error: function(err) {
+				console.error("세션 저장 요청 실패", err);
 			}
 		});
-	});
 
-</script>
-
-<script>
-
-	function goToDetail(url) {
-		window.location.href = url;
 	}
 
 	function focusInput() {
 		document.getElementById('searchInput').focus();
 	}
 
+	$(document).ready(function() {
+		const pastelColors = [
+			"#fca0b3", "#ffd167", "#ff93c9", "#a0e7e5",
+			"#d3a4ff", "#ffe9a7", "#ffb6c1", "#ffccd5",
+			"#fff2a8", "#ffe082", "#b2f2e8", "#9be7d9",
+			"#e0b3ff", "#cdb4f5"
+		];
+
+		$.ajax({
+			url: "/make/getAiGeneratedStoriesList",
+			type: "GET",
+			success: function(res) {
+				let wrapper = $("#slideCardWrapper");
+				wrapper.empty();
+
+				if (res.length === 0) {
+					wrapper.append("<p>저장된 동화가 없습니다.</p>");
+					return;
+				}
+
+				console.log(res)
+
+				res.forEach(story => {
+					let randomColor = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+
+					let cardHtml =
+							'<div class="slide-card" onclick="goToDetail(' + story.aiStoryId + ')">' +
+							'<div class="card-inner" style="background-color: ' + randomColor + '">' +
+							'<img src="' + (story.imageUrl || '/images/default.png') + '" alt="' + story.title + '">' +
+							'<div class="card-title">' + story.title + '</div>' +
+							'</div>' +
+							'</div>';
+
+					wrapper.append(cardHtml);
+				});
+
+				console.log("window.initSlide:", window.initSlide);
+				if (typeof window.initSlide === "function") {
+					window.initSlide();
+				} else {
+					console.error("initSlide 함수가 정의되지 않았습니다!");
+				}
+			},
+			error: function(err) {
+				console.error("동화 목록 불러오기 실패:", err);
+			}
+		});
+	});
+
 </script>
+
+
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 
 </body>

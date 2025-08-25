@@ -210,7 +210,8 @@ public class UserInfoController {
         List<QuizDTO> rList = Optional.ofNullable(quizService.getQuizList()).orElseGet(ArrayList::new);
 
         for (QuizDTO quiz : rList) {
-            QuizResultsDTO qResult = quizService.getQuizResultByUserAndQuiz(userId, quiz.getQuizId());
+            quiz.setUserId(userId);
+            QuizResultsDTO qResult = quizService.getQuizResultByUserAndQuiz(quiz);
             if (qResult != null) {
                 quiz.setScore(qResult.getScore());
                 quiz.setTotal(qResult.getTotal());

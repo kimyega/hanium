@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kopo.poly.hanium.mapper.IMakeMapper">
+
+    <insert id="insertAiGeneratedStories" parameterType="AiGeneratedStoriesDTO" useGeneratedKeys="true" keyProperty="aiStoryId">
+        INSERT INTO ai_generated_stories
+        (
+         USER_ID,
+         CHARACTER_NAME,
+         STORY_TEXT,
+         IMAGE_URL
+        )
+        VALUES
+        (
+         #{userId},
+         #{characterName},
+         #{storyText},
+         #{imageUrl}
+        )
+    </insert>
+
+
+
+    <insert id="insertAiGeneratedStoryPages" parameterType="AiGeneratedStoryPagesDTO">
+        INSERT INTO ai_generated_story_pages
+        (
+            AI_STORY_ID,
+            PAGE_NUMBER,
+            CONTENT_TEXT,
+            CONTENT_IMAGE
+        )
+        VALUES
+            (
+                #{aiStoryId},
+                #{pageNumber},
+                #{contentText},
+                #{contentImage}
+            )
+    </insert>
+
+    <select id="getAiGeneratedStoryPages" parameterType="AiGeneratedStoryPagesDTO" resultType="AiGeneratedStoryPagesDTO">
+        SELECT CONTENT_TEXT, CONTENT_IMAGE
+        FROM ai_generated_story_pages
+        WHERE AI_STORY_ID = #{aiStoryId}
+        AND   PAGE_NUMBER = #{pageNumber}
+    </select>
+
+    <delete id="deleteAiGeneratedStories" parameterType="AiGeneratedStoriesDTO">
+        DELETE
+        FROM ai_generated_stories
+        WHERE ai_story_id = #{aiStoryId}
+    </delete>
+
+    <update id="updateAiGeneratedStories" parameterType="AiGeneratedStoriesDTO">
+        UPDATE ai_generated_stories
+        SET TITLE = #{title}
+        WHERE AI_STORY_ID = #{aiStoryId}
+    </update>
+
+
+    <select id="getAiGeneratedStoriesList" parameterType="AiGeneratedStoriesDTO" resultType="AiGeneratedStoriesDTO">
+        SELECT AI_STORY_ID, USER_ID, TITLE, CHARACTER_NAME, STORY_TEXT, IMAGE_URL, CREATED_AT
+        FROM ai_generated_stories
+        WHERE USER_ID = #{userId}
+        ORDER BY CREATED_AT DESC
+    </select>
+</mapper>

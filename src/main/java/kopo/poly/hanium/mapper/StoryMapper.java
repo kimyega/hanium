@@ -17,6 +17,6 @@ public interface StoryMapper {
 
     // ✅ 추가
     StoryDTO getStoryByTitle(String title) throws Exception;
-    StoryDTO selectStoryInfo(int storyId);
+    StoryDTO selectStoryInfo(int storyId) throws Exception;
 
 }
