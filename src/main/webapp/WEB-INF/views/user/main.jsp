@@ -23,7 +23,13 @@
             --peach-border:#f59c8b;
             --shadow:0 8px 12px rgba(0,0,0,.10);
         }
-        html,body{height:100%; margin:0; font-family:'Cute Font',sans-serif; background:#fff;}
+        html,body{
+            height:100%;
+            margin:0;
+            font-family:'Cute Font',sans-serif;
+            background:#fff;
+            overflow: hidden;
+        }
 
         /* ===== 메인 Hero ===== */
         .hero-wrap{

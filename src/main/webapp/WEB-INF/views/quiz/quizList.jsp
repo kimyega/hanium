@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-<%@ page import="kopo.poly.hanium.dto.QuizDTO" %>
+<%@ page import="kopo.poly.hanium.dto.QuizzesDTO" %>
 <%@ page import="kopo.poly.hanium.util.CmmUtil" %>
 <%
-	List<QuizDTO> rList = (List<QuizDTO>) request.getAttribute("rList");
+	List<QuizzesDTO> rList = (List<QuizzesDTO>) request.getAttribute("rList");
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -201,10 +201,10 @@
 		</div>
 
 		<div class="slide-btn-container">
-			<button type="button" class="slide left" onclick="slide(-1, event)">
+			<button type="button" class="slide left">
 				<i class="fa-solid fa-arrow-left fa-2xl"></i>
 			</button>
-			<button type="button" class="slide right" onclick="slide(1, event)">
+			<button type="button" class="slide right">
 				<i class="fa-solid fa-arrow-right fa-2xl"></i>
 			</button>
 		</div>
@@ -257,6 +257,12 @@
 
 					wrapper.append(card);
 				});
+				console.log("window.initSlide:", window.initSlide);
+				if (typeof window.initSlide === "function") {
+					window.initSlide();
+				} else {
+					console.error("initSlide 함수가 정의되지 않았습니다!");
+				}
 			},
 			error: function (xhr, status, error) {
 				console.error('퀴즈 목록 로딩 실패:', error);
