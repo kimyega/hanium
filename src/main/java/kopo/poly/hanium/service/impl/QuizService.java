@@ -45,13 +45,6 @@ public class QuizService implements IQuizService {
         return quizMapper.selectQuizResultByUserAndQuiz(pDTO);
     }
 
-    @Override
-    public QuizResultsDTO getQuizResultByUserAndQuiz(String userId, int quizId) throws Exception {
-        log.info("{}.getQuizResultByUserAndQuiz start!", this.getClass().getName());
-
-        return quizMapper.selectQuizResultByUserAndQuiz(userId, quizId);
-    }
-
     // 퀴즈 리스트 불러오기
     @Override
     public List<QuizzesDTO> getQuizList() throws Exception {

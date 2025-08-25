@@ -2,9 +2,9 @@ package kopo.poly.hanium.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import kopo.poly.hanium.dto.QuizzesDTO;
 import kopo.poly.hanium.dto.QuizQuestionsDTO;
 import kopo.poly.hanium.dto.QuizResultsDTO;
+import kopo.poly.hanium.dto.QuizzesDTO;
 import kopo.poly.hanium.dto.SignWordsDTO;
 import kopo.poly.hanium.service.IQuizService;
 import kopo.poly.hanium.util.CmmUtil;
@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RequestMapping(value = "/quiz")
@@ -37,9 +35,16 @@ public class QuizController {
 
     // 퀴즈 결과 페이지
     @PostMapping(value = "quizResult")
-    public String quizResult(HttpServletRequest request, HttpSession session) throws Exception{
+    public String quizResult() {
 
-        log.info("{}.quizResult start!", this.getClass().getName());
+        return "quiz/quizResult"; // 결과 JSP
+    }
+
+    @ResponseBody
+    @PostMapping(value = "quizResultData")
+    public Map<String, Object> quizResultData(HttpServletRequest request, HttpSession session) throws Exception {
+
+        log.info("{}.quizResultData start!", this.getClass().getName());
 
         int quizId = Integer.parseInt(request.getParameter("quizId"));
         String[] words = request.getParameterValues("words");
@@ -48,43 +53,42 @@ public class QuizController {
         int correctCount = 0;
         int totalCount = words.length;
 
-        // 정답 개수 계산
         for (String result : results) {
             if ("true".equals(result)) {
                 correctCount++;
             }
         }
 
-        // 사용자 정보
         String userId = (String) session.getAttribute("SS_USER_ID");
 
-        // DB 저장 (quiz_id는 단일 퀴즈에 대해 고정 or 생성 필요)
         QuizResultsDTO pDTO = new QuizResultsDTO();
         pDTO.setUserId(userId);
-        pDTO.setQuizId(quizId); // 예시로 1번 퀴즈
+        pDTO.setQuizId(quizId);
         pDTO.setScore(correctCount);
         pDTO.setTotal(totalCount);
 
-        quizService.saveQuizResult(pDTO); // 이 메서드는 아래에서 작성 예정
+        quizService.saveQuizResult(pDTO);
 
-        // 상세 오답 단어 목록도 전달 (보기용)
-        List<String> wrongWords = new ArrayList<>();
+        List<Map<String, Object>> resultList = new ArrayList<>();
         for (int i = 0; i < totalCount; i++) {
-            if (!"true".equals(results[i])) {
-                wrongWords.add(words[i]);
-            }
+            Map<String, Object> item = new HashMap<>();
+            item.put("word", words[i]);
+            item.put("correct", "true".equals(results[i]));
+            resultList.add(item);
         }
 
-        request.setAttribute("quizId", quizId);
-        request.setAttribute("score", correctCount);
-        request.setAttribute("total", totalCount);
-        request.setAttribute("wrongWords", wrongWords);
-        request.setAttribute("words", words);
-        request.setAttribute("results", results);
+        int percentScore = (int) (((double) correctCount / totalCount) * 100);
 
-        log.info("{}.quizResult end!", this.getClass().getName());
+        Map<String, Object> res = new HashMap<>();
+        res.put("quizId", quizId);
+        res.put("score", correctCount);
+        res.put("total", totalCount);
+        res.put("percentScore", percentScore);
+        res.put("results", resultList);
 
-        return "quiz/quizResult"; // 결과 JSP
+        log.info("{}.quizResultData end!", this.getClass().getName());
+
+        return res;
     }
 
     // 퀴즈 리스트 불러오기

@@ -1,12 +1,4 @@
-<%@ page import="kopo.poly.hanium.util.CmmUtil" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-	String[] words = (String[]) request.getAttribute("words");
-	String[] results = (String[]) request.getAttribute("results");
-	int score = (request.getAttribute("score") != null) ? (int) request.getAttribute("score") : 0;
-	int total = (request.getAttribute("total") != null) ? (int) request.getAttribute("total") : 1; // 나누기 0 방지
-	int percentScore = (int) (((double) score / total) * 100);
-%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -128,20 +120,9 @@
 		<div class="container">
 			<div class="card-wrapper">
 				<div class="card card-img">
-					<div class="score-text"><%= percentScore %>점</div>
+					<div class="score-text" id="scoreText"></div>
 				</div>
-				<div class="score-result">
-					<% if (words != null && results != null) {
-						for (int i = 0; i < words.length; i++) {
-							String word = words[i];
-							boolean isCorrect = "true".equals(results[i]);
-					%>
-					<div>
-						<span class="word"><%= word %></span> : <span class="result <%= isCorrect ? "correct" : "wrong" %>"> <%= isCorrect ? "정답" : "오답" %> </span>
-					</div>
-					<%     }
-					}
-					%>
+				<div class="score-result" id="scoreResult">
 				</div>
 			</div>
 			<div class="make-wrapper-two">
@@ -149,6 +130,7 @@
 				<button type="button" class="button make" id="quizSaveBtn">퀴즈목록</button>
 			</div>
 		</div>
+		<input type="hidden" id="quizIdHidden" name="quizIdHidden" />
 		<input type="hidden" name="nSeq" value="<%= request.getAttribute("quizId") %>">
 	</main>
 </form>
@@ -161,6 +143,50 @@
 		<button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
 	</div>
 </div>
+
+<script>
+	// 세션스토리지에서 퀴즈 데이터 가져오기
+	var words = JSON.parse(sessionStorage.getItem("quizWords") || "[]");
+	var results = JSON.parse(sessionStorage.getItem("quizResults") || "[]");
+	var quizId = sessionStorage.getItem("quizId");
+
+	if (words.length && results.length && quizId) {
+		$.ajax({
+			url: "/quiz/quizResultData", // 변경된 URL 적용
+			type: "POST",
+			traditional: true, // 배열을 제대로 전달하려면 반드시 필요
+			data: {
+				quizId: quizId,
+				words: words,
+				results: results
+			},
+			success: function (res) {
+				$("#scoreText").text(res.percentScore + "점");
+				$("#quizIdHidden").val(res.quizId);
+
+				var resultArea = $("#scoreResult");
+
+				// 결과 목록 생성
+				$.each(res.results, function(index, item) {
+					var row = '<div>' +
+							'<span class="word">' + item.word + '</span> : ' +
+							'<span class="result ' + (item.correct ? 'correct' : 'wrong') + '">' +
+							(item.correct ? '정답' : '오답') +
+							'</span>' +
+							'</div>';
+					resultArea.append(row);
+				});
+			},
+			error: function () {
+				alert("퀴즈 결과 로딩 중 오류가 발생했습니다.");
+			}
+		});
+	} else {
+		alert("퀴즈 데이터가 없습니다. 메인으로 이동합니다.");
+		location.href = "/user/main";
+	}
+</script>
+
 
 <script>
 
