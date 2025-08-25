@@ -3,7 +3,7 @@ package kopo.poly.hanium.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import kopo.poly.hanium.dto.MsgDTO;
-import kopo.poly.hanium.dto.QuizDTO;
+import kopo.poly.hanium.dto.QuizzesDTO;
 import kopo.poly.hanium.dto.QuizResultsDTO;
 import kopo.poly.hanium.dto.UserInfoDTO;
 import kopo.poly.hanium.service.IQuizService;
@@ -202,14 +202,14 @@ public class UserInfoController {
     // 퀴즈 결과만 반환하는 API (JSON 응답)
     @ResponseBody
     @GetMapping("quizHistory")
-    public List<QuizDTO> getQuizHistory(HttpSession session) throws Exception {
+    public List<QuizzesDTO> getQuizHistory(HttpSession session) throws Exception {
         log.info("{}.getQuizHistory Start!", this.getClass().getName());
 
         String userId = (String) session.getAttribute("SS_USER_ID");
 
-        List<QuizDTO> rList = Optional.ofNullable(quizService.getQuizList()).orElseGet(ArrayList::new);
+        List<QuizzesDTO> rList = Optional.ofNullable(quizService.getQuizList()).orElseGet(ArrayList::new);
 
-        for (QuizDTO quiz : rList) {
+        for (QuizzesDTO quiz : rList) {
             quiz.setUserId(userId);
             QuizResultsDTO qResult = quizService.getQuizResultByUserAndQuiz(quiz);
             if (qResult != null) {

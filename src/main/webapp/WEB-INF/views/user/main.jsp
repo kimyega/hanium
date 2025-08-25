@@ -15,6 +15,9 @@
     <!-- CSS -->
     <link rel="stylesheet" href="/css/table.css" />
 
+    <%-- 모달창 css --%>
+    <link rel="stylesheet" href="/css/headerLogout.css" />
+
     <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
 
     <style>
@@ -23,7 +26,13 @@
             --peach-border:#f59c8b;
             --shadow:0 8px 12px rgba(0,0,0,.10);
         }
-        html,body{height:100%; margin:0; font-family:'Cute Font',sans-serif; background:#fff;}
+        html,body{
+            height:100%;
+            margin:0;
+            font-family:'Cute Font',sans-serif;
+            background:#fff;
+            overflow: hidden;
+        }
 
         /* ===== 메인 Hero ===== */
         .hero-wrap{
@@ -119,6 +128,15 @@
         </div>
     </div>
 </main>
+
+<%--모달창--%>
+<div id="signupModal" class="modal">
+    <div class="modal-content">
+        <h2>메르헨드</h2>
+        <p>로그아웃 완료!!</p>
+        <button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
+    </div>
+</div>
 
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 </body>

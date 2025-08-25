@@ -261,7 +261,7 @@
 			const lw = kp.find(k => k.name === 'left_wrist');
 			const rw = kp.find(k => k.name === 'right_wrist');
 
-			let isHandUp = lw?.score > 0.5 && rw?.score > 0.5 && lw.y < 750 && rw.y < 750;
+			let isHandUp = lw?.score > 0.5 && rw?.score > 0.5 && lw.y < 1250 && rw.y < 1250;
 			let isHandMoving = false;
 
 			if (lastLeft && lastRight && lw && rw) {
@@ -271,7 +271,7 @@
 				const deltaRY = Math.abs(rw.y - lastRight.y);
 
 				// 움직임 감지 기준 (픽셀 단위, 필요 시 조정)
-				isHandMoving = (deltaLX + deltaLY + deltaRX + deltaRY) > 30;
+				isHandMoving = (deltaLX + deltaLY + deltaRX + deltaRY) > 10;
 			}
 
 			// 현재 손 위치 저장 (다음 프레임 비교용)
@@ -289,7 +289,8 @@
 				if (!modalShown && Date.now() - greenStartTime >= 1500) {
 					modalShown = true;
 
-					const isCorrect = Math.random() < 0.8;
+					const isCorrect = (currentIndex === 3) ? false : true;
+
 					quizResults[currentIndex] = isCorrect;
 					const modal = document.getElementById("answerModal");
 					const msg = document.getElementById("answerMessage");
@@ -315,14 +316,30 @@
 						// ✅ 모달 닫힌 후 카드 이미지 변경
 						const dicCard = document.getElementById("dicCard"); // 카드 DOM 요소 가져오기
 						const icon = document.getElementById("cardDicImg");
-						if (dicCard) {
-							dicCard.style.backgroundImage = "url('/images/language.png')";
-							dicCard.style.backgroundSize = "cover";
-							dicCard.style.backgroundPosition = "center";
-							icon.remove(); // 기존 텍스트/아이콘 제거
+						if (dicCard && icon) {
+							// 기존 아이콘 내용 제거
+							icon.innerHTML = "";
+
+							// 이미지 엘리먼트 생성
+							const img = document.createElement("img");
+							img.src = quizWords[currentIndex].description; // 이미지 경로
+							img.alt = quizWords[currentIndex].word || "quiz image";
+
+							// 이미지 스타일 조절
+							img.style.width = "90%";
+							img.style.height = "90%";
+							img.style.objectFit = "contain";
+
+							// 이미지 추가
+							icon.appendChild(img);
+
+							// dicCard 배경 초기화 (필요하면)
+							dicCard.style.backgroundImage = "none";
+
 							isImageShown = true;
 						}
 					}, 2000);
+
 				}
 
 			} else {
@@ -346,13 +363,17 @@
 	// -------------------- 퀴즈 문제 데이터 --------------------
 	const quizWords = [
 		<%
-            for (int i = 0; i < rList.size(); i++) {
-                String word = rList.get(i).getWord();
-        %>
-		"<%= word %>"<%= (i < rList.size() - 1) ? "," : "" %>
+			for (int i = 0; i < rList.size(); i++) {
+				String word = rList.get(i).getWord();
+				String desc = rList.get(i).getDescription(); // 이미지 파일명
+		%>
+		{
+			word: "<%= word %>",
+			description: "<%= desc %>"
+		}<%= (i < rList.size() - 1) ? "," : "" %>
 		<%
-            }
-        %>
+			}
+		%>
 	];
 	// 각 단어의 결과 저장 (true = 정답, false = 오답)
 	let quizResults = new Array(quizWords.length).fill(null);
@@ -364,7 +385,7 @@
 	// -------------------- 페이지 업데이트 함수 --------------------
 	function updateQuizPage() {
 		// 문제 텍스트
-		document.querySelector(".quiz-container h1").innerText = quizWords[currentIndex];
+		document.querySelector(".quiz-container h1").innerText = quizWords[currentIndex].word;
 
 		console.log(currentIndex);
 		console.log(quizWords.length);
@@ -442,7 +463,7 @@
 			const wordInput = document.createElement("input");
 			wordInput.type = "hidden";
 			wordInput.name = "words";
-			wordInput.value = word;
+			wordInput.value = word.word;
 			wordInput.classList.add("quiz-hidden-input");
 			form.appendChild(wordInput);
 

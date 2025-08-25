@@ -121,7 +121,7 @@
 			<a class="button top-home-button" onclick="location.href='/user/main'">
 				<i class="fa-solid fa-house fa-2xl"></i>
 			</a>
-			<div class="top-title">체점 결과</div>
+			<div class="top-title">채점 결과</div>
 			<div style="width: 60px;"></div>
 		</div>
 
