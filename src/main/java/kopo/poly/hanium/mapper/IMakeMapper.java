@@ -11,6 +11,8 @@ public interface IMakeMapper {
 
   int insertAiGeneratedStories(AiGeneratedStoriesDTO pDTO) throws Exception;
 
+  int updateAiGeneratedStoriesImage(AiGeneratedStoriesDTO pDTO) throws Exception;
+
   int insertAiGeneratedStoryPages(AiGeneratedStoryPagesDTO pDTO) throws Exception;
 
   AiGeneratedStoryPagesDTO getAiGeneratedStoryPages (AiGeneratedStoryPagesDTO pDTO) throws Exception;

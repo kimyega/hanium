@@ -37,6 +37,25 @@ public class MakeService implements IMakeService {
   }
 
   @Override
+  public int updateAiGeneratedStoriesImage(AiGeneratedStoriesDTO pDTO) throws Exception {
+
+    log.info("{}.updateAiGeneratedStoriesImage Start!", this.getClass().getName());
+
+    int res = 0;
+
+    int success = makeMapper.updateAiGeneratedStoriesImage(pDTO);
+
+    if (success > 0) {
+      res = 1;
+
+    }
+
+    log.info("{}.updateAiGeneratedStoriesImage End!", this.getClass().getName());
+
+    return res;
+  }
+
+  @Override
   public List<AiGeneratedStoriesDTO> getAiGeneratedStoriesList(AiGeneratedStoriesDTO pDTO) throws Exception {
 
     log.info("{}.getAiGeneratedStories Start!", this.getClass().getName());

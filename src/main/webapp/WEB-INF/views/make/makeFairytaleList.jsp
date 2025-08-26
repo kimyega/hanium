@@ -254,11 +254,18 @@
 
 				res.forEach(story => {
 					let randomColor = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+					let imageHtml = "";
+
+					if (story.imageUrl) {
+						imgPath = "data:image/png;base64," + story.imageUrl;
+					} else {
+						imgPath = "/images/castle.png"; // 기본 이미지
+					}
 
 					let cardHtml =
-							'<div class="slide-card" onclick="goToDetail(' + story.aiStoryId + ')">' +
-							'<div class="card-inner" style="background-color: ' + randomColor + '">' +
-							'<img src="' + (story.imageUrl || '/images/default.png') + '" alt="' + story.title + '">' +
+							'<div class="slide-card" onclick="goToDetail(' + story.aiStoryId + ')">' 		+
+							'<div class="card-inner" style="background-color: ' + randomColor + '">' 		+
+							'<img src="' + imgPath + '" alt="/images/castle.png" style="max-width:100%;">' 	+
 							'<div class="card-title">' + story.title + '</div>' +
 							'</div>' +
 							'</div>';

@@ -351,12 +351,10 @@
                             html += "<p>" + data.contentText + "</p>";
                         }
 
-                        if (data.contentImage) {
-                            // 실제 URL이 아니므로 기본 이미지 사용
-                            // $("#gptResultBox").append("<p>이미지 설명: " + data.contentImage + "</p>");
-                            imgPath = "/images/castle.png"; // 또는 GPT 이미지 생성 로직으로 바꿀 수 있음
+                        if (data.aiImageData) {
+                            imgPath = "data:image/png;base64," + data.aiImageData;
                         } else {
-                            imgPath = "/images/castle.png";
+                            imgPath = "/images/castle.png"; // 기본 이미지
                         }
 
                         imageHtml += '<img src="' + imgPath + '" alt="기본 이미지" style="max-width:100%;">';

@@ -23,6 +23,9 @@
         </rollingPolicy>
     </appender>
 
+    <!-- MyBatis 쿼리 로그는 WARN 이상만 출력 -->
+    <logger name="org.mybatis" level="WARN"/>
+
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
