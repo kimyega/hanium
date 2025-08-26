@@ -34,6 +34,9 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/table.css" />
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/headerLogout.css" />
 
+	<%-- 모달창 css --%>
+	<link rel="stylesheet" href="/css/headerLogout.css" />
+
 	<!-- jQuery -->
 	<script src="${pageContext.request.contextPath}/js/jquery-3.6.0.min.js"></script>
 	<style>
@@ -126,6 +129,15 @@
 		</div>
 	</div>
 </main>
+
+<%--모달창--%>
+<div id="signupModal" class="modal">
+	<div class="modal-content">
+		<h2>메르헨드</h2>
+		<p>로그아웃 완료!!</p>
+		<button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
+	</div>
+</div>
 
 <script>
 	// 단어-이미지 매핑
