@@ -55,16 +55,19 @@
 			gap:40px;
 			justify-content:center;
 		}
-		.menu-btn{
-			padding:16px 40px;
-			font-size:28px;
+		.menu-btn {
+			width: 200px;        /* ✅ 고정 가로 크기 */
+			padding:20px 40px;
+			font-size:27px;
 			border-radius:40px;
 			border:6px solid var(--peach-border);
 			background:#fff;
 			cursor:pointer;
 			box-shadow:var(--shadow);
 			transition:all .2s ease;
+			text-align: center;  /* 텍스트 중앙 정렬 */
 		}
+
 		.menu-btn:hover{
 			background:#fffaf7;
 			transform:translateY(-3px);

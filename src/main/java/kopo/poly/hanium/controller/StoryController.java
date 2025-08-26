@@ -20,12 +20,18 @@ public class StoryController {
     private final IStoryService storyService; // ✅ 필드 추가
 
     // 동화 목록
+    // 동화 목록
     @GetMapping("/fairytale/list")
     public String fairytaleList(Model model) throws Exception {
         // "아기돼지 삼형제" 데이터만 DB에서 가져오기
         StoryDTO pigStory = storyService.getStoryByTitle("아기돼지 삼형제");
 
+        // "헨젤과 그레텔" 데이터도 DB에서 가져오기
+        StoryDTO hanselStory = storyService.getStoryByTitle("헨젤과 그레텔");
+
         model.addAttribute("pigStory", pigStory);
+        model.addAttribute("hanselStory", hanselStory);
+
         return "fairytale/fairytaleList";  // JSP 파일 경로
     }
 

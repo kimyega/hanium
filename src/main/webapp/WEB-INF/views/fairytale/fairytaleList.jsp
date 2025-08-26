@@ -164,9 +164,9 @@
 <form id="f">
 	<main>
 		<div class="top-bar">
-			<button class="button top-home-button" onclick="location.href='/home.html'">
+			<a class="button top-home-button" onclick="location.href='/user/main'">
 				<i class="fa-solid fa-house fa-2xl"></i>
-			</button>
+			</a>
 			<div class="top-search">
 				<i class="fa-solid fa-magnifying-glass fa-sm search-icon" onclick="focusInput()"></i>
 				<input id="searchInput" class="search-bar" type="text" placeholder="동화를 검색해보세요..." />
@@ -184,16 +184,10 @@
 						<div class="card-title">아기돼지 삼형제</div>
 					</div>
 				</div>
+				<div class="slide-card" onclick="goToDetail('/fairytale/readFairytale?storyId=2')">
 
-				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
-					<div class="card-inner" style="background-color: #ffd167">
-						<img src="/images/castle.png" alt="코딩 왕자">
-						<div class="card-title">코딩 왕자</div>
-					</div>
-				</div>
-				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
-					<div class="card-inner" style="background-color: #ff93c9">
-						<img src="/images/hansel.png" alt="헨젤과 그레텔">
+				<div class="card-inner" style="background-color: #ff93c9">
+						<img src="/images/hansel1.png" alt="헨젤과 그레텔">
 						<div class="card-title">헨젤과 그레텔</div>
 					</div>
 				</div>
@@ -203,16 +197,11 @@
 						<div class="card-title">별주부전</div>
 					</div>
 				</div>
-				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
-					<div class="card-inner" style="background-color: #d3a4ff">
-						<img src="/images/heungbu.png" alt="흥부놀부">
-						<div class="card-title">흥부놀부</div>
-					</div>
-				</div>
+
 				<div class="slide-card" onclick="goToDetail('/stories/pig.html')">
 					<div class="card-inner" style="background-color: #ffe9a7">
-						<img src="/images/castle.png" alt="메르헨 동산">
-						<div class="card-title">메르헨 동산</div>
+						<img src="/images/kongjwi.png" alt="메르헨 동산">
+						<div class="card-title">콩쥐팥쥐</div>
 					</div>
 				</div>
 			</div>
@@ -244,6 +233,13 @@
 <script src="${pageContext.request.contextPath}/js/listSlide.js"></script>
 
 <script>
+
+	console.log("window.initSlide:", window.initSlide);
+	if (typeof window.initSlide === "function") {
+		window.initSlide();
+	} else {
+		console.error("initSlide 함수가 정의되지 않았습니다!");
+	}
 
 	function goToDetail(url) {
 		window.location.href = url;
