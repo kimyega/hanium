@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-<%@ page import="kopo.poly.hanium.dto.QuizDTO" %>
+<%@ page import="kopo.poly.hanium.dto.QuizzesDTO" %>
 <%@ page import="kopo.poly.hanium.util.CmmUtil" %>
 <%
-    List<QuizDTO> rList = (List<QuizDTO>) request.getAttribute("rList");
+    List<QuizzesDTO> rList = (List<QuizzesDTO>) request.getAttribute("rList");
 %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -147,12 +147,20 @@
     <h2>마이페이지</h2>
 
     <button class="mypage-btn" onclick="location.href='/user/changePw'">
-        <span><i class="fa-solid fa-lock"></i> 비밀번호 변경</span>
+        <i class="fa-solid fa-book"></i>
+        <span>내가 만든 동화</span>
+        <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <button class="mypage-btn" onclick="location.href='/user/changePw'">
+        <i class="fa-solid fa-lock"></i>
+        <span>비밀번호 변경</span>
         <i class="fa-solid fa-chevron-right"></i>
     </button>
 
     <button class="mypage-btn" onclick="location.href='/user/withdraw'">
-        <span><i class="fa-solid fa-user-xmark"></i> 회원 탈퇴</span>
+        <i class="fa-solid fa-user-xmark"></i>
+        <span>회원 탈퇴</span>
         <i class="fa-solid fa-chevron-right"></i>
     </button>
 
@@ -198,27 +206,30 @@
                     tbody.append('<tr><td colspan="4">퀴즈 기록이 없습니다.</td></tr>');
                 } else {
                     data.forEach(q => {
-                        const date = q.takenAt ? q.takenAt.split('T')[0] : '-';
-                        const score = q.score !== null && q.total !== null && q.total !== 0
-                            ? Math.round((q.score / q.total) * 100) + '점'
-                            : '-';
+                        if (q.score !== null) {
+                            const date = q.takenAt ? q.takenAt.split('T')[0] : '-';
+                            const score = q.score !== null && q.total !== null && q.total !== 0
+                                ? Math.round((q.score / q.total) * 100) + '점'
+                                : '-';
 
-                        const tr = $('<tr></tr>');
-                        tr.append($('<td></td>').text(q.title));
-                        tr.append($('<td></td>').text(score));
-                        tr.append($('<td></td>').text(q.total));
-                        tr.append($('<td></td>').text(date));
-                        tr.css('cursor', 'pointer');  // 마우스 포인터가 클릭 가능한 모양으로 변경
-                        tr.on('click', function() {
-                            window.location.href = '/quiz/quizInfo?nSeq=' + q.quizId;
-                        })
-                        tr.on('mouseenter', function() {
-                            $(this).css('background-color', '#cce4ff');
-                        }).on('mouseleave', function() {
-                            $(this).css('background-color', '');
-                        });
-                        $('#quizTableBody').append(tr);
+                            const tr = $('<tr></tr>');
+                            tr.append($('<td></td>').text(q.title));
+                            tr.append($('<td></td>').text(score));
+                            tr.append($('<td></td>').text(q.total));
+                            tr.append($('<td></td>').text(date));
+                            tr.css('cursor', 'pointer');  // 마우스 포인터가 클릭 가능한 모양으로 변경
+                            tr.on('click', function () {
+                                window.location.href = '/quiz/quizInfo?nSeq=' + q.quizId;
+                            })
+                            tr.on('mouseenter', function () {
+                                $(this).css('background-color', '#cce4ff');
+                            }).on('mouseleave', function () {
+                                $(this).css('background-color', '');
+                            });
+                            $('#quizTableBody').append(tr);
+                        }
                     });
+
                 }
             },
             error: function (xhr, status, error) {

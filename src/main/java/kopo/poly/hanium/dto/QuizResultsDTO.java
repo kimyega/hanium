@@ -14,4 +14,6 @@ public class QuizResultsDTO {
     private int score;
     private int total;
     private LocalDateTime takenAt;
+
+    private String description;
 }

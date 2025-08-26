@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class QuizDTO {
+public class QuizzesDTO {
     private int quizId;
     private String title;
     private String description;

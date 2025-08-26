@@ -4,37 +4,38 @@
 <mapper namespace="kopo.poly.hanium.mapper.IQuizMapper">
 
     <!--    퀴즈 리스트 쿼리-->
-    <select id="getQuizList" resultType="QuizDTO">
-        SELECT quiz_id, title, description, created_at
+    <select id="getQuizList" resultType="QuizzesDTO">
+        SELECT QUIZ_ID, TITLE, DESCRIPTION, CREATED_AT
         FROM quizzes
     </select>
 
     <!--    퀴즈 문제 불러오기 쿼리-->
     <select id="getQuizInfo" resultType="SignWordsDTO">
         SELECT
-            sw.word_id,
-            sw.word,
-            sw.description
+            sw.WORD_ID,
+            sw.WORD,
+            sw.DESCRIPTION
         FROM quiz_questions qq
                  JOIN sign_words sw
-                      ON qq.word_id = sw.word_id
-        WHERE qq.quiz_id = #{quizId}
+                      ON qq.WORD_ID = sw.WORD_ID
+        WHERE qq.QUIZ_ID = #{quizId}
     </select>
 
     <!--    퀴즈 결과 저장 쿼리-->
     <insert id="saveQuizResult" parameterType="QuizResultsDTO">
-        INSERT INTO quiz_results (user_id, quiz_id, score, total)
+        INSERT INTO quiz_results (USER_ID, QUIZ_ID, SCORE, TOTAL)
         VALUES (#{userId}, #{quizId}, #{score}, #{total})
             ON DUPLICATE KEY UPDATE
-                                 score = #{score},
-                                 total = #{total}
+                                 SCORE = #{score},
+                                 TOTAL = #{total}
     </insert>
 
     <!--    퀴즈 점수 불러오기-->
-    <select id="selectQuizResultByUserAndQuiz" parameterType="QuizDTO" resultType="QuizResultsDTO">
-        SELECT user_id, quiz_id, score, total, taken_at
-        FROM quiz_results
-        WHERE user_id = #{userId}
-          AND quiz_id = #{quizId}
+    <select id="selectQuizResultByUserAndQuiz" parameterType="QuizzesDTO" resultType="QuizResultsDTO">
+        SELECT r.USER_ID, r.QUIZ_ID, r.SCORE, r.TOTAL, r.TAKEN_AT, q.DESCRIPTION
+        FROM quiz_results r
+                 JOIN quizzes q ON r.quiz_id = q.quiz_id
+        WHERE r.USER_ID = #{userId}
+          AND r.QUIZ_ID = #{quizId}
     </select>
 </mapper>
