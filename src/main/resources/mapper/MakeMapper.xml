@@ -21,6 +21,11 @@
     </insert>
 
 
+    <update id="updateAiGeneratedStoriesImage" parameterType="AiGeneratedStoriesDTO">
+        UPDATE ai_generated_stories
+        SET IMAGE_URL = #{imageUrl}
+        WHERE AI_STORY_ID = #{aiStoryId}
+    </update>
 
     <insert id="insertAiGeneratedStoryPages" parameterType="AiGeneratedStoryPagesDTO">
         INSERT INTO ai_generated_story_pages
@@ -28,22 +33,27 @@
             AI_STORY_ID,
             PAGE_NUMBER,
             CONTENT_TEXT,
-            CONTENT_IMAGE
+            CONTENT_IMAGE,
+            AI_IMAGE_DATA
         )
         VALUES
             (
                 #{aiStoryId},
                 #{pageNumber},
                 #{contentText},
-                #{contentImage}
+                #{contentImage},
+                #{aiImageData}
             )
     </insert>
 
     <select id="getAiGeneratedStoryPages" parameterType="AiGeneratedStoryPagesDTO" resultType="AiGeneratedStoryPagesDTO">
-        SELECT CONTENT_TEXT, CONTENT_IMAGE
+        SELECT
+            CONTENT_TEXT,
+            CONTENT_IMAGE,
+            AI_IMAGE_DATA
         FROM ai_generated_story_pages
         WHERE AI_STORY_ID = #{aiStoryId}
-        AND   PAGE_NUMBER = #{pageNumber}
+          AND PAGE_NUMBER = #{pageNumber}
     </select>
 
     <delete id="deleteAiGeneratedStories" parameterType="AiGeneratedStoriesDTO">
@@ -65,4 +75,6 @@
         WHERE USER_ID = #{userId}
         ORDER BY CREATED_AT DESC
     </select>
+
+
 </mapper>
