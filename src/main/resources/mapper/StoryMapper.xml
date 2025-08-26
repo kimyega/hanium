@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kopo.poly.hanium.mapper.StoryMapper">
+<mapper namespace="kopo.poly.hanium.mapper.IStoryMapper">
 
     <!-- 동화 목록 -->
     <select id="getAllStories" resultType="kopo.poly.hanium.dto.StoryDTO">
