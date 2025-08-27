@@ -137,7 +137,7 @@
 		.list-main-name-insert {
 			font-family: 'Cute Font', sans-serif;
 			display: block;
-			margin: 20px auto;
+			margin: 0 auto 20px;
 			width: 200px;
 			font-size: 50px;
 			text-align: center;
@@ -306,6 +306,18 @@
 						</fieldset>
 						<div class="list-main-name"><label for="listMainName">주인공 이름</label></div>
 						<input type="text" id="listMainName" class="list-main-name-insert" name="mainName">
+
+						<!-- 🔹 성별 선택 라디오 버튼 -->
+						<div class="list-main-gender" style="text-align:center; margin-top:10px; font-size:40px;">
+							<label for="genderMale">
+								<input type="radio" id="genderMale" name="gender" value="male" checked> 남자
+							</label>
+							&nbsp;&nbsp;
+							<label for="genderFemale">
+								<input type="radio" id="genderFemale" name="gender" value="female"> 여자
+							</label>
+						</div>
+
 					</div>
 				</div>
 			</div>

@@ -2,7 +2,7 @@ package kopo.poly.hanium.service.impl;
 
 import kopo.poly.hanium.dto.StoryDTO;
 import kopo.poly.hanium.dto.StoryPageDTO;
-import kopo.poly.hanium.mapper.StoryMapper;
+import kopo.poly.hanium.mapper.IStoryMapper;
 import kopo.poly.hanium.service.IStoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StoryService implements IStoryService {
 
-    private final StoryMapper storyMapper;
+    private final IStoryMapper storyMapper;
 
     @Override
     public List<StoryDTO> getAllStories() throws Exception {

@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface StoryMapper {
+public interface IStoryMapper {
 
     List<StoryDTO> getAllStories() throws Exception;
 

@@ -10,4 +10,5 @@ public class AiGeneratedStoryPagesDTO {
   private String pageNumber;
   private String contentText;
   private String contentImage;
+  private String aiImageData;
 }
