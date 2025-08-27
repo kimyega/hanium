@@ -124,7 +124,7 @@
 			<div id="pageIndicator" class="page-number">1</div>
 			<button id="nextBtn" class="button next"><i class="fa-solid fa-arrow-right fa-2xl"></i></button>
 			<div class="make-wrapper">
-				<button type="button" class="button make" id="quizBtn" onclick="location.href='/quiz/quizList'">퀴즈</button>
+				<button type="button" class="button make" id="quizBtn" onclick="location.href='/quiz/quizInfo?nSeq=' + <%= story.getStoryId() %> ">퀴즈</button>
 			</div>
 		</div>
 	</div>
