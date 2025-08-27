@@ -145,7 +145,7 @@
 		"돼지": "/images/words/pig.png",
 		"집": "/images/words/house.jpg",
 		"늑대": "/images/words/wolf.jpg",
-		"굴": "/images/words/chimney.jpg",
+		"굴뚝": "/images/words/chimney.jpg",
 		"물": "/images/words/water.jpg",
 		"벽돌": "/images/words/brick.jpg",
 		"나무": "/images/words/tree.jpg",

@@ -478,8 +478,8 @@
 			currentWord = "";
 
 			// 🔥 랜덤 단어 표시
-			currentWord = getRandomWord();
-			wordContent.innerText = currentWord;
+			// currentWord = getRandomWord();
+			// wordContent.innerText = currentWord;
 
 			modalShown = false;
 			greenStartTime = null;
@@ -504,8 +504,8 @@
 	});
 
 	// 🔥 랜덤 단어 표시
-	currentWord = getRandomWord();
-	wordContent.innerText = currentWord;
+	// currentWord = getRandomWord();
+	// wordContent.innerText = currentWord;
 </script>
 <script>
 	$('#checkModalBtn').click(function() {

@@ -180,7 +180,7 @@
 			<div class="slide-card-wrapper" id="slideCardWrapper">
 				<div class="slide-card" onclick="goToDetail('/fairytale/readFairytale?storyId=1')">
 					<div class="card-inner" style="background-color: #fca0b3">
-						<img src="/images/pig.png" alt="아기돼지 삼형제">
+						<img src="/images/pig1.png" alt="아기돼지 삼형제">
 						<div class="card-title">아기돼지 삼형제</div>
 					</div>
 				</div>
