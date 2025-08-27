@@ -160,6 +160,31 @@ public class UserInfoController {
     }
 
     @ResponseBody
+    @PostMapping(value = "emailAuthNumberPw")
+    public UserInfoDTO emailAuthNumberPw(HttpServletRequest request) throws Exception {
+
+        log.info("{}.emailAuthNumberPw Start!", this.getClass().getName());
+
+        String userId = CmmUtil.nvl(request.getParameter("userId"));
+        String email = CmmUtil.nvl(request.getParameter("email"));
+
+        log.info("userId : {}", userId);
+        log.info("email : {}", email);
+
+        UserInfoDTO pDTO = new UserInfoDTO();
+        pDTO.setUserId(userId);
+        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
+
+        log.info("암호화 email : {}", pDTO.getEmail());
+
+        UserInfoDTO rDTO = Optional.ofNullable(userInfoService.emailAuthNumberPw(pDTO)).orElseGet(UserInfoDTO::new);
+
+        log.info("{}.emailAuthNumberPw End!", this.getClass().getName());
+
+        return rDTO;
+    }
+
+    @ResponseBody
     @PostMapping(value = "searchUserIdProc")
     public MsgDTO searchUserIdProc(HttpServletRequest request) throws Exception {
 
@@ -228,8 +253,10 @@ public class UserInfoController {
     // 비밀번호 찾기 페이지 이동
     @GetMapping(value = "findPw")
     public String findPw() {
+
         return "user/findPw"; // JSP: /WEB-INF/views/user/findPw.jsp
     }
+
     @ResponseBody
     @PostMapping(value = "searchPasswordProc")
     public MsgDTO searchPasswordProc(HttpServletRequest request) throws Exception {
@@ -243,7 +270,7 @@ public class UserInfoController {
 
         UserInfoDTO pDTO = new UserInfoDTO();
         pDTO.setUserId(userId);
-        pDTO.setEmail(email);
+        pDTO.setEmail(EncryptUtil.encAES128BCBC(email));
 
         UserInfoDTO rDTO = Optional.ofNullable(
                 userInfoService.searchUserIdOrPasswordProc(pDTO) // 내부에서 userId+email 일치 확인
@@ -287,8 +314,7 @@ public class UserInfoController {
                 pDTO.setUserId(userId);
 
                 // ※ 실제 운영 시에는 반드시 해시 적용
-                // pDTO.setPassword(EncryptUtil.encHashSHA256(password));
-                pDTO.setPassword(password); // 데모/테스트용
+                pDTO.setPassword(EncryptUtil.encHashSHA256(password));
 
                 int i = userInfoService.updatePassword(pDTO); // IUserInfoService에 메서드 필요
 

@@ -10,6 +10,8 @@ public interface IUserInfoMapper {
 
     UserInfoDTO emailAuthNumber(UserInfoDTO pDTO) throws Exception;
 
+    UserInfoDTO emailAuthNumberPw(UserInfoDTO pDTO) throws Exception;
+
     UserInfoDTO getUserId(UserInfoDTO pDTO) throws Exception;
     UserInfoDTO getUserForPassword(UserInfoDTO pDTO) throws Exception;  // 비번 찾기 (user_id+email)
 

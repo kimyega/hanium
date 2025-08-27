@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="/css/table.css" />
+    <link rel="stylesheet" href="/css/modal.css" />
 
     <%-- 모달창 css --%>
     <link rel="stylesheet" href="/css/headerLogout.css" />
@@ -116,13 +117,13 @@
 
         function emailExists(f) {
             if (f.userName.value === "") {
-                alert("이름을 입력하세요.");
+                showModal("이름을 입력하세요.");
                 f.email.focus();
                 return;
             }
 
             if (f.email.value === "") {
-                alert("이메일을 입력하세요.");
+                showModal("이메일을 입력하세요.");
                 f.email.focus();
                 return;
             }
@@ -136,14 +137,13 @@
                     if (json.existsYn === "Y") {
                         step1.style.display = 'none';
                         step2.style.display = 'block';
-                        console.log("받은 인증번호 " + json.authNumber);
+
                         emailAuthNumber = json.authNumber;
-                        console.log("저장된 인증번호 " + json.authNumber);
 
                         document.getElementById("hiddenUserName").value = f.userName.value;
                         document.getElementById("hiddenEmail").value = f.email.value;
                     } else {
-                        alert("존재하지 않는 이름 또는 메일 입니다.")
+                        showModal("존재하지 않는 이름 또는 메일 입니다.")
                         f.email.focus();
                     }
                 }
@@ -152,13 +152,13 @@
         function doCheck(f2) {
 
             if (f2.authNumber.value === "") {
-                alert("인증번호를 입력하세요.");
+                showModal("인증번호를 입력하세요.");
                 f2.authNumber.focus();
                 return;
             }
 
             if (parseInt(f2.authNumber.value) !== emailAuthNumber) {
-                alert("인증번호가 일치하지 않습니다.")
+                showModal("인증번호가 일치하지 않습니다.")
                 f2.authNumber.focus();
                 return;
             }
@@ -181,7 +181,7 @@
                         const strongEl = step3.querySelector("strong");
                         strongEl.textContent = json.msg;
                     } else {
-                        alert(json.msg);
+                        showModal(json.msg);
                     }
                 }
             })
@@ -240,7 +240,7 @@
         <button id="modalLoginBtn" class="modal-btn">메인 화면으로</button>
     </div>
 </div>
-
+<script src="/js/modal.js"></script>
 <script>
 
     const step1 = document.getElementById('step1');

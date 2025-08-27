@@ -6,7 +6,11 @@ public interface IUserInfoService {
 
     UserInfoDTO getLogin(UserInfoDTO pDTO) throws Exception;
 
+    // 아이디 찾기 메일 인증
     UserInfoDTO emailAuthNumber(UserInfoDTO pDTO) throws Exception;
+
+    // 비밀번호 찾기 메일 인증
+    UserInfoDTO emailAuthNumberPw(UserInfoDTO pDTO) throws Exception;
 
     UserInfoDTO searchUserIdOrPasswordProc(UserInfoDTO pDTO) throws Exception;
 

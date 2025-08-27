@@ -33,6 +33,9 @@
         }
 
         .made.contents {
+            justify-content: center;
+            line-height: 70px;
+            font-size: 45px;
             text-align: center;
             overflow-y: auto;
         }
@@ -238,17 +241,10 @@
             flex-direction: column;   /* 아이콘 위, 텍스트 아래 */
             align-items: center;      /* 가운데 정렬 */
             justify-content: center;  /* 세로로도 가운데 정렬 */
-            gap: 8px;                 /* 아이콘-텍스트 간격 */
-            padding-top: 20px; /* top을 크게 줘서 아래로 내림 */
         }
 
         .top-back-button i {
             font-size: 24px;  /* 화살표 크기 */
-        }
-
-        .top-back-button span {
-            font-size: 12px;  /* 글자 작게 */
-            color: #333;      /* 텍스트 색 */
         }
 
         .top-back-button:hover {
@@ -272,8 +268,7 @@
 
             <!-- 이전 페이지 버튼 -->
             <button type="button" class="button top-back-button" onclick="history.back()">
-                <i class="fa-solid fa-arrow-left fa-2xl"></i>
-                <span class="">이전</span>
+                <i class="fa-solid fa-chevron-left fa-2xl"></i>
             </button>
         </div>
 

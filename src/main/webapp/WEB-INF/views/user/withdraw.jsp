@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="/css/table.css" />
+    <link rel="stylesheet" href="/css/modal.css" />
 
     <%-- 모달창 css --%>
     <link rel="stylesheet" href="/css/headerLogout.css" />
@@ -76,19 +77,28 @@
         const pw = $("#password").val().trim();
         if (!pw) return alert("비밀번호를 입력하세요.");
 
-        if (!confirm("정말 탈퇴하시겠습니까? 탈퇴 시 데이터가 삭제됩니다.")) return;
-
-        $.post("/user/withdrawProc", { password: pw }, function (res) {
-            if (res.result === 1) {
-                alert("탈퇴가 완료되었습니다.");
-                // 세션 무효화가 서버에서 되었으니 메인/로그인으로
-                location.href = "/";
-            } else {
-                alert(res.msg || "탈퇴에 실패했습니다.");
+        confirmModal(
+            "정말 탈퇴하시겠습니까? 탈퇴 시 데이터가 삭제됩니다.",
+            () => { // ✅ onOk: 확인 버튼 눌렀을 때
+                $.post("/user/withdrawProc", { password: pw }, function (res) {
+                    if (res.result === 1) {
+                        showModal("탈퇴가 완료되었습니다.", () => {
+                            // 세션 무효화가 서버에서 되었으니 메인/로그인으로 이동
+                            location.href = "/";
+                        });
+                    } else {
+                        showModal(res.msg || "탈퇴에 실패했습니다.");
+                    }
+                }, "json");
+            },
+            () => { // ❌ onCancel: 취소 버튼 눌렀을 때
+                console.log("탈퇴 취소");
+                // 아무 동작 안 하고 그냥 모달 닫힘
             }
-        }, "json");
+        );
     });
 </script>
+<script src="/js/modal.js"></script>
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 </body>
 </html>
