@@ -61,7 +61,7 @@
 		#prevBtn { left: 5px; } #nextBtn { right: 5px; }
 
 		.story-text {
-			font-size: 32px; line-height: 1.8; text-align: center;
+			font-size: 45px; line-height: 1.8; text-align: center;
 			white-space: pre-line; word-break: keep-all;
 			font-family: 'Cute Font', sans-serif;
 		}

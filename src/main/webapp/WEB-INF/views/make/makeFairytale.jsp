@@ -374,7 +374,14 @@
 	let lastLeft = null, lastRight = null;
 
 	// 🔥 랜덤 단어 풀
-	let testWords = ["공주", "왕자", "마녀", "구두", "성", "모험", "마법", "동화", "용", "숲"];
+	let testWords = ["용", "여행"];
+
+
+
+
+
+
+	let currentIndex = 0;
 
 	// 랜덤 단어 뽑기 함수
 	function getRandomWord() {
@@ -439,12 +446,15 @@
 
 				if (!greenStartTime) greenStartTime = Date.now();
 
-				if (!modalShown && Date.now() - greenStartTime >= 1500) {
+				if (!modalShown && Date.now() - greenStartTime >= 1000) {
 					modalShown = true;
 
 					// 🔥 랜덤 단어 표시
-					currentWord = getRandomWord();
+					// currentWord = getRandomWord();
+
+					currentWord = testWords[currentIndex];
 					wordContent.innerText = currentWord;
+					currentIndex++;
 				}
 			} else {
 				video.style.border = "8px solid #ff3333";

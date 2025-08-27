@@ -19,6 +19,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="/css/table.css" />
 
+    <link rel="stylesheet" href="/css/modal.css" />
+
     <%-- 모달창 css --%>
     <link rel="stylesheet" href="/css/headerLogout.css" />
 
@@ -202,7 +204,9 @@
                 tbody.empty();
                 console.log(data)
 
-                if (data.length === 0) {
+
+                const hasAnyScore = data.some(q => q.score !== null);
+                if (!hasAnyScore) {
                     tbody.append('<tr><td colspan="4">퀴즈 기록이 없습니다.</td></tr>');
                 } else {
                     data.forEach(q => {
@@ -239,7 +243,7 @@
         });
     });
 </script>
-
+<script src="/js/modal.js"></script>
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 
 </body>

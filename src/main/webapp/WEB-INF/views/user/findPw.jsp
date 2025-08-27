@@ -15,6 +15,7 @@
 
     <!-- 공통 스타일 -->
     <link rel="stylesheet" href="/css/table.css" />
+    <link rel="stylesheet" href="/css/modal.css" />
 
     <%-- Jquery --%>
     <script type="text/javascript" src="/js/jquery-3.6.0.min.js"></script>
@@ -90,14 +91,14 @@
             const userId = $("#userId").val()?.trim();
             const email  = $("#email").val()?.trim();
 
-            if (!email)  { showModal("이메일을 입력하세요.",  () => $("#email").focus());  return; }
             if (!userId) { showModal("아이디를 입력하세요.", () => $("#userId").focus()); return; }
+            if (!email)  { showModal("이메일을 입력하세요.",  () => $("#email").focus());  return; }
 
             $.ajax({
-                url: "/user/emailAuthNumber",
+                url: "/user/emailAuthNumberPw",
                 type: "POST",
                 dataType: "JSON",
-                data: { email },
+                data: { userId, email },
                 success: function (json) {
                     if (json.existsYn === "Y") {
                         $.ajax({
@@ -187,17 +188,6 @@
     <section id="step3" class="find-id-box" style="display:none;"></section>
 </main>
 
-<!-- ✅ 공용 알림 모달 -->
-<div id="appModal" class="modal-overlay" style="display:none;">
-    <div class="modal-box" style="
-    width:520px;max-width:calc(100vw - 40px);background:#fff;border:6px solid #fca08c;border-radius:30px;
-    box-shadow:8px 8px 10px rgba(0,0,0,0.15);padding:36px 28px;text-align:center;">
-        <h3 class="modal-title" style="font-size:24px;font-weight:700;margin-bottom:14px;">알림</h3>
-        <p class="modal-message" style="font-size:18px;line-height:1.6;margin:10px 0 22px;white-space:pre-line;"></p>
-        <button type="button" id="modalOk" class="verify-button" style="width:160px;margin:0 auto;">확인</button>
-    </div>
-</div>
-
 <%--모달창--%>
 <div id="signupModal" class="modal">
     <div class="modal-content">
@@ -207,11 +197,12 @@
     </div>
 </div>
 
+<script src="/js/modal.js"></script>
+
 <style>
     .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:9999}
     .modal-overlay.show{display:flex}
 </style>
-
 
 <script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 </body>

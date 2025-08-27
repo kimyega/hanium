@@ -214,7 +214,7 @@
 <!-- 정답/오답 모달 -->
 <div id="answerModal" class="modal-res" style="display:none;">
 	<div class="modal-con">
-		<h2>메르헨드</h2>
+		<h2 id="answerWord"></h2>
 		<p id="answerMessage">정답!</p>
 		<div id="answerSymbol"></div>
 	</div>
@@ -295,6 +295,9 @@
 					const modal = document.getElementById("answerModal");
 					const msg = document.getElementById("answerMessage");
 					const symbol = document.getElementById("answerSymbol");
+					const answerWord = document.getElementById("answerWord");
+
+					answerWord.innerHTML = quizWords[currentIndex].word;
 
 					if (isCorrect) {
 						msg.innerText = "정답!";
@@ -307,6 +310,7 @@
 						symbol.innerText = "✕";            // ✅ X 출력
 						symbol.style.color = "#ff3333";
 					}
+
 
 					modal.style.display = "block";
 

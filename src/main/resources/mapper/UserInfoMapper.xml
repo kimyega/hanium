@@ -18,6 +18,13 @@
         WHERE email = #{email} AND name = #{name}
     </select>
 
+    <select id="emailAuthNumberPw" parameterType="UserInfoDTO" resultType="UserInfoDTO">
+        SELECT
+            IF(COUNT(password) > 0, 'Y', 'N') AS EXISTS_YN
+        FROM users
+        WHERE email = #{email} AND user_id = #{userId}
+    </select>
+
     <select id="getUserId" parameterType="UserInfoDTO" resultType="UserInfoDto">
         SELECT user_id, name, email
         FROM users

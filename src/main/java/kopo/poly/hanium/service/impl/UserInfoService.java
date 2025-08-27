@@ -78,6 +78,38 @@ public class UserInfoService implements IUserInfoService {
         return rDTO;
     }
 
+    @Override
+    public UserInfoDTO emailAuthNumberPw(UserInfoDTO pDTO) throws Exception {
+
+        log.info("{}.emailAuthNumberPw Start!", this.getClass().getName());
+
+        UserInfoDTO rDTO = Optional.ofNullable(userInfoMapper.emailAuthNumberPw(pDTO)).orElseGet(UserInfoDTO::new);
+
+        log.info("rDTO : {}", rDTO);
+        log.info("rDTO.getExistsYn() : {}", rDTO.getExistsYn());
+
+        if (kopo.poly.hanium.util.CmmUtil.nvl(rDTO.getExistsYn()).equals("Y")) {
+
+            int authNumber = ThreadLocalRandom.current().nextInt(100000, 1000000);
+            log.info("authNumber : {}", authNumber);
+
+            MailDTO dto = new MailDTO();
+
+            dto.setTitle("아이디/비밀번호 찾기 인증번호 안내"); // 문구만 약간 일반화
+            dto.setContents("인증번호는 " + authNumber + " 입니다.");
+            dto.setToMail(CmmUtil.nvl(EncryptUtil.decAES128BCBC(pDTO.getEmail())));
+
+            mailService.doSendMail(dto);
+            dto = null;
+
+            rDTO.setAuthNumber(authNumber);
+        }
+
+        log.info("{}.emailAuthNumberPw End!", this.getClass().getName());
+
+        return rDTO;
+    }
+
     // ★ 분기 추가: userId 있으면(비번찾기) user_id+email, 없으면(아이디찾기) name+email
     @Override
     public UserInfoDTO searchUserIdOrPasswordProc(UserInfoDTO pDTO) throws Exception {
@@ -101,8 +133,7 @@ public class UserInfoService implements IUserInfoService {
     // ★ 새 비밀번호 저장
     @Override
     public int updatePassword(UserInfoDTO pDTO) throws Exception {
-        // 운영 시 해시 적용 (예: SHA-256 / BCrypt)
-        // pDTO.setPassword(EncryptUtil.encHashSHA256(pDTO.getPassword()));
+
         return userInfoMapper.updateUserPassword(pDTO);
     }
 

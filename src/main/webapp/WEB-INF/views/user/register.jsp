@@ -598,26 +598,7 @@
     });
 
 </script>
-<script>
-    // 간단 드롭다운 (table.js 쓰면 생략 가능)
-    const toggle = document.getElementById('headerDropdownToggle');
-    const menu = document.getElementById('headerDropdownMenu');
-    if (toggle && menu){
-        toggle.addEventListener('click', e => {
-            e.stopPropagation();
-            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
-        });
-        document.addEventListener('click', () => menu.style.display = 'none');
-
-        // 로그인 여부에 따라 메뉴 항목 토글
-        const nameText = toggle.textContent.trim();
-        const loggedIn = !(nameText === '메뉴' || nameText === '로그인');
-        [...menu.querySelectorAll('li')].forEach(li=>{
-            if (loggedIn && (li.textContent.includes('로그인') || li.textContent.includes('회원가입'))) li.style.display='none';
-            if (!loggedIn && (li.textContent.includes('내 정보') || li.textContent.includes('로그아웃'))) li.style.display='none';
-        });
-    }
-</script>
+<script src="${pageContext.request.contextPath}/js/headerLogout.js"></script>
 </body>
 
 </html>
