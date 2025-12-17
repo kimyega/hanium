@@ -24,6 +24,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
 
 	<style>
+
 		.screen-text {
 			margin-top: 20px;
 		}
